@@ -1,8 +1,5 @@
 #pragma once
 
-// file: object_image.hpp
-// purpose: 
-
 #include "../graphics/render.h"
 #include "../graphics/graphics.h"
 #include "../game/tileset.h"

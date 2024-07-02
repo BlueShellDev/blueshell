@@ -25,8 +25,8 @@ LevelComponents::BGDatObject::unpack
     tileset_id.type = ImGuiDataType_U8;
     tileset_id.value = (packed >> 12) & 0xF;
 
-    properties.entries.push_back(object_id);
-    properties.entries.push_back(tileset_id);
+    properties.push_back(object_id);
+    properties.push_back(tileset_id);
 
     transform.x = IO::read<u16>(from, at);
     transform.y = IO::read<u16>(from, at);
@@ -44,7 +44,7 @@ LevelComponents::BGDatObject::pack
     sz_t& at
 )
 {
-    const u16 packed = (properties.entries.at(0).value | ( (u16)properties.entries.at(1).value << 12 ));
+    const u16 packed = (properties.at(0).value | ( (u16)properties.at(1).value << 12 ));
 
     IO::write(packed, to, at);
     IO::write(transform.x, to, at);
@@ -69,7 +69,7 @@ LevelComponents::StageObject::unpack
     stage_obj_id.type = ImGuiDataType_U16;
     stage_obj_id.value = IO::read<u16>(from, at);
 
-    properties.entries.push_back(stage_obj_id);
+    properties.push_back(stage_obj_id);
 
     transform.x         = IO::read<u16>(from, at);
     transform.y         = IO::read<u16>(from, at);
@@ -115,63 +115,63 @@ LevelComponents::Entrance::unpack
     entry.display_name = "Camera X";
     entry.type = ImGuiDataType_U16;
     entry.value = IO::read<u16>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Camera Y";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u16>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Entrance ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Destination Area";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Connected Pipe ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     at++;
 
     entry.display_name = "Destination Entrance ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     at++;
 
     entry.display_name = "Entrance Type";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Entrance Settings";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Unknown 0";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     at++;
 
     entry.display_name = "Is Zone";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Unknown 1";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 }
 
 void
@@ -205,40 +205,40 @@ LevelComponents::View::unpack
     entry.display_name = "View ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Camera ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Background Music";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Unknown 0";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Unknown 1";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Unknown 2";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Lighting";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 
     entry.display_name = "Goal ID";
     entry.type = ImGuiDataType_U8;
     entry.value = IO::read<u8>(from, at);
-    properties.entries.push_back(entry);
+    properties.push_back(entry);
 }

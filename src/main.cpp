@@ -15,8 +15,8 @@
 
 // ui
 #include "ui/object_image.hpp"
-#include "ui/level_render_widget.hpp"
-#include "ui/object_picker_widget.hpp"
+#include "ui/widgets/level_render_widget.h"
+#include "ui/widgets/object_picker_widget.h"
 
 static Editor::Application      app;
 
@@ -519,9 +519,6 @@ int main()
         ImGui::NewFrame();
 
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-
-        ImGui::ShowStyleEditor();
-
         Render::bind_buffers_to_gpu(&app.render_manager);
 
         // menu bar setup
@@ -750,16 +747,6 @@ int main()
         //}
         //ImGui::End();
 
-        //// render manager viewer
-        //ImGui::Begin("OpenGL");
-        //for (sz_t i = 0; i < app.render_manager.number_of_textures_to_gen; i++)
-        //{
-        //    Render::PixelBuffer* buffer = app.render_manager.buffer_table.at(static_cast<Render::TextureSlot_>(i));
-        //    ImGui::Image((ImTextureID)*buffer->link_to_texture, { (float)buffer->width, (float)buffer->height });
-        //    ImGui::Separator();
-        //}
-        //ImGui::End();
-
         // loaded_area view info 
         ImGui::Begin("Status", 0, ImGuiWindowFlags_NoTitleBar);
         ImGui::Text(std::format("Zoom: {}x", area_view.draw_env.scale).c_str());
@@ -867,7 +854,7 @@ int main()
                     ImGui::TableSetupColumn("Value");
                     ImGui::TableHeadersRow();
 
-                    for (auto& property : e->properties.entries)
+                    for (auto& property : e->properties)
                     {
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
@@ -882,36 +869,6 @@ int main()
             }
             ImGui::EndChild();
             ImGui::End();
-        }
-
-        if (ImGui::IsKeyPressed(ImGuiKey_PageUp) && loaded_area.source.area_id < level_source.areas.size() - 1)
-        {
-            sz_t next_area_id = loaded_area.source.area_id;
-            next_area_id++;
-
-            NSMB::AreaSource source = level_source.areas.at(next_area_id);
-
-            loaded_area = NSMB::load_area(source);
-            insert_global_tilesets(loaded_area, nitro_root);
-            insert_area_tileset(loaded_area, nitro_root);
-            area_view._clear_selected_items();
-            populate_object_pickers(loaded_area);
-            render_area_tilesets(loaded_area);
-        }
-
-        if (ImGui::IsKeyPressed(ImGuiKey_PageDown) && loaded_area.source.area_id > 0)
-        {
-            sz_t next_area_id = loaded_area.source.area_id;
-            next_area_id--;
-
-            NSMB::AreaSource source = level_source.areas.at(next_area_id);
-
-            loaded_area = NSMB::load_area(source);
-            insert_global_tilesets(loaded_area, nitro_root);
-            insert_area_tileset(loaded_area, nitro_root);
-            area_view._clear_selected_items();
-            populate_object_pickers(loaded_area);
-            render_area_tilesets(loaded_area);
         }
 
         ImGui::Render();

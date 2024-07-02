@@ -1,22 +1,8 @@
-#pragma once
-
-#include "transform.hpp"
+#include "draw_enviroment.h"
 
 namespace UI
 {
-    struct DrawEnviroment
-    {
-        ImDrawList*                         canvas                  = nullptr;
-        ImVec2                              canvas_origin           = { 0, 0 };
-        ImVec2                              content_size            = { 0, 0 };
-
-        const ImVec2                        pixels_per_unit         = { 16, 16 };
-        ImVec2                              mouse_pos               = { 0, 0 };
-
-        float                               scale                   = 1.0f;
-    };
-
-    static ImVec2 transform_to_canvas
+    ImVec2 UI::transform_to_canvas
     (
         DrawEnviroment&                     env, 
         const Transform&                    t
@@ -29,12 +15,12 @@ namespace UI
         };
     }
 
-    static void draw_transform
+    void UI::draw_transform
     (
         DrawEnviroment&                     env, 
         const Transform&                    t,
         const u32&                          color,
-        const float&                        rounding = 0.0f
+        const float&                        rounding
     )
     {
         const ImVec2 top_left =
@@ -53,7 +39,7 @@ namespace UI
         //env.canvas->AddRect(top_left, btm_right, 0x3F000000);
     }
 
-    static void draw_transform_o
+    void UI::draw_transform_o
     (
         DrawEnviroment& env,
         const Transform& t,
@@ -76,7 +62,7 @@ namespace UI
         env.canvas->AddRect(top_left, btm_right, color, 0, 0, 2.0f);
     }
 
-    static void draw_stage_obj
+    void UI::draw_stage_obj
     (
         DrawEnviroment&                     env,
         const Transform&                    t
@@ -86,7 +72,7 @@ namespace UI
         draw_transform_o(env, t, 0xBF000000);
     }
     
-    static void draw_entrance
+    void UI::draw_entrance
     (
         DrawEnviroment&                     env,
         const Transform&                    t
@@ -96,7 +82,7 @@ namespace UI
         draw_transform_o(env, t, 0xBF000000);
     }
 
-    static void draw_view
+    void UI::draw_view
     (
         DrawEnviroment&                     env,
         const Transform&                    t

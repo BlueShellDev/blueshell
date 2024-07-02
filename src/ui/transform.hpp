@@ -1,16 +1,18 @@
 #pragma once
 
+#include "../editor.hpp"
+
 namespace UI
 {
     struct Transform
     {
-        ImVec2  pixels_per_unit = { 16, 16 };
+        ImVec2 pixels_per_unit = { 16, 16 };
 
         // position in units;
         u16     x = 0,
-            y = 0,
-            w = 0,
-            h = 0;
+                y = 0,
+                w = 0,
+                h = 0;
     };
 
     static Transform translate

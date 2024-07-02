@@ -37,7 +37,7 @@ namespace Editor
         const std::string       tileset_json = "res/names.json";
         const std::string       worlds_json = "res/worlds.json";
      
-        const std::string       base_path = "D:/Documents/NDS Games/FILESYSTEM/root/";
+        std::string       base_path = "D:/Documents/NDS Games/FILESYSTEM/root/";
 
         const std::string       ov0_path = "D:/Documents/NDS Games/FILESYSTEM/overlay9/overlay9_0.bin";
         const std::string       ov10_path = "D:/Documents/NDS Games/FILESYSTEM/overlay9/overlay9_10.bin";

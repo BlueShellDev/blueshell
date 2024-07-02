@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ui/level_render_item.hpp"
+#include "../ui/items/level_render_item.h"
 #include "../util/util.hpp"
 
 namespace NSMB::LevelComponents
