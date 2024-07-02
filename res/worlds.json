@@ -1,0 +1,482 @@
+{
+    "worlds": [
+        {
+            "letter": "A",
+            "name": "World 1",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 3
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 3
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 1
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 3
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-A",
+                    "areas": 2
+                },
+                {
+                    "id": "07",
+                    "name": "-Tower",
+                    "areas": 3
+                },
+                {
+                    "id": "08",
+                    "name": "-Castle",
+                    "areas": 3
+                },
+                {
+                    "id": "09",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "B",
+            "name": "World 2",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 3
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 2
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-6",
+                    "areas": 2
+                },
+                {
+                    "id": "07",
+                    "name": "-A",
+                    "areas": 3
+                },
+                {
+                    "id": "08",
+                    "name": "-Tower",
+                    "areas": 3
+                },
+                {
+                    "id": "09",
+                    "name": "-Castle",
+                    "areas": 3
+                },
+                {
+                    "id": "10",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "C",
+            "name": "World 3",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 2
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 3
+                },
+                {
+                    "id": "04",
+                    "name": "-A",
+                    "areas": 3
+                },
+                {
+                    "id": "05",
+                    "name": "-B",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-C",
+                    "areas": 2
+                },
+                {
+                    "id": "07",
+                    "name": "-Ghost House",
+                    "areas": 3
+                },
+                {
+                    "id": "08",
+                    "name": "-Tower",
+                    "areas": 2
+                },
+                {
+                    "id": "09",
+                    "name": "-Castle",
+                    "areas": 2
+                },
+                {
+                    "id": "10",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "D",
+            "name": "World 4",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 1
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 2
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 3
+                },
+                {
+                    "id": "06",
+                    "name": "-6",
+                    "areas": 2
+                },
+                {
+                    "id": "07",
+                    "name": "-A",
+                    "areas": 2
+                },
+                {
+                    "id": "08",
+                    "name": "-Ghost House",
+                    "areas": 3
+                },
+                {
+                    "id": "09",
+                    "name": "-Tower",
+                    "areas": 2
+                },
+                {
+                    "id": "10",
+                    "name": "-Castle",
+                    "areas": 2
+                },
+                {
+                    "id": "11",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "E",
+            "name": "World 5",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 1
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 1
+                },
+                {
+                    "id": "05",
+                    "name": "-A",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-B",
+                    "areas": 1
+                },
+                {
+                    "id": "07",
+                    "name": "-C",
+                    "areas": 2
+                },
+                {
+                    "id": "08",
+                    "name": "-Ghost House",
+                    "areas": 3
+                },
+                {
+                    "id": "09",
+                    "name": "-Tower",
+                    "areas": 2
+                },
+                {
+                    "id": "10",
+                    "name": "-Castle",
+                    "areas": 2
+                },
+                {
+                    "id": "11",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "F",
+            "name": "World 6",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 2
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 1
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-6",
+                    "areas": 3
+                },
+                {
+                    "id": "07",
+                    "name": "-A",
+                    "areas": 2
+                },
+                {
+                    "id": "08",
+                    "name": "-B",
+                    "areas": 1
+                },
+                {
+                    "id": "09",
+                    "name": "-Tower 1",
+                    "areas": 2
+                },
+                {
+                    "id": "10",
+                    "name": "-Tower 2",
+                    "areas": 2
+                },
+                {
+                    "id": "11",
+                    "name": "-Castle",
+                    "areas": 2
+                },
+                {
+                    "id": "12",
+                    "name": "-Cannon",
+                    "areas": 1
+                }
+            ]
+        },
+        {
+            "letter": "G",
+            "name": "World 7",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 1
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 2
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 1
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 3
+                },
+                {
+                    "id": "06",
+                    "name": "-6",
+                    "areas": 3
+                },
+                {
+                    "id": "07",
+                    "name": "-7",
+                    "areas": 1
+                },
+                {
+                    "id": "08",
+                    "name": "-A",
+                    "areas": 2
+                },
+                {
+                    "id": "09",
+                    "name": "-Ghost House",
+                    "areas": 3
+                },
+                {
+                    "id": "10",
+                    "name": "-Tower",
+                    "areas": 2
+                },
+                {
+                    "id": "11",
+                    "name": "-Castle",
+                    "areas": 2
+                }
+            ]
+        },
+        {
+            "letter": "H",
+            "name": "World 8",
+            "levels": [
+                {
+                    "id": "01",
+                    "name": "-1",
+                    "areas": 2
+                },
+                {
+                    "id": "02",
+                    "name": "-2",
+                    "areas": 3
+                },
+                {
+                    "id": "03",
+                    "name": "-3",
+                    "areas": 2
+                },
+                {
+                    "id": "04",
+                    "name": "-4",
+                    "areas": 2
+                },
+                {
+                    "id": "05",
+                    "name": "-5",
+                    "areas": 2
+                },
+                {
+                    "id": "06",
+                    "name": "-6",
+                    "areas": 2
+                },
+                {
+                    "id": "07",
+                    "name": "-7",
+                    "areas": 1
+                },
+                {
+                    "id": "08",
+                    "name": "-8",
+                    "areas": 2
+                },
+                {
+                    "id": "09",
+                    "name": "-Tower 1",
+                    "areas": 2
+                },
+                {
+                    "id": "10",
+                    "name": "-Tower 2",
+                    "areas": 2
+                },
+                {
+                    "id": "11",
+                    "name": "-Castle",
+                    "areas": 2
+                },
+                {
+                    "id": "12",
+                    "name": "-Bowser's Castle",
+                    "areas": 3
+                }
+            ]
+        }
+    ]
+}
