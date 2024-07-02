@@ -55,7 +55,7 @@ namespace Graphics
         void pack(IO::ByteArray& out);
     };
 
-    const enum class ObjectTileControlByte
+    enum class ObjectTileControlByte
     {
         NORMAL      = 0x00,
         REPEAT_X    = 0x01,
@@ -65,7 +65,7 @@ namespace Graphics
         NEW_LINE    = 0xFE,
     };
 
-    const enum class ObjectRowControlByte
+    enum class ObjectRowControlByte
     {
         OBJECT_END          = 0xFF,
         SLOPE_NE            = 0x80,

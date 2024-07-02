@@ -150,7 +150,7 @@ void Graphics::ObjectRow::unpack(IO::ByteArray& in, sz_t& at, bool& hit_eoo)
         break;
     }
 
-    std::size_t id = 0;
+    size_t id = 0;
     while (!_row_over)
     {
         ObjectTile tile;
@@ -174,9 +174,9 @@ void Graphics::Object::unpack(IO::ByteArray& in, sz_t& at)
 {
     bool _object_over = false;
     // store the old width so we can compute the max between it and the current row
-    std::size_t old_width = 0;
+    size_t old_width = 0;
 
-    std::size_t id = 0;
+    size_t id = 0;
     while (!_object_over)
     {
         ObjectRow row;
@@ -185,7 +185,7 @@ void Graphics::Object::unpack(IO::ByteArray& in, sz_t& at)
         if (!_object_over)
         {
             // update object dimensions
-            width = std::max({ old_width, row.tiles.size() });
+            width = std::max(old_width, row.tiles.size());
             height++;
             old_width = width;
 
