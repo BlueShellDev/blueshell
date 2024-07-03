@@ -2,18 +2,18 @@
 
 namespace UI
 {
-    UI::AreaRenderItem create_object_item
+    AreaRenderItem create_object_item
     (
         const u16& object_id,
         const u8&  tileset_id
     )
     {
-        UI::AreaRenderItem item;
+        AreaRenderItem item;
 
-        item.item_type = UI::AreaItemType::AreaItemType_BgDat;
+        item.item_type = AreaItemType::AreaItemType_BgDat;
         item.resizeable = true;
 
-        UI::PropertyEntry entry;
+        PropertyEntry entry;
         entry.display_name = "Object ID";
         entry.type = ImGuiDataType_U16;
         entry.value = object_id & 0xFFF;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../editor.hpp"
+#include "../../editor.h"
 #include "../draw_enviroment.h"
 #include "../object_image.hpp"
 #include "../transform.hpp"

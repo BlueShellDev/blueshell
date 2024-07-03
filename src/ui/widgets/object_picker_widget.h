@@ -9,12 +9,12 @@ namespace UI
 {
     struct ObjectPickerWidget
     {
-        UI::DrawEnviroment draw_env;
+        DrawEnviroment draw_env;
 
         NSMB::Tileset* tileset = nullptr;
 
         std::vector<UI::ObjectPickerItem> items;
-        UI::ObjectPickerItem* selection = nullptr;
+        ObjectPickerItem* selection = nullptr;
 
         // padding inbetween items
         u16 x_padding = 3,
@@ -30,7 +30,7 @@ namespace UI
         void _draw_items
         (
             Render::RenderManager* render_mgr, 
-            UI::DrawEnviroment draw_env
+            DrawEnviroment draw_env
         );
 
         // external methods

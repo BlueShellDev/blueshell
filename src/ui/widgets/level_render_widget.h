@@ -25,22 +25,22 @@ namespace UI
 
     struct AreaRenderWidget
     {
-        UI::DrawEnviroment                  draw_env;
+        DrawEnviroment                  draw_env;
         ImVec4                              background_color = { 0.0f, 0.0f, 0.0f, 0.5f };
 
         NSMB::Area* area = nullptr;
 
-        std::vector<UI::AreaRenderItem*>    selection;
-        std::vector<UI::AreaRenderItem>     clipboard;
-        std::vector<UI::AreaRenderItem>     trashcan;
+        std::vector<AreaRenderItem*>    selection;
+        std::vector<AreaRenderItem>     clipboard;
+        std::vector<AreaRenderItem>     trashcan;
 
-        UI::ObjectPickerWidget*             active_picker;
+        ObjectPickerWidget*             active_picker;
 
         ImVec2                              click_cache;
 
         // stuff for multiselect
         bool                                can_grab = false;
-        UI::Transform                       grab_transform = { .pixels_per_unit = {1, 1} };
+        Transform                       grab_transform = { .pixels_per_unit = {1, 1} };
 
         // perimiter of all selected objects
         Transform                           max_perimeter = {

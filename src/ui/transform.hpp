@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../editor.hpp"
+#include "../editor.h"
 
 namespace UI
 {

@@ -8,15 +8,15 @@ namespace UI
     struct TerrainNode
     {
         sz_t node_id = 0;
-        UI::Transform transform = { .w = 1, .h = 1 };
+        Transform transform = { .w = 1, .h = 1 };
     };
 
     struct TerrainBuilder
     {
-        bool    is_active = false,
-            can_plot = false;
+        bool is_active = false,
+             can_plot = false;
 
-        std::vector<UI::TerrainNode>        nodes;
+        std::vector<TerrainNode>        nodes;
 
         // internal methods
         double _calc_slope(const TerrainNode& node_0, const TerrainNode& node_1);

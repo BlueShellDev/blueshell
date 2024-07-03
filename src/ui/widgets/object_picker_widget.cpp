@@ -77,7 +77,7 @@ namespace UI
     void ObjectPickerWidget::_draw_items
     (
         Render::RenderManager* render_mgr,
-        UI::DrawEnviroment draw_env
+        DrawEnviroment draw_env
     )
     {
         for (auto& item : items)
