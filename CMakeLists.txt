@@ -2,16 +2,14 @@
 
 project(
     BlueShellLevelEditor
-    VERSION 0.2.1
+    VERSION 0.2.2
 )
 
 find_package(glfw3 REQUIRED)
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 find_package(imgui REQUIRED)
-
-add_library(nlohmann-json INTERFACE)
-target_include_directories(nlohmann-json INTERFACE ${CMAKE_SOURCE_DIR}/deps/nlohmann)
+find_package(nlohmann_json REQUIRED)
 
 add_library(imfilebrowser INTERFACE)
 target_include_directories(imfilebrowser INTERFACE ${CMAKE_SOURCE_DIR}/deps/imfilebrowser)
@@ -41,7 +39,7 @@ add_dependencies(BlueShellLevelEditor res)
 target_link_libraries(
     BlueShellLevelEditor 
     PRIVATE 
-    nlohmann-json 
+    nlohmann_json::nlohmann_json
     imfilebrowser 
     stb
 )

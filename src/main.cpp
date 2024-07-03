@@ -222,9 +222,33 @@ int main()
     }
     Editor::initialize_imgui_style();
 
+    
+    std::ifstream fstream = Util::begin_ifstream("res/enviroment.json");
+    app.enviroment.json = nlohmann::json::parse(fstream);
+
+    // load base path
+    std::filesystem::path path = app.enviroment.json["sys-paths"]["rom_fs"].get<std::string>();
+
+    // load directories
+    std::filesystem::path rom_root = app.enviroment.json["dirs"]["root"].get<std::string>(),
+                            overlay = app.enviroment.json["dirs"]["overlay"].get<std::string>(),
+                            stages = app.enviroment.json["subdirs"]["stages"].get<std::string>(),
+                            characters = app.enviroment.json["subdirs"]["graphics"]["characters"].get<std::string>(),
+                            palettes = app.enviroment.json["subdirs"]["graphics"]["palettes"].get<std::string>(),
+                            metatiles = app.enviroment.json["subdirs"]["graphics"]["metatiles"].get<std::string>(),
+                            objects = app.enviroment.json["subdirs"]["graphics"]["objects"].get<std::string>(),
+                            textures = app.enviroment.json["subdirs"]["graphics"]["textures"].get<std::string>();
+
+    std::filesystem::path real = path / rom_root / characters;
+
+    if (path.empty())
+    {
+        Debug::log("Please specify a directory.");
+        return EXIT_FAILURE;
+    }
+
     // setup root directory
     std::filesystem::recursive_directory_iterator root(app.enviroment.base_path);
-    std::ifstream fstream;
 
     // parse override map
     try

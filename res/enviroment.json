@@ -1,0 +1,21 @@
+{
+    "sys-paths": {
+        "rom_fs": ""
+    },
+
+    "dirs": {
+        "root": "root/",
+        "overlay": "overlay9/"
+    },
+
+    "subdirs": {
+        "stages": "course/",
+        "graphics": {
+            "characters": "BG_ncg/",
+            "palettes": "BG_ncl/",
+            "metatiles": "BG_pnl/",
+            "objects": "BG_unt/",
+            "textures": "polygon_unit/"
+        }
+    }
+}

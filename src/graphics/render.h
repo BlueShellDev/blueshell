@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <map>
 
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 #include "../nsmb/tileset.h"
 #include "../util/util.hpp"
