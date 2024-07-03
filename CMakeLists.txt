@@ -35,7 +35,7 @@ file(
     ${CMAKE_SOURCE_DIR}/src/*.h
 )
 
-add_executable(BlueShellLevelEditor ${SOURCE})
+add_executable(BlueShellLevelEditor ${SOURCE} "src/sources.h")
 add_dependencies(BlueShellLevelEditor res)
 
 target_link_libraries(

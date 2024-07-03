@@ -3,7 +3,7 @@
 #include "../draw_enviroment.h"
 #include "object_picker_widget.h"
 #include "../items/level_render_item.h"
-#include "../../game/level.h"
+#include "../../nsmb/area/area.h"
 #include "terrain_builder.h"
 
 namespace UI

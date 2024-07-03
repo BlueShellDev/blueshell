@@ -2,7 +2,7 @@
 
 #include "../graphics/render.h"
 #include "../graphics/graphics.h"
-#include "../game/tileset.h"
+#include "../nsmb/tileset.h"
 #include "../util/util.hpp"
 
 namespace UI

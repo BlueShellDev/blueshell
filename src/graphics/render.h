@@ -9,7 +9,7 @@
 
 #include "json.hpp"
 
-#include "../game/tileset.h"
+#include "../nsmb/tileset.h"
 #include "../util/util.hpp"
 
 namespace Render

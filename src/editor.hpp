@@ -1,8 +1,8 @@
 #pragma once
 
 // opengl
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
 
 // imgui
 #include "imgui.h"

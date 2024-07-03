@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../draw_enviroment.h"
-#include "../../game/level.h"
+#include "../../nsmb/area/area.h"
 
 namespace UI
 {

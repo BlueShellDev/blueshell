@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../items/object_picker_item.h"
+#include "../../nsmb/tileset.h"
 #include "../draw_enviroment.h"
 #include "../object_image.hpp"
 

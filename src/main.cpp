@@ -7,11 +7,13 @@
 
 // app
 #include "editor.hpp"
+#include "sources.h"
 #include "util/util.hpp"
 #include "util/lz.hpp"
 
+#include "nitro/nsbtx.h"
 #include "nitro/rom.hpp"
-#include "game/level.h"
+#include "nsmb/area/area.h"
 
 // ui
 #include "ui/object_image.hpp"
@@ -19,13 +21,12 @@
 #include "ui/widgets/object_picker_widget.h"
 
 static Editor::Application      app;
+static Editor::LevelSource      level_source;
 
 static UI::AreaRenderWidget     area_view;
 static UI::ObjectPickerWidget   general_picker;
 static UI::ObjectPickerWidget   stage_picker;
 static UI::ObjectPickerWidget   goal_picker;
-
-static NSMB::LevelSource        level_source;
 
 static NSMB::Area               loaded_area;
 
@@ -67,149 +68,10 @@ std::filesystem::path sys_path_from_file_id
     return found_sys_path;
 }
 
-struct WorldEntry
-{
-    std::string name;
-    std::vector<NSMB::LevelSource> levels;
-};
-
-struct TilesetEntry
-{
-    u32 id;
-    std::string name;
-    bool unused;
-};
-
-// NSBTX HELPER FUNCS // 
-struct NitroHeader
-{
-    char identifier[4];
-    u32 magic;
-    u32 file_size;
-    u16 header_size;
-    u16 num_blocks;
-};
-
-struct TEX0Block
-{
-    char identifier[4];
-    u32 size;
-    u32 padding_a;
-    u16 tex_data_size;
-    u16 tex_info_offset;
-    u32 padding_b;
-    u32 tex_data_offset;
-    u32 padding_c;
-    u16 cmp_tex_data_size;
-    u16 cmp_tex_info_offset;
-    u32 padding_d;
-    u32 cmp_tex_data_offset;
-    u32 cmp_text_info_data_offset;
-    u32 padding_e;
-    u32 pal_data_size;
-    u32 pal_info_offset;
-    u32 pal_data_offset;
-};
-
-struct PaletteHeader
-{
-    u16 pal_offset;
-    u16 unk;
-};
-
-struct TextureHeader
-{
-    u16     tex_offset;
-    u8      format;
-    u8      width;
-    u8      height;
-    bool    color_0;
-    u32     unused;
-
-    void unpack(IO::ByteArray& from, sz_t& at)
-    {
-        tex_offset = IO::read<u16>(from, at) * 8;
-        u16 packed_param = IO::read<u16>(from, at);
-        format = (packed_param >> 10) & 0b111;
-        width = 0b1000 << ((packed_param >> 4) & 0b111);
-        height = 0b1000 << ((packed_param >> 7) & 0b111);
-        color_0 = !((packed_param >> 13) & 0b001);
-        unused = IO::read<u32>(from, at);
-    }
-};
-
-struct TextureData
-{
-    IO::ByteArray pixel_data;
-};
-
-struct NitroSubHeader
-{
-    u8  dummy;
-    u8  num_objects;
-    u16 header_size;
-
-    u16 unk_section_header_size;
-    u16 unk_section_size;
-    u32 unk_constant;
-    std::vector<u32> unk_entries;
-
-    u16 data_info_entry_size;
-    u16 data_info_section_size;
-    std::vector<TextureHeader> data_info;
-
-    std::vector<std::string> object_names;
-
-    void unpack(IO::ByteArray& from, sz_t& at)
-    {
-        dummy = IO::read<u8>(from, at);
-        num_objects = IO::read<u8>(from, at);
-        header_size = IO::read<u16>(from, at);
-
-        unk_section_header_size = IO::read<u16>(from, at);
-        unk_section_size = IO::read<u16>(from, at);
-        unk_constant = IO::read<u32>(from, at);
-
-        for (sz_t i = 0; i < num_objects; i++)
-        {
-            u32 unk_data = IO::read<u32>(from, at);
-            unk_entries.push_back(unk_data);
-        }
-
-        data_info_entry_size = IO::read<u16>(from, at);
-        data_info_section_size = IO::read<u16>(from, at);
-
-        for (sz_t i = 0; i < num_objects; i++)
-        {
-            TextureHeader data;
-            data.unpack(from, at);
-            data_info.push_back(data);
-        }
-
-        for (sz_t i = 0; i < num_objects; i++)
-        {
-            std::string name;
-            for (sz_t j = 0; j < 0x10; j++)
-            {
-                name += IO::read<char>(from, at);
-            }
-            object_names.push_back(name);
-        }
-    }
-};
-
-struct TileNSBTXTableEntry
-{
-    u32 i_file_id;
-    u32 tex_id;
-    u16 pal_id;
-    //two bytes padding!
-};
-
-static std::vector<TilesetEntry> tileset_entries;
+static std::vector<Editor::TilesetEntry> tileset_entries;
 static nlohmann::json names;
 
-static std::vector<WorldEntry> worlds;
+static std::vector<Editor::WorldEntry> worlds;
 
 void draw_fs_tree(const Nitro::Directory& dir)
 {
@@ -379,7 +241,7 @@ int main()
 
     for (const auto& e : names["tilesets"])
     {
-        TilesetEntry ent;
+        Editor::TilesetEntry ent;
         ent.id = e["id"].get<int>();
         ent.name = e["name"].get<std::string>();
         ent.unused = e["unused"].get<bool>();
@@ -392,20 +254,20 @@ int main()
 
     for (const auto& world : worlds_json["worlds"])
     {
-        WorldEntry w_entry;
+        Editor::WorldEntry w_entry;
         const std::string w_letter = world["letter"].get<std::string>();
         const std::string w_name = world["name"].get<std::string>();
         w_entry.name = w_name;
         for (const auto& level : world["levels"])
         {
-            NSMB::LevelSource l_entry;
+            Editor::LevelSource l_entry;
             const std::string l_id = level["id"].get<std::string>();
             const std::string l_name = level["name"].get<std::string>();
             const int l_area_count = level["areas"].get<int>();
             l_entry.name = w_name + l_name;
             for (int i = 0; i < l_area_count; i++)
             {
-                NSMB::AreaSource a_entry;
+                Editor::AreaSource a_entry;
                 const std::string a_base_fn = w_letter + l_id + "_" + std::to_string(i + 1);
                 a_entry.area_id = i;
                 a_entry.header_fn = app.base_path + app.course_path + a_base_fn + ".bin";
@@ -446,17 +308,17 @@ int main()
     fnt_raw.clear();
 
     // tex block testing
-    NitroHeader head;
-    TEX0Block tex_block;
+    Nitro::NitroHeader head;
+    Nitro::TEX0Block tex_block;
 
-    NitroSubHeader s;
+    Nitro::NitroSubHeader s;
 
     sz_t at = 0x50;
     s.unpack(nsbtx_raw, at);
 
-    std::memcpy(&tex_block, &nsbtx_raw[20], sizeof(TEX0Block));
+    std::memcpy(&tex_block, &nsbtx_raw[20], sizeof(Nitro::TEX0Block));
 
-    std::vector<std::pair<u8, TileNSBTXTableEntry>> textured_tile_table;
+    std::vector<std::pair<u8, Nitro::TileNSBTXTableEntry>> textured_tile_table;
 
     try
     {
@@ -467,8 +329,8 @@ int main()
         for (sz_t i = 0; i < 144; i++)
         {
             u8 offset = IO::read<u8>(overlay_0_raw, ov0_table_offset);
-            ov10_at = ov10_table_offset + (offset * sizeof(TileNSBTXTableEntry));
-            TileNSBTXTableEntry e;
+            ov10_at = ov10_table_offset + (offset * sizeof(Nitro::TileNSBTXTableEntry));
+            Nitro::TileNSBTXTableEntry e;
             e.i_file_id = IO::read<u32>(overlay_10_raw, ov10_at);
             e.tex_id = IO::read<u32>(overlay_10_raw, ov10_at);
             e.pal_id = IO::read<u16>(overlay_10_raw, ov10_at);
@@ -487,7 +349,7 @@ int main()
 
     // load W1-4, area 1
     level_source = worlds.at(4).levels.at(0);
-    NSMB::AreaSource source = level_source.areas.at(0);
+    Editor::AreaSource source = level_source.areas.at(0);
 
     // load tilesets
     try
@@ -618,7 +480,7 @@ int main()
                             level_source = level;
 
                             // load W1-1, area 1
-                            NSMB::AreaSource source = level_source.areas.at(0);
+                            Editor::AreaSource source = level_source.areas.at(0);
 
                             loaded_area = NSMB::load_area(source);
                             insert_global_tilesets(loaded_area, nitro_root);

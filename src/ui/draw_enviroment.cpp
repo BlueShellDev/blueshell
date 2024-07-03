@@ -2,7 +2,7 @@
 
 namespace UI
 {
-    ImVec2 UI::transform_to_canvas
+    ImVec2 transform_to_canvas
     (
         DrawEnviroment&                     env, 
         const Transform&                    t
@@ -15,7 +15,7 @@ namespace UI
         };
     }
 
-    void UI::draw_transform
+    void draw_transform
     (
         DrawEnviroment&                     env, 
         const Transform&                    t,
@@ -39,7 +39,7 @@ namespace UI
         //env.canvas->AddRect(top_left, btm_right, 0x3F000000);
     }
 
-    void UI::draw_transform_o
+    void draw_transform_o
     (
         DrawEnviroment& env,
         const Transform& t,
@@ -62,7 +62,7 @@ namespace UI
         env.canvas->AddRect(top_left, btm_right, color, 0, 0, 2.0f);
     }
 
-    void UI::draw_stage_obj
+    void draw_stage_obj
     (
         DrawEnviroment&                     env,
         const Transform&                    t
@@ -72,7 +72,7 @@ namespace UI
         draw_transform_o(env, t, 0xBF000000);
     }
     
-    void UI::draw_entrance
+    void draw_entrance
     (
         DrawEnviroment&                     env,
         const Transform&                    t
@@ -82,7 +82,7 @@ namespace UI
         draw_transform_o(env, t, 0xBF000000);
     }
 
-    void UI::draw_view
+    void draw_view
     (
         DrawEnviroment&                     env,
         const Transform&                    t
