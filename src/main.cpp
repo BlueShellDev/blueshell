@@ -437,7 +437,16 @@ int main()
                     }
                     else
                     {
+                        load_reqs();
+                        load_fs();
                         is_env_set = true;
+                        app.env.save_paths_to_json();
+                        Debug::log("writing enviroment variables to json...");
+                    
+                        std::ofstream fstream = Util::begin_ofstream("res/enviroment.json");
+                        fstream << std::setw(4) << app.env.env_json;
+                        fstream.close();
+
                         open_level_listing = true;
                         ImGui::CloseCurrentPopup();
                     }
@@ -474,8 +483,6 @@ int main()
                     {
                         if (ImGui::Selectable(("> " + level.name).c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
                         {
-                            load_reqs();
-                            load_fs();
                             load_level(level, 0);
                             init_ui();
                             area_view._clear_selected_items();
@@ -615,9 +622,7 @@ int main()
         ImGui::End();
 
         // areas window setup
-        if (!area_view.area)
-            Debug::log("area view's area pointer points to nothing... not drawing area view!");
-        else
+        if (area_view.area)
         {
             ImGui::Begin(std::format("{}###level_editor", level_source.name).c_str());
             area_view.draw(&app.render_manager, { 512, 256 });
