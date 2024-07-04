@@ -248,7 +248,7 @@ int main()
     // if base path is empty or invalid we can't continue
     if (app.env.fs == "" || !std::filesystem::exists(app.env.fs))
     {
-        Debug::log("BASE path was not specified or was invalid: " + app.env.fs.string());
+        Debug::log("base path was not specified or was invalid: \nplease check 'sys-path' in res/enviroment.json" + app.env.fs.string());
         return EXIT_FAILURE;
     }
 
