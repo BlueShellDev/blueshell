@@ -266,7 +266,7 @@ namespace UI
                 draw_env.canvas->AddText
                 (
                     ImGui::GetDefaultFont(),
-                    6.0f * draw_env.scale,
+                    10.0f * draw_env.scale,
                     draw_at,
                     0xFFFFFFFF,
                     std::format("{}", item.properties.at(0).value).c_str()
@@ -282,7 +282,7 @@ namespace UI
                 draw_env.canvas->AddText
                 (
                     ImGui::GetDefaultFont(),
-                    6.0f * draw_env.scale,
+                    10.0f * draw_env.scale,
                     draw_at,
                     0xFFFFFFFF,
                     std::format("{}", item.properties.at(2).value).c_str()
@@ -375,14 +375,6 @@ namespace UI
 
         if (builder.is_active)
             builder.draw_nodes(draw_env);
-          
-        ImGui::Begin("builder");
-        ImGui::Checkbox("Enable Builder", &builder.is_active);
-        if (ImGui::Button("Render Platform"))
-        {
-            builder.render_platform(area);
-        }
-        ImGui::End();
 
         if (ImGui::IsWindowHovered())
         {

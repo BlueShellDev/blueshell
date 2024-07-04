@@ -220,7 +220,7 @@ void load_reqs()
     fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_0.bin");
     overlay_0_raw = IO::bytes_from_file(fstream);
 
-    Debug::log("reading overlay 0 from disk...", Debug::LogType_Verbose);
+    Debug::log("reading overlay 10 from disk...", Debug::LogType_Verbose);
     fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_10.bin");
     overlay_10_raw = IO::bytes_from_file(fstream);
 
@@ -415,9 +415,14 @@ int main()
         if (!is_env_set)
             ImGui::OpenPopup("###setup_env");
 
-        if (ImGui::BeginPopupModal("Setup Enviroment Variables###setup_env"))
+        ImGui::SetNextWindowSize({ 650, 150 });
+        if (ImGui::BeginPopupModal("Setup Enviroment Variables###setup_env", 0, ImGuiWindowFlags_NoResize))
         {
-            ImGui::TextWrapped("Please provide an extracted 'New! Super Mario Bros' ROM at the top-most level\n(e.g <extracted_folder>/FILESYSTEM)");
+            ImGui::BeginChild("setup-popup-child", {0, ImGui::GetWindowHeight() - 70}, ImGuiChildFlags_Border);
+            ImGui::TextWrapped("Invalid or empty 'FILESYSTEM' path detected. Please provide the directory of an extracted 'New! Super Mario Bros.' ROM.\n\n(note: BlueShell will remember this location on next launch)");
+            ImGui::EndChild();
+            ImGui::SetCursorPos({ ImGui::GetCursorPosX(), ImGui::GetWindowHeight() - 30});
+            ImGui::BeginGroup();
             if (ImGui::Button("Browse"))
             {
                 dir_browser.Open();
@@ -462,9 +467,12 @@ int main()
                     ImGui::EndPopup();
                 }
 
-                ImGui::Separator();
+                ImGui::SameLine();
+                ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+                ImGui::SameLine();
                 ImGui::TextWrapped(("selected: " + dir_browser.GetSelected().string()).c_str());
             }
+            ImGui::EndGroup();
             dir_browser.Display();
             ImGui::EndPopup();
         }
