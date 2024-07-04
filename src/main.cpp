@@ -290,7 +290,7 @@ int main()
     Debug::log("reading jsons from disk...", Debug::LogType_Verbose);
     try
     {
-        fstream = Util::begin_ifstream("res/enviroment.json");
+        fstream = Util::begin_ifstream("res/Environment.json");
         app.env.env_json = nlohmann::json::parse(fstream);
 
         fstream = Util::begin_ifstream("res/overrides.json");
@@ -347,7 +347,7 @@ int main()
     }
 
     // load paths from json file to env variables
-    Debug::log("loading eviroment variables from 'enviroment.json'...", Debug::LogType_Verbose);
+    Debug::log("loading eviroment variables from 'environment.json'...", Debug::LogType_Verbose);
     app.env.load_paths_from_json();
 
     // if base path is empty or invalid we can't continue
@@ -355,7 +355,7 @@ int main()
     {
         Debug::log
         (
-            "base path was not specified or was invalid \nplease check 'rom-fs' field in res/enviroment.json:\n'" +
+            "base path was not specified or was invalid \nplease check 'rom-fs' field in res/environment.json:\n'" +
             app.env.fs.string() + "' is not a valid file path"
         );
 
@@ -416,7 +416,7 @@ int main()
             ImGui::OpenPopup("###setup_env");
 
         ImGui::SetNextWindowSize({ 650, 150 });
-        if (ImGui::BeginPopupModal("Setup Enviroment Variables###setup_env", 0, ImGuiWindowFlags_NoResize))
+        if (ImGui::BeginPopupModal("Setup environment Variables###setup_env", 0, ImGuiWindowFlags_NoResize))
         {
             ImGui::BeginChild("setup-popup-child", {0, ImGui::GetWindowHeight() - 70}, ImGuiChildFlags_Border);
             ImGui::TextWrapped("Invalid or empty 'FILESYSTEM' path detected. Please provide the directory of an extracted 'New! Super Mario Bros.' ROM.\n\n(note: BlueShell will remember this location on next launch)");
@@ -446,9 +446,9 @@ int main()
                         load_fs();
                         is_env_set = true;
                         app.env.save_paths_to_json();
-                        Debug::log("writing enviroment variables to json...");
+                        Debug::log("writing environment variables to json...");
                     
-                        std::ofstream fstream = Util::begin_ofstream("res/enviroment.json");
+                        std::ofstream fstream = Util::begin_ofstream("res/environment.json");
                         fstream << std::setw(4) << app.env.env_json;
                         fstream.close();
 

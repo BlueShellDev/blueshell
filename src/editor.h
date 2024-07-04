@@ -20,7 +20,7 @@
 
 namespace Editor
 {
-    struct Enviroment
+    struct Environment
     {
         /* jsons */
         nlohmann::json overrides_json,
@@ -51,7 +51,7 @@ namespace Editor
         const int default_main_window_height = 1080; // px
 
         /* program paths */ 
-        Enviroment env;
+        Environment env;
 
         /* links to main app services */
         GLFWwindow* main_window = nullptr;
