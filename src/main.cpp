@@ -20,8 +20,13 @@
 #include "ui/widgets/level_render_widget.h"
 #include "ui/widgets/object_picker_widget.h"
 
+#include "imfilebrowser.h"
+
 Editor::Application      app;
 Editor::LevelSource      level_source;
+
+ImGui::FileBrowser dir_browser = ImGui::FileBrowser(ImGuiFileBrowserFlags_SelectDirectory);
+ImGui::FileBrowser file_browser = ImGui::FileBrowser();
 
 UI::AreaRenderWidget     area_view;
 UI::ObjectPickerWidget   general_picker;
@@ -39,6 +44,9 @@ Nitro::Directory         nitro_root;
 
 std::vector<Editor::TilesetEntry> tileset_entries;
 std::vector<Editor::WorldEntry> worlds;
+
+bool is_env_set = true;
+bool open_level_listing = false;
 
 // FILESYSTEM HELPER FUNCS //
 std::filesystem::path sys_path_from_file_id
@@ -204,11 +212,69 @@ void render_area_tilesets(NSMB::Area& area)
     Render::render_tileset(&app.render_manager, area.tilesets.at(2));
 }
 
+// these are not final methods, just a grouping rn
+void load_reqs()
+{
+    std::ifstream fstream;
+    Debug::log("reading overlay 0 from disk...", Debug::LogType_Verbose);
+    fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_0.bin");
+    overlay_0_raw = IO::bytes_from_file(fstream);
+
+    Debug::log("reading overlay 0 from disk...", Debug::LogType_Verbose);
+    fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_10.bin");
+    overlay_10_raw = IO::bytes_from_file(fstream);
+
+    Debug::log("reading filename table from disk...", Debug::LogType_Verbose);
+    fstream = Util::begin_ifstream(app.env.fs / "fnt.bin");
+    fnt_raw = IO::bytes_from_file(fstream);
+
+    Debug::log("reading nsbtx file from disk...", Debug::LogType_Verbose);
+    fstream = Util::begin_ifstream(app.env.fs / app.env.root / app.env.textures / "I_dokan.nsbtx");
+    nsbtx_raw = IO::bytes_from_file(fstream);
+    fstream.close();
+}
+
+//
+void load_fs()
+{
+    // load fs
+    Debug::log("parsing fnt...", Debug::LogType_Verbose);
+    nitro_root = Nitro::parse_directory_filename_table(fnt_raw, 0xF000);
+    nitro_root.name = "root";
+    fnt_raw.clear();
+}
+
+// 
+void load_level(const Editor::LevelSource& lvl_src, const sz_t& area_id)
+{
+    level_source = lvl_src;
+    Editor::AreaSource source = level_source.areas.at(area_id);
+    loaded_area = NSMB::load_area(app.env, source);
+
+    Debug::log("loading tilesets 0 and 2 from disk...", Debug::LogType_Verbose);
+    insert_global_tilesets(loaded_area, nitro_root);
+
+    Debug::log("loading tileset 1 from disk...", Debug::LogType_Verbose);
+    insert_area_tileset(loaded_area, nitro_root);
+}
+
+void init_ui()
+{
+    // init ui elements
+    area_view.area = &loaded_area;
+    general_picker.tileset = &loaded_area.tilesets.at(0);
+    stage_picker.tileset = &loaded_area.tilesets.at(1);
+    goal_picker.tileset = &loaded_area.tilesets.at(2);
+    populate_object_pickers(loaded_area);
+}
+
 int main()
 {
     try
     {
+        Debug::log("initializing main window...", Debug::LogType_Verbose);
         Editor::initialize_main_window(&app);
+        Debug::log("initializing render manager... ", Debug::LogType_Verbose);
         Editor::initialize_renderer(&app);
     }
     catch (const std::runtime_error& e)
@@ -221,7 +287,7 @@ int main()
 
     // load editor files
     std::ifstream fstream;
-
+    Debug::log("reading jsons from disk...", Debug::LogType_Verbose);
     try
     {
         fstream = Util::begin_ifstream("res/enviroment.json");
@@ -241,44 +307,9 @@ int main()
         Debug::log(e.what());
         return EXIT_FAILURE;
     }
-
-    // load paths from json file to env variables
-    app.env.load_paths_from_json();
-
-    // if base path is empty or invalid we can't continue
-    if (app.env.fs == "" || !std::filesystem::exists(app.env.fs))
-    {
-        Debug::log
-        (
-            "base path was not specified or was invalid \nplease check 'rom-fs' field in res/enviroment.json:\n'" + 
-            app.env.fs.string() + "' is not a valid file path"
-        );
-        return EXIT_FAILURE;
-    }
-
-    try
-    {
-        fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_0.bin");
-        overlay_0_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_10.bin");
-        overlay_10_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.env.fs / "fnt.bin");
-        fnt_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.env.fs / app.env.root / app.env.textures / "I_dokan.nsbtx");
-        nsbtx_raw = IO::bytes_from_file(fstream);
-    }
-    catch (const std::runtime_error& e)
-    {
-        Debug::log(e.what());
-        return EXIT_FAILURE;
-    }
-
     fstream.close();
 
-    // populate entries
+    // populate entries from jsons
     for (const auto& tileset : app.env.tilesets_json["tilesets"])
     {
         Editor::TilesetEntry ent;
@@ -287,7 +318,6 @@ int main()
         ent.unused = tileset["unused"].get<bool>();
         tileset_entries.push_back(ent);
     }
-
     for (const auto& world : app.env.worlds_json["worlds"])
     {
         Editor::WorldEntry w_entry;
@@ -316,35 +346,56 @@ int main()
         worlds.push_back(w_entry);
     }
 
-    // load fs
-    nitro_root = Nitro::parse_directory_filename_table(fnt_raw, 0xF000);
-    nitro_root.name = "root";
-    fnt_raw.clear();
-  
-    general_picker.tileset = &loaded_area.tilesets.at(0);
-    stage_picker.tileset = &loaded_area.tilesets.at(1);
-    goal_picker.tileset = &loaded_area.tilesets.at(2);
+    // load paths from json file to env variables
+    Debug::log("loading eviroment variables from 'enviroment.json'...", Debug::LogType_Verbose);
+    app.env.load_paths_from_json();
 
-    // load W1-4, area 1
-    level_source = worlds.at(4).levels.at(0);
-    Editor::AreaSource source = level_source.areas.at(0);
+    // if base path is empty or invalid we can't continue
+    if (!std::filesystem::exists(app.env.fs))
+    {
+        Debug::log
+        (
+            "base path was not specified or was invalid \nplease check 'rom-fs' field in res/enviroment.json:\n'" +
+            app.env.fs.string() + "' is not a valid file path"
+        );
 
-    try
-    {
-        loaded_area = NSMB::load_area(app.env, source);
-        insert_global_tilesets(loaded_area, nitro_root);
-        insert_area_tileset(loaded_area, nitro_root);
-    }
-    catch (const std::runtime_error& e)
-    {
-        Debug::log(e.what());
-        return EXIT_FAILURE;
+        is_env_set = false;
+        //return EXIT_FAILURE;
     }
 
-    // init ui elements
-    area_view.area = &loaded_area;
-    populate_object_pickers(loaded_area);
-    render_area_tilesets(loaded_area);
+    if (is_env_set)
+    {
+        // read non-level essential files from
+        try
+        {
+            load_reqs();
+            load_fs();
+        }
+        catch (const std::runtime_error& e)
+        {
+            Debug::log(e.what());
+            return EXIT_FAILURE;
+        }
+
+        // set level source for load
+        level_source = worlds.at(4).levels.at(0);
+
+        // load W1-4, area 1
+        Debug::log("reading '" + level_source.name + "' area files from disk... ", Debug::LogType_Verbose);
+        try
+        {
+            load_level(level_source, 0);
+            init_ui();
+            render_area_tilesets(loaded_area);
+        }
+        catch (const std::runtime_error& e)
+        {
+            Debug::log(e.what());
+            return EXIT_FAILURE;
+        }
+    }
+
+    Debug::log("entering main loop", Debug::LogType_Verbose);
 
     // render loop
     while (!glfwWindowShouldClose(app.main_window))
@@ -361,8 +412,89 @@ int main()
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
         Render::bind_buffers_to_gpu(&app.render_manager);
 
+        if (!is_env_set)
+            ImGui::OpenPopup("###setup_env");
+
+        if (ImGui::BeginPopupModal("Setup Enviroment Variables###setup_env"))
+        {
+            ImGui::TextWrapped("Please provide an extracted 'New! Super Mario Bros' ROM at the top-most level\n(e.g <extracted_folder>/FILESYSTEM)");
+            if (ImGui::Button("Browse"))
+            {
+                dir_browser.Open();
+            }
+            ImGui::SameLine();;
+            if (dir_browser.HasSelected())
+            {
+                ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+                ImGui::SameLine();
+                if (ImGui::Button("OK"))
+                {
+                    app.env.fs = dir_browser.GetSelected();
+                    // check more than if just root exists ;p
+                    if (!std::filesystem::exists(app.env.fs / app.env.root))
+                    {
+                        ImGui::OpenPopup("###invalid_path");
+                    }
+                    else
+                    {
+                        is_env_set = true;
+                        open_level_listing = true;
+                        ImGui::CloseCurrentPopup();
+                    }
+                }
+
+                if (ImGui::BeginPopupModal("Invalid Path###invalid_path"))
+                {
+                    ImGui::Text("The selected directory does not contain valid files.");
+                    if (ImGui::Button("Re-select directory..."))
+                    {
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::EndPopup();
+                }
+
+                ImGui::Separator();
+                ImGui::TextWrapped(("selected: " + dir_browser.GetSelected().string()).c_str());
+            }
+            dir_browser.Display();
+            ImGui::EndPopup();
+        }
+
+        if (open_level_listing)
+            ImGui::OpenPopup("###level_listing");
+
+        if (ImGui::BeginPopupModal("Select a Level to Open###level_listing"))
+        {
+            ImGui::BeginChild("##listing-child", { 0, 0 }, ImGuiChildFlags_Border);
+            for (auto& world : worlds)
+            {
+                if (ImGui::TreeNodeEx(world.name.c_str(), ImGuiTreeNodeFlags_Framed))
+                {
+                    for (auto& level : world.levels)
+                    {
+                        if (ImGui::Selectable(("> " + level.name).c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
+                        {
+                            load_reqs();
+                            load_fs();
+                            load_level(level, 0);
+                            init_ui();
+                            area_view._clear_selected_items();
+                            render_area_tilesets(loaded_area);
+
+                            open_level_listing = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+                    }
+                    ImGui::Separator();
+                    ImGui::NewLine();
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::EndChild();
+            ImGui::EndPopup();
+        }
+
         // menu bar setup
-        bool open_level_listing = false;
         ImGui::BeginMainMenuBar();
         if (ImGui::BeginMenu("File"))
         {
@@ -420,10 +552,6 @@ int main()
 
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu("Level"))
-        {
-            ImGui::EndMenu();
-        }
         if (ImGui::BeginMenu("Settings"))
         {
             ImGui::ColorEdit4("Background color: ", &area_view.background_color.x);
@@ -432,52 +560,7 @@ int main()
             ImGui::PopItemWidth();
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu("About"))
-        {
-            if (ImGui::MenuItem("About BlueShell"))
-            {
-            }
-            ImGui::EndMenu();
-        }
         ImGui::EndMainMenuBar();
-
-        if (open_level_listing)
-            ImGui::OpenPopup("###level_listing");
-
-        if (ImGui::BeginPopupModal("Select a Level to Open###level_listing"))
-        {
-            ImGui::BeginChild("##listing-child", { 0, 0 }, ImGuiChildFlags_Border);
-            for (auto& world : worlds)
-            {
-                if (ImGui::TreeNodeEx(world.name.c_str(), ImGuiTreeNodeFlags_Framed))
-                {
-                    for (auto& level : world.levels)
-                    {
-                        if (ImGui::Selectable(("> " + level.name).c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
-                        {
-                            level_source = level;
-
-                            // load W1-1, area 1
-                            Editor::AreaSource source = level_source.areas.at(0);
-
-                            loaded_area = NSMB::load_area(app.env, source);
-                            insert_global_tilesets(loaded_area, nitro_root);
-                            insert_area_tileset(loaded_area, nitro_root);
-                            area_view._clear_selected_items();
-                            populate_object_pickers(loaded_area);
-                            render_area_tilesets(loaded_area);
-
-                            ImGui::CloseCurrentPopup();
-                        }
-                    }
-                    ImGui::Separator();
-                    ImGui::NewLine();
-                    ImGui::TreePop();
-                }
-            }
-            ImGui::EndChild();
-            ImGui::EndPopup();
-        }
 
         // toolbox setup
         ImGui::Begin("Toolbox");
@@ -532,9 +615,14 @@ int main()
         ImGui::End();
 
         // areas window setup
-        ImGui::Begin(std::format("{}###level_editor", level_source.name).c_str());
-        area_view.draw(&app.render_manager, { 512, 256 });
-        ImGui::End();
+        if (!area_view.area)
+            Debug::log("area view's area pointer points to nothing... not drawing area view!");
+        else
+        {
+            ImGui::Begin(std::format("{}###level_editor", level_source.name).c_str());
+            area_view.draw(&app.render_manager, { 512, 256 });
+            ImGui::End();
+        }
 
         // loaded_area settigns table
         ImGui::Begin("Level Settings");

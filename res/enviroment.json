@@ -1,5 +1,6 @@
 {
     "sys-paths": {
+        "settings": "settings/",
         "rom_fs": ""
     },
 

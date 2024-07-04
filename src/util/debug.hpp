@@ -10,7 +10,7 @@
 
 namespace Debug
 {
-    static bool ignore_verbose = true;
+    static bool ignore_verbose = false;
 
     enum LogType_ 
     {
