@@ -27,6 +27,7 @@ namespace NSMB
 
     Area load_area
     (
+        const Editor::Enviroment& env,
         const Editor::AreaSource& source
     );
 

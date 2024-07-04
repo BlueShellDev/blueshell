@@ -24,7 +24,7 @@ namespace Render
         std::vector<u16> data;
     };
 
-    /* enumeration class to keep track of texture names */
+    /* enumeration class to keep track of texture tilesets_json */
     enum TextureSlot_
     {
         TextureSlot_NCG_J,

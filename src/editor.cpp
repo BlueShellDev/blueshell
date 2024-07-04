@@ -2,6 +2,32 @@
 
 namespace Editor
 {
+    void Enviroment::load_paths_from_json()
+    {
+        fs  = env_json["sys-paths"]["rom_fs"].get<std::string>();
+        root        = env_json["dirs"]["root"].get<std::string>(),
+        overlays    = env_json["dirs"]["overlay"].get<std::string>(),
+        stages      = env_json["subdirs"]["stages"].get<std::string>(),
+        characters  = env_json["subdirs"]["graphics"]["characters"].get<std::string>(),
+        palettes    = env_json["subdirs"]["graphics"]["palettes"].get<std::string>(),
+        metatiles   = env_json["subdirs"]["graphics"]["metatiles"].get<std::string>(),
+        objects     = env_json["subdirs"]["graphics"]["objects"].get<std::string>(),
+        textures    = env_json["subdirs"]["graphics"]["textures"].get<std::string>();
+    }
+
+    void Enviroment::save_paths_to_json()
+    {
+        env_json["sys-paths"]["rom_fs"] = fs;
+        env_json["dirs"]["root"] = root;
+        env_json["dirs"]["overlay"] = overlays;
+        env_json["subdirs"]["stages"] = stages;
+        env_json["subdirs"]["graphics"]["characters"] = characters;
+        env_json["subdirs"]["graphics"]["palettes"] = palettes;
+        env_json["subdirs"]["graphics"]["metatiles"] = metatiles;
+        env_json["subdirs"]["graphics"]["objects"] = objects;
+        env_json["subdirs"]["graphics"]["textures"] = textures;
+    }
+
     void initialize_main_window(Application* app)
     {
         /* basic boilerplate GLFW shit, just create a window and make sure it's there */
@@ -41,8 +67,18 @@ namespace Editor
         Render::initialize_pixmap_table(&app->render_manager);
 
         /* load override images as textures */
-        Render::load_image_to_texture(&app->render_manager, &app->render_manager.overrides_texture, app->enviroment.jyotyu_override_path);
-        Render::load_image_to_texture(&app->render_manager, &app->render_manager.pipes_texture, app->enviroment.pipe_override_path);
+        Render::load_image_to_texture
+        (
+            &app->render_manager, 
+            &app->render_manager.overrides_texture, 
+            "res/block_override.png"
+        );
+        Render::load_image_to_texture
+        (
+            &app->render_manager, 
+            &app->render_manager.pipes_texture, 
+            "res/pipe_override.png"
+        );
     }
 
     void initialize_imgui_style()

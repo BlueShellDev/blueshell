@@ -2419,37 +2419,37 @@ JSON_HEDLEY_DIAGNOSTIC_POP
             #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
         #endif
 
-        // std::filesystem does not work on MinGW GCC 8: https://sourceforge.net/p/mingw-w64/bugs/737/
+        // std::fs does not work on MinGW GCC 8: https://sourceforge.net/p/mingw-w64/bugs/737/
         #if defined(__MINGW32__) && defined(__GNUC__) && __GNUC__ == 8
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
         #endif
 
-        // no filesystem support before GCC 8: https://en.cppreference.com/w/cpp/compiler_support
+        // no fs support before GCC 8: https://en.cppreference.com/w/cpp/compiler_support
         #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 8
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
         #endif
 
-        // no filesystem support before Clang 7: https://en.cppreference.com/w/cpp/compiler_support
+        // no fs support before Clang 7: https://en.cppreference.com/w/cpp/compiler_support
         #if defined(__clang_major__) && __clang_major__ < 7
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
         #endif
 
-        // no filesystem support before MSVC 19.14: https://en.cppreference.com/w/cpp/compiler_support
+        // no fs support before MSVC 19.14: https://en.cppreference.com/w/cpp/compiler_support
         #if defined(_MSC_VER) && _MSC_VER < 1914
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
         #endif
 
-        // no filesystem support before iOS 13
+        // no fs support before iOS 13
         #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 130000
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
         #endif
 
-        // no filesystem support before macOS Catalina
+        // no fs support before macOS Catalina
         #if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 101500
             #undef JSON_HAS_FILESYSTEM
             #undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
@@ -3846,7 +3846,7 @@ struct is_compatible_array_type_impl <
     enable_if_t <
     is_detected<iterator_t, CompatibleArrayType>::value&&
     is_iterator_traits<iterator_traits<detected_t<iterator_t, CompatibleArrayType>>>::value&&
-// special case for types like std::filesystem::path whose iterator's value_type are themselves
+// special case for types like std::fs::path whose iterator's value_type are themselves
 // c.f. https://github.com/nlohmann/json/pull/3073
     !std::is_same<CompatibleArrayType, detected_t<range_value_t, CompatibleArrayType>>::value >>
 {
@@ -3881,7 +3881,7 @@ struct is_constructible_array_type_impl <
 is_detected<iterator_t, ConstructibleArrayType>::value&&
 is_iterator_traits<iterator_traits<detected_t<iterator_t, ConstructibleArrayType>>>::value&&
 is_detected<range_value_t, ConstructibleArrayType>::value&&
-// special case for types like std::filesystem::path whose iterator's value_type are themselves
+// special case for types like std::fs::path whose iterator's value_type are themselves
 // c.f. https://github.com/nlohmann/json/pull/3073
 !std::is_same<ConstructibleArrayType, detected_t<range_value_t, ConstructibleArrayType>>::value&&
         is_complete_type <
@@ -5195,7 +5195,7 @@ template<typename IteratorType> class iteration_proxy_value
   private:
     /// the iterator
     IteratorType anchor{};
-    /// an index for arrays (used to create key names)
+    /// an index for arrays (used to create key tilesets_json)
     std::size_t array_index = 0;
     /// last stringified array index
     mutable std::size_t array_index_last = 0;
@@ -24547,11 +24547,11 @@ inline void swap(nlohmann::NLOHMANN_BASIC_JSON_TPL& j1, nlohmann::NLOHMANN_BASIC
 
 #if JSON_USE_GLOBAL_UDLS
     #if !defined(JSON_HEDLEY_GCC_VERSION) || JSON_HEDLEY_GCC_VERSION_CHECK(4,9,0)
-        using nlohmann::literals::json_literals::operator ""_json; // NOLINT(misc-unused-using-decls,google-global-names-in-headers)
-        using nlohmann::literals::json_literals::operator ""_json_pointer; //NOLINT(misc-unused-using-decls,google-global-names-in-headers)
+        using nlohmann::literals::json_literals::operator ""_json; // NOLINT(misc-unused-using-decls,google-global-tilesets_json-in-headers)
+        using nlohmann::literals::json_literals::operator ""_json_pointer; //NOLINT(misc-unused-using-decls,google-global-tilesets_json-in-headers)
     #else
-        using nlohmann::literals::json_literals::operator "" _json; // NOLINT(misc-unused-using-decls,google-global-names-in-headers)
-        using nlohmann::literals::json_literals::operator "" _json_pointer; //NOLINT(misc-unused-using-decls,google-global-names-in-headers)
+        using nlohmann::literals::json_literals::operator "" _json; // NOLINT(misc-unused-using-decls,google-global-tilesets_json-in-headers)
+        using nlohmann::literals::json_literals::operator "" _json_pointer; //NOLINT(misc-unused-using-decls,google-global-tilesets_json-in-headers)
     #endif
 #endif
 

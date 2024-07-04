@@ -4,6 +4,7 @@ namespace NSMB
 {
     Area load_area
     (
+        const Editor::Enviroment& env,
         const Editor::AreaSource& source
     )
     {
@@ -11,7 +12,7 @@ namespace NSMB
         level.source = source;
 
         /* header */
-        std::ifstream in = Util::begin_ifstream(level.source.header_fn);
+        std::ifstream in = Util::begin_ifstream(env.fs / env.root / env.stages / level.source.header_fn);
         IO::ByteArray header_raw = IO::bytes_from_file(in);
 
         std::vector<std::pair<u32, u32>> block_ids;
@@ -38,7 +39,7 @@ namespace NSMB
 
 
         /* bgdat */
-        in = Util::begin_ifstream(level.source.bgdat_fn);
+        in = Util::begin_ifstream(env.fs / env.root / env.stages / level.source.bgdat_fn);
         IO::ByteArray raw_data = IO::bytes_from_file(in);
 
         addr = 0;

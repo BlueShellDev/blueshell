@@ -47,10 +47,10 @@ NSMB::Tileset
 NSMB::load_tileset
 (
     NSMB::TilesetType_ type,
-    const std::string& ncg_path,
-    const std::string& ncl_path,
-    const std::string& pnl_path,
-    const std::string& unt_path
+    const std::filesystem::path& ncg_path,
+    const std::filesystem::path& ncl_path,
+    const std::filesystem::path& pnl_path,
+    const std::filesystem::path& unt_path
 )
 {
     NSMB::Tileset tileset;

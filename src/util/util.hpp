@@ -2,24 +2,28 @@
 
 #include "debug.hpp"
 #include "byteio.hpp"
+#include <filesystem>
 
 namespace Util
 {
-    static std::ifstream begin_ifstream(const std::string& filename)
+    static std::ifstream begin_ifstream(const std::filesystem::path& filename)
     {
         std::ifstream in
         (
-            filename, 
+            filename,
             std::ios::in | std::ios::binary
         );
 
         if (!in.is_open())
-            throw std::runtime_error("cannot open " + filename);
+        {
+            const std::string msg = std::format("failed to open: '{}'", filename.string());
+            throw std::runtime_error(msg);
+        }
 
         return in;
     }
 
-    static std::ofstream begin_ofstream(const std::string& filename)
+    static std::ofstream begin_ofstream(const std::filesystem::path& filename)
     {
         std::ofstream out
         (
@@ -28,7 +32,10 @@ namespace Util
         );
 
         if (!out.is_open())
-            throw std::runtime_error("cannot open " + filename);
+        {
+            const std::string msg = std::format("failed to write: '{}'", filename.string());
+            throw std::runtime_error(msg);
+        }
 
         return out;
     }

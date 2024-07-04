@@ -815,7 +815,7 @@ inline void ImGui::FileBrowser::SetTypeFilters(
 {
     typeFilters_.clear();
 
-    // remove duplicate filter names due to case unsensitivity on windows
+    // remove duplicate filter tilesets_json due to case unsensitivity on windows
 
 #ifdef _WIN32
 

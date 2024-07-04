@@ -37,6 +37,9 @@ IO::ByteArray            fnt_raw;
 
 Nitro::Directory         nitro_root;
 
+std::vector<Editor::TilesetEntry> tileset_entries;
+std::vector<Editor::WorldEntry> worlds;
+
 // FILESYSTEM HELPER FUNCS //
 std::filesystem::path sys_path_from_file_id
 (
@@ -68,11 +71,6 @@ std::filesystem::path sys_path_from_file_id
     return found_sys_path;
 }
 
-std::vector<Editor::TilesetEntry> tileset_entries;
-nlohmann::json names;
-
-std::vector<Editor::WorldEntry> worlds;
-
 void draw_fs_tree(const Nitro::Directory& dir)
 {
     if (ImGui::TreeNodeEx(dir.name.c_str()))
@@ -87,8 +85,6 @@ void draw_fs_tree(const Nitro::Directory& dir)
         ImGui::TreePop();
     }
 }
-
-// loader functions
 
 void insert_global_tilesets(NSMB::Area& area, Nitro::Directory root)
 {
@@ -112,10 +108,10 @@ void insert_global_tilesets(NSMB::Area& area, Nitro::Directory root)
     tileset_0 = NSMB::load_tileset
     (
         NSMB::TilesetType_Jyotyu,
-        app.enviroment.base_path + app.enviroment.ncg_dir + app.enviroment.t0_ncg_path,
-        app.enviroment.base_path + app.enviroment.ncl_dir + jyotyu_ncl_path,
-        app.enviroment.base_path + app.enviroment.pnl_dir + app.enviroment.t0_pnl_path,
-        app.enviroment.base_path + app.enviroment.unt_dir + app.enviroment.t0_unt_path
+        app.env.fs / app.env.root / app.env.characters / "d_2d_A_J_jyotyu_ncg.bin",
+        app.env.fs / app.env.root / app.env.palettes / jyotyu_ncl_path,
+        app.env.fs / app.env.root / app.env.metatiles / "d_2d_PA_A_J_jyotyu.bin",
+        app.env.fs / app.env.root / app.env.objects / "A_J_jyotyu.bin"
     );
 
     // init tileset0 overrides vector
@@ -132,10 +128,10 @@ void insert_global_tilesets(NSMB::Area& area, Nitro::Directory root)
     tileset_2 = NSMB::load_tileset
     (
         NSMB::TilesetType_Sub,
-        app.enviroment.base_path + app.enviroment.ncg_dir + app.enviroment.t2_ncg_path,
-        app.enviroment.base_path + app.enviroment.ncl_dir + app.enviroment.t2_ncl_path,
-        app.enviroment.base_path + app.enviroment.pnl_dir + app.enviroment.t2_pnl_path,
-        app.enviroment.base_path + app.enviroment.unt_dir + app.enviroment.t2_unt_path
+        app.env.fs / app.env.root / app.env.characters / "d_2d_I_S_tikei_nohara_ncg.bin",
+        app.env.fs / app.env.root / app.env.palettes / "d_2d_I_S_tikei_nohara_ncl.bin",
+        app.env.fs / app.env.root / app.env.metatiles / "d_2d_PA_I_S_nohara.bin",
+        app.env.fs / app.env.root / app.env.objects / "I_S_nohara.bin"
     );
 }
 
@@ -143,7 +139,7 @@ void insert_area_tileset(NSMB::Area& area, Nitro::Directory root)
 {
     NSMB::Tileset& tileset_1 = area.tilesets.at(1);
 
-    // get table offsets for overlay 0
+    // get table offsets for overlays 0
     sz_t addr_ncl = 0x31494 + (area.main_tileset_table_offset * 4);
     sz_t addr_ncg = 0x30ea4 + (area.main_tileset_table_offset * 4);
     sz_t addr_pnl = 0x316f4 + (area.main_tileset_table_offset * 4);
@@ -156,10 +152,10 @@ void insert_area_tileset(NSMB::Area& area, Nitro::Directory root)
     u32 unt_id = (IO::read<u32>(overlay_0_raw, addr_unt) & 0xffff) + 131;
 
     // load sys paths from file ids
-    std::filesystem::path ncl_path = sys_path_from_file_id(app.enviroment.base_path, root, ncl_id);
-    std::filesystem::path ncg_path = sys_path_from_file_id(app.enviroment.base_path, root, ncg_id);
-    std::filesystem::path pnl_path = sys_path_from_file_id(app.enviroment.base_path, root, pnl_id);
-    std::filesystem::path unt_path = sys_path_from_file_id(app.enviroment.base_path, root, unt_id);
+    std::filesystem::path ncl_path = sys_path_from_file_id(app.env.fs / app.env.root, root, ncl_id);
+    std::filesystem::path ncg_path = sys_path_from_file_id(app.env.fs / app.env.root, root, ncg_id);
+    std::filesystem::path pnl_path = sys_path_from_file_id(app.env.fs / app.env.root, root, pnl_id);
+    std::filesystem::path unt_path = sys_path_from_file_id(app.env.fs / app.env.root, root, unt_id);
 
     // load each tileset 1 file
     std::ifstream in = Util::begin_ifstream(ncl_path.string());
@@ -220,41 +216,25 @@ int main()
         Debug::log(e.what());
         return EXIT_FAILURE;
     }
+
     Editor::initialize_imgui_style();
 
-    
-    std::ifstream fstream = Util::begin_ifstream("res/enviroment.json");
-    app.enviroment.json = nlohmann::json::parse(fstream);
+    // load editor files
+    std::ifstream fstream;
 
-    // load base path
-    std::filesystem::path path = app.enviroment.json["sys-paths"]["rom_fs"].get<std::string>();
-
-    // load directories
-    std::filesystem::path rom_root = app.enviroment.json["dirs"]["root"].get<std::string>(),
-                            overlay = app.enviroment.json["dirs"]["overlay"].get<std::string>(),
-                            stages = app.enviroment.json["subdirs"]["stages"].get<std::string>(),
-                            characters = app.enviroment.json["subdirs"]["graphics"]["characters"].get<std::string>(),
-                            palettes = app.enviroment.json["subdirs"]["graphics"]["palettes"].get<std::string>(),
-                            metatiles = app.enviroment.json["subdirs"]["graphics"]["metatiles"].get<std::string>(),
-                            objects = app.enviroment.json["subdirs"]["graphics"]["objects"].get<std::string>(),
-                            textures = app.enviroment.json["subdirs"]["graphics"]["textures"].get<std::string>();
-
-    std::filesystem::path real = path / rom_root / characters;
-
-    if (path.empty())
-    {
-        Debug::log("Please specify a directory.");
-        return EXIT_FAILURE;
-    }
-
-    // setup root directory
-    std::filesystem::recursive_directory_iterator root(app.enviroment.base_path);
-
-    // parse override map
     try
     {
-        fstream = Util::begin_ifstream(app.enviroment.override_json);
+        fstream = Util::begin_ifstream("res/enviroment.json");
+        app.env.env_json = nlohmann::json::parse(fstream);
+
+        fstream = Util::begin_ifstream("res/overrides.json");
         app.render_manager.overrides_json = nlohmann::json::parse(fstream);
+
+        fstream = Util::begin_ifstream("res/tilesets.json");
+        app.env.tilesets_json = nlohmann::json::parse(fstream);
+
+        fstream = Util::begin_ifstream("res/worlds.json");
+        app.env.worlds_json = nlohmann::json::parse(fstream);
     }
     catch (const std::runtime_error& e)
     {
@@ -262,11 +242,29 @@ int main()
         return EXIT_FAILURE;
     }
 
-    // parse tileset name map
+    // load paths from json file to env variables
+    app.env.load_paths_from_json();
+
+    // if base path is empty or invalid we can't continue
+    if (app.env.fs == "" || !std::filesystem::exists(app.env.fs))
+    {
+        Debug::log("BASE path was not specified or was invalid: " + app.env.fs.string());
+        return EXIT_FAILURE;
+    }
+
     try
     {
-        fstream = Util::begin_ifstream(app.enviroment.tileset_json);
-        names = nlohmann::json::parse(fstream);
+        fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_0.bin");
+        overlay_0_raw = IO::bytes_from_file(fstream);
+
+        fstream = Util::begin_ifstream(app.env.fs / app.env.overlays / "overlay9_10.bin");
+        overlay_10_raw = IO::bytes_from_file(fstream);
+
+        fstream = Util::begin_ifstream(app.env.fs / "fnt.bin");
+        fnt_raw = IO::bytes_from_file(fstream);
+
+        fstream = Util::begin_ifstream(app.env.fs / app.env.root / app.env.textures / "I_dokan.nsbtx");
+        nsbtx_raw = IO::bytes_from_file(fstream);
     }
     catch (const std::runtime_error& e)
     {
@@ -274,20 +272,19 @@ int main()
         return EXIT_FAILURE;
     }
 
-    for (const auto& e : names["tilesets"])
+    fstream.close();
+
+    // populate entries
+    for (const auto& tileset : app.env.tilesets_json["tilesets"])
     {
         Editor::TilesetEntry ent;
-        ent.id = e["id"].get<int>();
-        ent.name = e["name"].get<std::string>();
-        ent.unused = e["unused"].get<bool>();
+        ent.id = tileset["id"].get<int>();
+        ent.name = tileset["name"].get<std::string>();
+        ent.unused = tileset["unused"].get<bool>();
         tileset_entries.push_back(ent);
     }
 
-    // parse worlds name map
-    fstream = Util::begin_ifstream(app.enviroment.worlds_json);
-    nlohmann::json worlds_json = nlohmann::json::parse(fstream);
-
-    for (const auto& world : worlds_json["worlds"])
+    for (const auto& world : app.env.worlds_json["worlds"])
     {
         Editor::WorldEntry w_entry;
         const std::string w_letter = world["letter"].get<std::string>();
@@ -305,8 +302,8 @@ int main()
                 Editor::AreaSource a_entry;
                 const std::string a_base_fn = w_letter + l_id + "_" + std::to_string(i + 1);
                 a_entry.area_id = i;
-                a_entry.header_fn = app.enviroment.base_path + app.enviroment.course_path + a_base_fn + ".bin";
-                a_entry.bgdat_fn = app.enviroment.base_path + app.enviroment.course_path + a_base_fn + "_bgdat.bin";
+                a_entry.header_fn = a_base_fn + ".bin";
+                a_entry.bgdat_fn = a_base_fn + "_bgdat.bin";
 
                 l_entry.areas.push_back(a_entry);
             }
@@ -315,69 +312,10 @@ int main()
         worlds.push_back(w_entry);
     }
 
-    // load certain files for testing
-    try
-    {
-        fstream = Util::begin_ifstream(app.enviroment.ov0_path);
-        overlay_0_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.enviroment.ov10_path);
-        overlay_10_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.enviroment.fnt_path);
-        fnt_raw = IO::bytes_from_file(fstream);
-
-        fstream = Util::begin_ifstream(app.enviroment.base_path + app.enviroment.nsbtx_dir + app.enviroment.nsbtx_path);
-        nsbtx_raw = IO::bytes_from_file(fstream);
-    }
-    catch (const std::runtime_error& e)
-    {
-        Debug::log(e.what());
-        return EXIT_FAILURE;
-    }
-
-    fstream.close();
-
-    // load filesystem
+    // load fs
     nitro_root = Nitro::parse_directory_filename_table(fnt_raw, 0xF000);
     nitro_root.name = "root";
     fnt_raw.clear();
-
-    try
-    {
-        // tex block testing
-        Nitro::NitroHeader head;
-        Nitro::TEX0Block tex_block;
-
-        Nitro::NitroSubHeader s;
-
-        sz_t at = 0x50;
-        s.unpack(nsbtx_raw, at);
-
-        std::memcpy(&tex_block, &nsbtx_raw[20], sizeof(Nitro::TEX0Block));
-
-        std::vector<std::pair<u8, Nitro::TileNSBTXTableEntry>> textured_tile_table;
-
-        // load nsbtx table
-        sz_t ov0_table_offset = 0x2F60C;
-        sz_t ov10_table_offset = 0x55BE0;
-        sz_t ov10_at = 0;
-        for (sz_t i = 0; i < 144; i++)
-        {
-            u8 offset = IO::read<u8>(overlay_0_raw, ov0_table_offset);
-            ov10_at = ov10_table_offset + (offset * sizeof(Nitro::TileNSBTXTableEntry));
-            Nitro::TileNSBTXTableEntry e;
-            e.i_file_id = IO::read<u32>(overlay_10_raw, ov10_at);
-            e.tex_id = IO::read<u32>(overlay_10_raw, ov10_at);
-            e.pal_id = IO::read<u16>(overlay_10_raw, ov10_at);
-            textured_tile_table.push_back({ i + 112, e });
-        }
-    }
-    catch (const std::exception &e)
-    {
-        Debug::log(e.what(), Debug::LogType_Trace);
-        return EXIT_FAILURE;
-    }
   
     general_picker.tileset = &loaded_area.tilesets.at(0);
     stage_picker.tileset = &loaded_area.tilesets.at(1);
@@ -387,16 +325,16 @@ int main()
     level_source = worlds.at(4).levels.at(0);
     Editor::AreaSource source = level_source.areas.at(0);
 
-    // load tilesets
     try
     {
-        loaded_area = NSMB::load_area(source);
+        loaded_area = NSMB::load_area(app.env, source);
         insert_global_tilesets(loaded_area, nitro_root);
         insert_area_tileset(loaded_area, nitro_root);
     }
     catch (const std::runtime_error& e)
     {
         Debug::log(e.what());
+        return EXIT_FAILURE;
     }
 
     // init ui elements
@@ -518,7 +456,7 @@ int main()
                             // load W1-1, area 1
                             Editor::AreaSource source = level_source.areas.at(0);
 
-                            loaded_area = NSMB::load_area(source);
+                            loaded_area = NSMB::load_area(app.env, source);
                             insert_global_tilesets(loaded_area, nitro_root);
                             insert_area_tileset(loaded_area, nitro_root);
                             area_view._clear_selected_items();
