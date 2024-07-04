@@ -2,5 +2,6 @@
 /build
 /vcpkg_installed
 /out
+/CMakeFiles
 .vs
 CMakeUserPresets.json
