@@ -34,6 +34,18 @@ namespace Editor
         if (!glfwInit()) 
             throw std::runtime_error("failed to initialize GLFW!");
 
+#if defined(__APPLE__)
+	const char* glsl_version = "#version 150";
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#else
+	const char* glsl_version = "#version 130";
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#endif
+
         app->main_window = glfwCreateWindow
         (
             app->default_main_window_width,
@@ -56,7 +68,7 @@ namespace Editor
         ImGui::CreateContext();
 
         ImGui_ImplGlfw_InitForOpenGL(app->main_window, true);
-        ImGui_ImplOpenGL3_Init("#version 330");
+        ImGui_ImplOpenGL3_Init(glsl_version);
     }
 
     void initialize_renderer(Application* app)

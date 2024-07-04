@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.12)
 
 project(
     BlueShellLevelEditor
@@ -10,6 +10,10 @@ set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 find_package(imgui REQUIRED)
 find_package(nlohmann_json REQUIRED)
+
+if(APPLE)
+find_package(glew REQUIRED)
+endif(APPLE)
 
 add_library(imfilebrowser INTERFACE)
 target_include_directories(imfilebrowser INTERFACE ${CMAKE_SOURCE_DIR}/deps/imfilebrowser)
@@ -52,6 +56,14 @@ if (WIN32)
         opengl32.lib 
         imgui::imgui
     )
+elseif(APPLE)
+    target_link_libraries(
+	BlueShellLevelEditor
+	PRIVATE
+	glfw
+	GLEW::GLEW
+	imgui::imgui
+    )
 else()
     target_link_libraries(
         BlueShellLevelEditor
@@ -62,6 +74,6 @@ else()
     )
 endif()
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET BlueShellLevelEditor PROPERTY CXX_STANDARD 20)
-endif()
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)

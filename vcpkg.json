@@ -1,6 +1,6 @@
 {
     "dependencies": [
-        "glew",
+	"glew",
         "glfw3",
         {
             "name": "imgui",
