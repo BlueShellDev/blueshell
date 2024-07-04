@@ -290,7 +290,7 @@ int main()
     Debug::log("reading jsons from disk...", Debug::LogType_Verbose);
     try
     {
-        fstream = Util::begin_ifstream("res/Environment.json");
+        fstream = Util::begin_ifstream("settings/environment.json");
         app.env.env_json = nlohmann::json::parse(fstream);
 
         fstream = Util::begin_ifstream("res/overrides.json");
@@ -355,7 +355,7 @@ int main()
     {
         Debug::log
         (
-            "base path was not specified or was invalid \nplease check 'rom-fs' field in res/environment.json:\n'" +
+            "base path was not specified or was invalid \nplease check 'rom-fs' field in 'environment.json':\n'" +
             app.env.fs.string() + "' is not a valid file path"
         );
 

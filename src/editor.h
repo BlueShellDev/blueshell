@@ -46,7 +46,7 @@ namespace Editor
     struct Application
     {
         /* program constants */
-        const std::string main_window_title = "BlueShell [NSMB Level Editor] 0.2.2a";
+        const std::string main_window_title = "BlueShell [NSMB Level Editor] 0.2.3a";
         const int default_main_window_width = 1920; // px
         const int default_main_window_height = 1080; // px
 

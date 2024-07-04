@@ -1,8 +1,8 @@
 ﻿cmake_minimum_required (VERSION 3.12)
 
 project(
-    BlueShellLevelEditor
-    VERSION 0.2.2
+    BlueShell
+    VERSION 0.2.3
 )
 
 find_package(glfw3 REQUIRED)
@@ -24,8 +24,11 @@ target_include_directories(stb INTERFACE ${CMAKE_SOURCE_DIR}/deps/stb)
 add_custom_target(
     res
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/res
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/settings
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/res
-    COMMENT "copying ${CMAKE_SOURCE_DIR}/res to ${CMAKE_BINARY_DIR}/res"
+    COMMENT "copying ${CMAKE_SOURCE_DIR}'/res' to ${CMAKE_BINARY_DIR}'/res'"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/settings ${CMAKE_BINARY_DIR}/settings
+    COMMENT "copying ${CMAKE_SOURCE_DIR}'/settings' to ${CMAKE_BINARY_DIR}'/settings'"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
@@ -37,11 +40,11 @@ file(
     ${CMAKE_SOURCE_DIR}/src/*.h
 )
 
-add_executable(BlueShellLevelEditor ${SOURCE})
-add_dependencies(BlueShellLevelEditor res)
+add_executable(${PROJECT_NAME} ${SOURCE})
+add_dependencies(${PROJECT_NAME} res)
 
 target_link_libraries(
-    BlueShellLevelEditor 
+    ${PROJECT_NAME} 
     PRIVATE 
     nlohmann_json::nlohmann_json
     imfilebrowser 
@@ -50,7 +53,7 @@ target_link_libraries(
 
 if (WIN32)
     target_link_libraries(
-        BlueShellLevelEditor
+        ${PROJECT_NAME}
         PRIVATE
         glfw 
         opengl32.lib 
@@ -58,7 +61,7 @@ if (WIN32)
     )
 elseif(APPLE)
     target_link_libraries(
-	BlueShellLevelEditor
+	${PROJECT_NAME}
 	PRIVATE
 	glfw
 	GLEW::GLEW
@@ -66,14 +69,13 @@ elseif(APPLE)
     )
 else()
     target_link_libraries(
-        BlueShellLevelEditor
+        ${PROJECT_NAME}
         PRIVATE
         glfw 
         OpenGL
         imgui::imgui
     )
 endif()
-
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
