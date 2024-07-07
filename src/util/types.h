@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // helper types
 using u8 = uint8_t;
 using u16 = uint16_t;

@@ -3866,7 +3866,7 @@ static stbi_uc *load_jpeg_image(stbi__jpeg *z, int *out_x, int *out_y, int *comp
    int n, decode_n, is_rgb;
    z->s->img_n = 0; // make stbi__cleanup_jpeg safe
 
-   // validate req_comp
+   // validate_paths req_comp
    if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
 
    // load a jpeg image from whichever source, but leave in YCbCr format

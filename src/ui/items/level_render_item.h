@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../editor.h"
 #include "../draw_enviroment.h"
 #include "../object_image.hpp"
 #include "../transform.hpp"
@@ -14,7 +13,7 @@ namespace UI
         sz_t value = 0;
     };
 
-    enum class AreaItemType
+    enum AreaItemType_
     {
         AreaItemType_BgDat,
         AreaItemType_StageObject,
@@ -33,7 +32,7 @@ namespace UI
         Transform transform, prev_transform;
 
         // item type
-        AreaItemType item_type;
+        AreaItemType_ item_type;
 
         // item-specific properties
         std::vector<PropertyEntry> properties;

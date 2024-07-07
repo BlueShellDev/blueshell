@@ -95,6 +95,24 @@ namespace IO
     }
     //
 
+    static
+    u8 read_bit
+    (
+        const ByteArray& from,
+        sz_t& at_bits
+    )
+    {
+        sz_t at_bytes = at_bits / 8;
+        sz_t local_bit = at_bits % 8;
+        //Debug::log(std::format("{}: reading byte {} <{:02X}>, bit {}", at_bits, at_bytes, from.at(at_bytes), local_bit));
+
+        u8 res = (from.at(at_bytes) >> (local_bit % 8)) & 0b1;
+
+        at_bits++;
+        return res;
+    }
+    //
+
     // write a value to a byte array at a specified address
     template <Trivial T, Endian E = Endian::Little>
     void write

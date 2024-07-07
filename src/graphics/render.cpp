@@ -6,14 +6,11 @@
 void Render::initialize_opengl_textures(Render::RenderManager* render_mgr)
 {
     // size texture list accordingly
-    render_mgr->texture_list.resize
-    (
-        render_mgr->number_of_textures_to_gen
-    );
+    render_mgr->texture_list.resize(render_mgr->number_of_textures_to_gen);
 
     glGenTextures
     (
-        render_mgr->number_of_textures_to_gen, 
+        (GLsizei)render_mgr->number_of_textures_to_gen, 
         render_mgr->texture_list.data()
     );
 

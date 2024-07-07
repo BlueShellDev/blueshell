@@ -1,6 +1,6 @@
 #include "tileset.h"
 
-NSMB::Tileset NSMB::load_tileset
+NSMB::Tileset NSMB::load_tileset_from_raw
 (
     NSMB::TilesetType_ type, 
     IO::ByteArray& ncl_raw,
@@ -44,7 +44,7 @@ NSMB::Tileset NSMB::load_tileset
 };
 
 NSMB::Tileset
-NSMB::load_tileset
+NSMB::load_tileset_from_disk
 (
     NSMB::TilesetType_ type,
     const std::filesystem::path& ncg_path,

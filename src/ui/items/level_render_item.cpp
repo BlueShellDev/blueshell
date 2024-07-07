@@ -10,7 +10,7 @@ namespace UI
     {
         AreaRenderItem item;
 
-        item.item_type = AreaItemType::AreaItemType_BgDat;
+        item.item_type = UI::AreaItemType_BgDat;
         item.resizeable = true;
 
         PropertyEntry entry;

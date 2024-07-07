@@ -31,19 +31,7 @@ namespace NSMB::LevelComponents
         void pack(IO::ByteArray& to, sz_t& at);
     };
 
-    struct Zone : UI::AreaRenderItem
-    {
-        void unpack(IO::ByteArray& from, sz_t& at);
-        void pack(IO::ByteArray& to, sz_t& at);
-    };
-
     struct Path : UI::AreaRenderItem
-    {
-        void unpack(IO::ByteArray& from, sz_t& at);
-        void pack(IO::ByteArray& to, sz_t& at);
-    };
-
-    struct ProgressPath : UI::AreaRenderItem
     {
         void unpack(IO::ByteArray& from, sz_t& at);
         void pack(IO::ByteArray& to, sz_t& at);

@@ -37,7 +37,7 @@ namespace Debug
         case LogType_Info:
             /* standard log message */
             std::cout
-                << "[INFO]: "
+                << "[BlueShell]: "
                 << message                                            
                 << std::endl;
             break;
@@ -59,7 +59,7 @@ namespace Debug
                 return;
             else 
                 std::cout
-                << "[VERB]: "
+                << "<BlueShell>: "
                 << message
                 << std::endl;
             break;

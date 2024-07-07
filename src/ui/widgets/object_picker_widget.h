@@ -13,6 +13,7 @@ namespace UI
 
         NSMB::Tileset* tileset = nullptr;
 
+        std::string display_name;
         std::vector<UI::ObjectPickerItem> items;
         ObjectPickerItem* selection = nullptr;
 

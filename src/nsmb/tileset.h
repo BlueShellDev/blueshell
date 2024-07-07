@@ -26,7 +26,7 @@ namespace NSMB
         std::vector<int>                    overrides;
     };
 
-    Tileset load_tileset
+    Tileset load_tileset_from_raw
     (
         TilesetType_ type,
         IO::ByteArray& ncl_raw,
@@ -35,7 +35,7 @@ namespace NSMB
         IO::ByteArray& unt_raw
     );
 
-    Tileset load_tileset
+    Tileset load_tileset_from_disk
     (
         TilesetType_ type,
         const std::filesystem::path& ncg_path,

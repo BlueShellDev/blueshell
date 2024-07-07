@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../editor.h"
+#include "imgui.h"
+
+#include "../util/types.h"
 
 namespace UI
 {
@@ -9,10 +11,11 @@ namespace UI
         ImVec2 pixels_per_unit = { 16, 16 };
 
         // position in units;
-        u16     x = 0,
-                y = 0,
-                w = 0,
-                h = 0;
+        u16     
+        x = 0,
+        y = 0,
+        w = 0,
+        h = 0;
     };
 
     static Transform translate

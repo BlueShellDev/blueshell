@@ -1,8 +1,9 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
+#include <filesystem>
 #include "debug.hpp"
 #include "byteio.hpp"
-#include <filesystem>
 
 namespace Util
 {
@@ -38,6 +39,11 @@ namespace Util
         }
 
         return out;
+    }
+
+    static nlohmann::json read_json_from_disk(const std::filesystem::path& filename)
+    {
+        return nlohmann::json::parse(begin_ifstream(filename));
     }
 
     struct Data

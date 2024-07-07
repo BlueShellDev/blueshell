@@ -10,12 +10,8 @@ namespace UI
         selection.clear();
             
         for (auto& item : area->items)
-        {
             if (item.is_selected)
-            {
                 selection.push_back(&item);
-            }
-        }
     }
 
     void AreaRenderWidget::_alias_active_resize_nub()
@@ -23,22 +19,18 @@ namespace UI
         active_nub = nullptr;
         is_resizing = false;
         for (auto& nub : resize_nub_regions)
-        {
             if (nub.is_active)
             {
                 active_nub = &nub;
                 is_resizing = true;
             }
-        }
     }
 
     void AreaRenderWidget::_clear_selected_items()
     {
         // clear selection
         for (auto& sel : selection)
-        {
             sel->is_selected = false;
-        }
 
         selection.clear();
     }
@@ -46,34 +38,22 @@ namespace UI
     void AreaRenderWidget::_clear_resize_nubs()
     {
         for (auto& nub : resize_nub_regions)
-        {
             nub.transform = Transform{ .pixels_per_unit = {1, 1} };
-        }
     }
 
-    void AreaRenderWidget::_check_mouse_all_items
-    (
-        bool toggle
-    )
+    void AreaRenderWidget::_check_mouse_all_items(bool toggle)
     {
         // iterate through items from last -> first so that elements drawn last are selected first
         for (auto& item : area->items | std::ranges::views::reverse)
         {
             // cheap hack to not select views
-            if (UI::is_imvec2_inside(item.transform, draw_env.mouse_pos) && item.item_type != UI::AreaItemType::AreaItemType_View)
+            if (UI::is_imvec2_inside(item.transform, draw_env.mouse_pos) && item.item_type != UI::AreaItemType_View)
             {
                 item.prev_transform = item.transform;
-                    
                 if (toggle)
-                {
                     item.is_selected = !item.is_selected;
-                }
                 else
-                {
                     item.is_selected = true;
-                }
-
-                // cheap hack
                 break;
             }
         }
@@ -82,16 +62,7 @@ namespace UI
     void AreaRenderWidget::_check_mouse_resize_nubs()
     {
         for (auto& nub : resize_nub_regions)
-        {
-            if (UI::is_imvec2_inside(nub.transform, draw_env.mouse_pos))
-            {
-                nub.is_active = true;
-            }
-            else
-            {
-                nub.is_active = false;
-            }
-        }
+            nub.is_active = UI::is_imvec2_inside(nub.transform, draw_env.mouse_pos);
     }
 
     void AreaRenderWidget::_check_grab_all_items()
@@ -99,15 +70,13 @@ namespace UI
         // iterate through items from last -> first so that elements drawn last are selected first
         for (auto& item : area->items | std::ranges::views::reverse)
         {
-            if (UI::is_transform_inside(grab_transform, item.transform) && item.item_type != UI::AreaItemType::AreaItemType_View)
+            if (UI::is_transform_inside(grab_transform, item.transform) && item.item_type != UI::AreaItemType_View)
             {
                 item.prev_transform = item.transform;
                 item.is_selected = true;
             }
             else
-            {
                 item.is_selected = false;
-            }
         }
     }
 
@@ -130,18 +99,17 @@ namespace UI
         max_perimeter = { .pixels_per_unit = {1, 1}, .x = (u16)-1, .y = (u16)-1, .w = 0, .h = 0 };
 
         if (!selection.empty() && selection.size() < 2)
-        {
             max_perimeter = UI::translate(selection.front()->transform, { 1, 1 });
-        }
+
         else if (!selection.empty())
         {    
             for (auto& item : selection)
             {
                 Transform t = UI::translate(item->transform, { 1, 1 });
-                max_perimeter.x = std::min(max_perimeter.x, t.x);
-                max_perimeter.y = std::min(max_perimeter.y, t.y);
-                max_perimeter.w = std::max((u16)max_perimeter.w, u16(t.x + t.w));
-                max_perimeter.h = std::max((u16)max_perimeter.h, u16(t.y + t.h));
+                max_perimeter.x = (((max_perimeter.x) < (t.x)) ? (max_perimeter.x) : (t.x));
+                max_perimeter.y = (((max_perimeter.y) < (t.y)) ? (max_perimeter.y) : (t.y));
+                max_perimeter.w = ((((u16)max_perimeter.w) > (u16(t.x + t.w))) ? ((u16)max_perimeter.w) : (u16(t.x + t.w)));
+                max_perimeter.h = ((((u16)max_perimeter.h) > (u16(t.y + t.h))) ? ((u16)max_perimeter.h) : (u16(t.y + t.h)));
             }
             max_perimeter.w -= max_perimeter.x;
             max_perimeter.h -= max_perimeter.y;
@@ -152,16 +120,14 @@ namespace UI
     {
         // check if any objects in selection cannot be resized
         for (auto& item : selection)
-        {
             if (!item->resizeable)
             {
                 _clear_resize_nubs();
                 return;
             }
-        }
 
-        u16 nub_thickness   = 12 / draw_env.scale;
-        u16 nub_padding     = 6 / draw_env.scale;
+        u16 nub_thickness   = 8 / draw_env.scale;
+        u16 nub_padding     = 8 / draw_env.scale;
 
         for (auto& nub : resize_nub_regions)
         {
@@ -225,13 +191,15 @@ namespace UI
                 item->transform.w = item->prev_transform.w + (dx / item->transform.pixels_per_unit.x);
                 break;
             }
+
+            item->transform.x = std::clamp<s16>(item->transform.x, 1, item->prev_transform.x + item->prev_transform.w - 1);
+            item->transform.y = std::clamp<s16>(item->transform.y, 1, item->prev_transform.y + item->prev_transform.h - 1);
+            item->transform.w = std::clamp<s16>(item->transform.w, 1, 0xFF);
+            item->transform.h = std::clamp<s16>(item->transform.h, 1, 0xFF);
         }
     }
 
-    void AreaRenderWidget::_draw_items
-    (
-        Render::RenderManager* render_mgr
-    )
+    void AreaRenderWidget::_draw_items(Render::RenderManager* render_mgr)
     {
         // for level items
         for (auto& item : area->items)
@@ -239,7 +207,7 @@ namespace UI
             ImVec2 draw_at = UI::transform_to_canvas(draw_env, item.transform);
             switch (item.item_type)
             {
-            case UI::AreaItemType::AreaItemType_BgDat:
+            case UI::AreaItemType_BgDat:
                 if (!show_objects)
                     break;
 
@@ -256,40 +224,37 @@ namespace UI
                 );
                 break;
                 
-            case UI::AreaItemType::AreaItemType_StageObject:
-                if (!show_sprites)
+            case UI::AreaItemType_StageObject:
+                if (!show_actors)
                     break;
 
                 UI::draw_stage_obj(draw_env, item.transform);
-
-                
                 draw_env.canvas->AddText
                 (
                     ImGui::GetDefaultFont(),
-                    10.0f * draw_env.scale,
+                    9.0f * draw_env.scale,
                     draw_at,
                     0xFFFFFFFF,
                     std::format("{}", item.properties.at(0).value).c_str()
                 );
                 break;
                 
-            case UI::AreaItemType::AreaItemType_Entrance:
+            case UI::AreaItemType_Entrance:
                 if (!show_entrances)
                     break;
 
                 UI::draw_entrance(draw_env, item.transform);
-
                 draw_env.canvas->AddText
                 (
                     ImGui::GetDefaultFont(),
-                    10.0f * draw_env.scale,
+                    9.0f * draw_env.scale,
                     draw_at,
                     0xFFFFFFFF,
                     std::format("{}", item.properties.at(2).value).c_str()
                 );
                 break;
                 
-            case UI::AreaItemType::AreaItemType_View:
+            case UI::AreaItemType_View:
                 if (!show_views)
                     break;
 
@@ -304,9 +269,6 @@ namespace UI
                     0xFFFFFFFF,
                     std::format("View {}", item.properties.at(0).value).c_str()
                 );
-                break;
-                
-            default:
                 break;
             }
         }
@@ -327,13 +289,17 @@ namespace UI
     void AreaRenderWidget::_draw_resize_nubs()
     {
         for (auto& nub : resize_nub_regions)
-        {
             UI::draw_transform(draw_env, nub.transform, 0xFFFF7F7F, 4.0f);
-        }
     }
 
     // external methods
     
+    void AreaRenderWidget::reset(NSMB::Area* area)
+    {
+        _clear_selected_items();
+        
+    }
+
     void AreaRenderWidget::draw
     (
         Render::RenderManager* render_mgr,
@@ -373,17 +339,15 @@ namespace UI
         _draw_max_perimeter();
         _draw_resize_nubs();
 
-        if (builder.is_active)
-            builder.draw_nodes(draw_env);
-
         if (ImGui::IsWindowHovered())
         {
+            bool shift_mod = ImGui::IsKeyDown(ImGuiMod_Shift);
+            bool ctrl_mod = ImGui::IsKeyDown(ImGuiMod_Ctrl);
+            bool alt_mod = ImGui::IsKeyDown(ImGuiMod_Alt);
+
             bool left_mb_clicked        = ImGui::IsMouseClicked(ImGuiMouseButton_Left);
             bool ctr_mb_clicked         = ImGui::IsMouseClicked(ImGuiMouseButton_Middle);
             bool right_mb_clicked       = ImGui::IsMouseClicked(ImGuiMouseButton_Right);
-
-            bool left_mb_released       = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
-            bool right_mb_released      = ImGui::IsMouseReleased(ImGuiMouseButton_Right);
 
             bool left_mb_dragging       = ImGui::IsMouseDragging(ImGuiMouseButton_Left);
             bool right_mb_dragging      = ImGui::IsMouseDragging(ImGuiMouseButton_Right);
@@ -391,15 +355,12 @@ namespace UI
             ImVec2 left_mb_delta        = ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
             ImVec2 ctr_mb_delta         = ImGui::GetMouseDragDelta(ImGuiMouseButton_Middle);
             ImVec2 right_mb_delta       = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
-
-            bool shift_mod              = ImGui::IsKeyDown(ImGuiMod_Shift);
-            bool ctrl_mod               = ImGui::IsKeyDown(ImGuiMod_Ctrl);
                 
-            u16 mouse_x_units = (u16)draw_env.mouse_pos.x / (u16)draw_env.pixels_per_unit.x;
-            u16 mouse_y_units = (u16)draw_env.mouse_pos.y / (u16)draw_env.pixels_per_unit.y;
+            u16 mouse_x_units_s = (u16)(draw_env.mouse_pos.x + (draw_env.pixels_per_unit.x / 2)) / (u16)draw_env.pixels_per_unit.x;
+            u16 mouse_y_units_s = (u16)(draw_env.mouse_pos.y + (draw_env.pixels_per_unit.x / 2)) / (u16)draw_env.pixels_per_unit.y;
 
-            u16 mouse_x_units_s = (u16)(draw_env.mouse_pos.x + 8) / (u16)draw_env.pixels_per_unit.x;
-            u16 mouse_y_units_s = (u16)(draw_env.mouse_pos.y + 8) / (u16)draw_env.pixels_per_unit.y;
+            u16 mouse_x_units = (u16)(draw_env.mouse_pos.x) / (u16)draw_env.pixels_per_unit.x;
+            u16 mouse_y_units = (u16)(draw_env.mouse_pos.y) / (u16)draw_env.pixels_per_unit.y;
 
             s16 x_delta = (left_mb_dragging ? (left_mb_delta.x) : (right_mb_delta.x)) / draw_env.scale;
             s16 y_delta = (left_mb_dragging ? (left_mb_delta.y) : (right_mb_delta.y)) / draw_env.scale;
@@ -408,22 +369,12 @@ namespace UI
             s16 x_delta_units = (x_delta / (u16)draw_env.pixels_per_unit.x) * draw_env.pixels_per_unit.x;
             s16 y_delta_units = (y_delta / (u16)draw_env.pixels_per_unit.y) * draw_env.pixels_per_unit.y;
 
-            if (builder.is_active)
-                builder.preview_next_node(draw_env, mouse_x_units_s, mouse_y_units_s);
-
-            // mouse handling
-            if (left_mb_released || right_mb_released)
-            {
-            }
-
             if (ctr_mb_clicked)
-            {
                 pan_origin = 
                 {
                     ImGui::GetScrollX(),
                     ImGui::GetScrollY()
                 };
-            }
 
             if (left_mb_clicked)
             {
@@ -432,9 +383,7 @@ namespace UI
 
                 // update all selection items' previous transform
                 for (auto& item : selection)
-                {
                     item->prev_transform = item->transform;
-                }
 
                 // check if we are clicking on a resize nub
                 _check_mouse_resize_nubs();
@@ -444,24 +393,17 @@ namespace UI
                 {
                     //_clear_selected_items();
                     if (shift_mod)
-                    {
                         _check_mouse_all_items(true);
-                    }
                     else
                     {
                         // 3 am
                         bool good = false;
                         for (auto& item : selection)
-                        {
                             if (UI::is_imvec2_inside(item->transform, draw_env.mouse_pos))
-                            {
                                 good = true;
-                            }
-                        }
                         if (!good)
-                        {
                             _clear_selected_items();
-                        }
+
                         _check_mouse_all_items(false);
                     }
                     _alias_selected_items();
@@ -472,18 +414,10 @@ namespace UI
                 can_grab = selection.empty();
             }
 
-            if (left_mb_clicked && builder.is_active)
-            {
-                builder.add_node(mouse_x_units_s, mouse_y_units_s);
-            }
-
             if (left_mb_dragging)
             {
-                if (is_resizing)
-                {
-                    // resize routine
+                if (is_resizing) // resize routine 
                     _resize_selection(x_delta_units, y_delta_units);
-                }
                 else if (can_grab)
                 {
                     // grab routine
@@ -492,35 +426,26 @@ namespace UI
                     _alias_selected_items();
                     UI::draw_transform(draw_env, grab_transform, 0x2FFF7F7F);
                 }
-                else
-                {
-                    // not-grabbing routine (dragging)
+                else // not-grabbing routine (dragging)
                     for (auto& item : selection)
-                    {
                         UI::move_to
                         (
                             item->transform, 
                             item->prev_transform.x + (x_delta_units / item->transform.pixels_per_unit.x),
                             item->prev_transform.y + (y_delta_units / item->transform.pixels_per_unit.y)
                         );
-                    }
-                }
             }
 
-            if (right_mb_clicked && active_picker)
+            if (right_mb_clicked)
             {
                 _clear_selected_items();
-                if (active_picker->selection)
-                {
-                    UI::AreaRenderItem item = UI::create_object_item(active_picker->selection->object->_id, (u8)active_picker->tileset->type);
-                    item.transform.x = mouse_x_units;
-                    item.transform.y = mouse_y_units;
-                    item.transform.w = 1;
-                    item.transform.h = 1;
-                    item.prev_transform = item.transform;
-                    item.is_selected = true;
-                    NSMB::add_item(*area, item);
-                }
+                paint_picker_selection
+                (
+                    { 
+                        .x = mouse_x_units, .y = mouse_y_units, 
+                        .w = 1, .h = 1 
+                    }
+                );
                 _alias_selected_items();
             }
 
@@ -529,80 +454,62 @@ namespace UI
                 // resize drag
                 for (auto& item : selection)
                 {
+                    UI::move_to
+                    (
+                        item->transform,
+                        (x_delta_units < 0) ? item->prev_transform.x + (x_delta_units / item->transform.pixels_per_unit.x) : item->prev_transform.x,
+                        (y_delta_units < 0) ? item->prev_transform.y + (y_delta_units / item->transform.pixels_per_unit.y) : item->prev_transform.y
+                    );
+
                     UI::resize_to
                     (
                         item->transform,
-                        item->prev_transform.w + (x_delta_units / item->transform.pixels_per_unit.x),
-                        item->prev_transform.h + (y_delta_units / item->transform.pixels_per_unit.y)
+                        item->prev_transform.w + (std::abs(x_delta_units) / item->transform.pixels_per_unit.x),
+                        item->prev_transform.h + (std::abs(y_delta_units) / item->transform.pixels_per_unit.y)
                     );
+
+                    item->transform.w = std::clamp<s16>(item->transform.w, 1, 0xFF);
+                    item->transform.h = std::clamp<s16>(item->transform.h, 1, 0xFF);
                 }
             }
                 
-            // copy/paste handling
-
+            // copy handling
             if (ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_C))
-            {
-                clipboard.clear();
-                // copy selection into clipboard
-                for (auto  item : selection)
-                {
-                    clipboard.push_back(*item);
-                }
-            }
+                copy_selection();
 
+            // paste handling
             if (ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_V))
-            {
-                _clear_selected_items();
-                for (auto copy : clipboard)
-                {
-                    copy.prev_transform = copy.transform;
-                    copy.is_selected    = true;
-
-                    NSMB::add_item(*area, copy);
-
-                    _alias_selected_items();
-                }
-            }
+                paste_selection();
 
             // delete handling
-
             if ((ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_X)) || ImGui::IsKeyPressed(ImGuiKey_Delete))
-            {
-                // dereference selection and copy into "purgatory"
-                for (auto item : selection)
-                {
-                    trashcan.push_back(*item);
-                }
-                // wipe selection
-                _clear_selected_items();
+                delete_selection();
 
-                // iterate through trash
-                // issue: when items are deleted, the ids shift by how many items were deleted.
-                // but the ids of these items in the trash DONT get updated, so the error keeps increasing
-                for (auto item : trashcan)
-                {
-                    NSMB::remove_item(*area, item);
-                }
+            // visibility command handling
+            if (ctrl_mod && alt_mod && ImGui::IsKeyPressed(ImGuiKey_O))
+                set_items_visibility(AreaItemType_BgDat, !show_objects);
 
-                trashcan.clear();
-            }
+            if (ctrl_mod && alt_mod && ImGui::IsKeyPressed(ImGuiKey_A))
+                set_items_visibility(AreaItemType_StageObject, !show_actors);
+
+            if (ctrl_mod && alt_mod && ImGui::IsKeyPressed(ImGuiKey_E))
+                set_items_visibility(AreaItemType_Entrance, !show_entrances);
+
+            if (ctrl_mod && alt_mod && ImGui::IsKeyPressed(ImGuiKey_V))
+                set_items_visibility(AreaItemType_View, !show_views);
+
+            if (ctrl_mod && alt_mod && ImGui::IsKeyPressed(ImGuiKey_P))
+                set_items_visibility(AreaItemType_Path, !show_paths);
 
             // zoom/pan handling
-
             if (ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_Equal))
-            {
-                draw_env.scale += 0.25f;
-            }
+                scale(draw_env.scale + 0.25f);
 
             if (ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_Minus))
-            {
-                draw_env.scale -= 0.25f;
-            }
+                scale(draw_env.scale - 0.25f);
 
             if (ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_MouseWheelY))
-            {
-                draw_env.scale += 0.25f * ImGui::GetIO().MouseWheel;
-            }
+                scale(draw_env.scale + 0.25f * (std::abs(ImGui::GetIO().MouseWheel) / ImGui::GetIO().MouseWheel));
 
             if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
             {
@@ -614,5 +521,77 @@ namespace UI
 
         ImGui::EndChild();
         ImGui::PopStyleColor();
+    }
+
+    void AreaRenderWidget::paint_picker_selection(const Transform& transform)
+    {
+        if (paint_item)
+        {
+            UI::AreaRenderItem item = UI::create_object_item
+            (
+                paint_item->object->_id,
+                (u8)paint_item->tileset->type
+            );
+            item.transform = transform;
+            item.prev_transform = item.transform;
+            item.is_selected = true;
+            NSMB::add_item(*area, item);
+        }
+    }
+
+    void AreaRenderWidget::copy_selection()
+    {
+        clipboard.clear();
+        // copy selection into clipboard
+        for (auto item : selection)
+        {
+            clipboard.push_back(*item);
+        }
+    }
+
+    void AreaRenderWidget::paste_selection()
+    {
+        _clear_selected_items();
+        for (auto copy : clipboard)
+        {
+            copy.prev_transform = copy.transform;
+            copy.is_selected = true;
+
+            NSMB::add_item(*area, copy);
+
+            _alias_selected_items();
+        }
+    }
+
+    void AreaRenderWidget::delete_selection()
+    {
+        // dereference selection and copy into "purgatory"
+        for (auto item : selection)
+        {
+            trashcan.push_back(*item);
+        }
+        // wipe selection
+        _clear_selected_items();
+
+        // iterate through trash
+        // issue: when items are deleted, the ids shift by how many items were deleted.
+        // but the ids of these items in the trash DONT get updated, so the error keeps increasing
+        for (auto item : trashcan)
+        {
+            NSMB::remove_item(*area, item);
+        }
+
+        trashcan.clear();
+    }
+
+    // useful commands
+    void AreaRenderWidget::scale(const float& new_scale)
+    {
+        draw_env.scale = std::clamp<float>(new_scale, 0.25f, 4.0f);
+    }
+
+    void AreaRenderWidget::set_items_visibility(AreaItemType_ item_type, const bool& visible)
+    {
+        show_objects = (item_type == AreaItemType_BgDat) && visible;
     }
 }

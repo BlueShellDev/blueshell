@@ -1,6 +1,6 @@
 #pragma once
 
-#include "byteio.hpp"
+#include "util.hpp"
 
 namespace LZ
 {

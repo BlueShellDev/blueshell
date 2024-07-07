@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util/byteio.hpp"
+#include "../util/util.hpp"
 
 namespace Nitro
 {

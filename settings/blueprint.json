@@ -1,0 +1,27 @@
+{
+    "object-properties": [
+        {
+            "display-name": "Object ID",
+            "display-type": "value",
+            "width": 12
+        },
+        {
+            "display-name": "Tileset ID",
+            "display-type": "value",
+            "width": 4
+        }
+    ],
+
+    "actor-properties": [
+        {
+            "display-name": "Actor Settings",
+            "display-type": "value",
+            "width": 32
+        },
+        {
+            "display-name": "Actor Event ID",
+            "display-type": "value",
+            "width": 16
+        }
+    ]
+}

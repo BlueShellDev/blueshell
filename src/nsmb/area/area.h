@@ -1,17 +1,25 @@
 #pragma once
 
+#include "../../sources.h"
 #include "../tileset.h"
 #include "components.h"
-#include "../../sources.h"
 
 namespace NSMB
 {
+    enum AreaJyotyuType_
+    {
+        AreaJyotyuType_Normal,
+        AreaJyotyuType_B,
+        AreaJyotyuType_R,
+        AreaJyotyuType_W
+    };
+
     struct Area 
     {
-        Editor::AreaSource source;
+        sz_t area_index = 0;
 
         std::array<Tileset, 3> tilesets;
-       
+
         u8 start_entrance_id;
         u8 midway_entrance_id;
         u8 settings;
@@ -25,27 +33,37 @@ namespace NSMB
         std::vector<UI::AreaRenderItem> items;
     };
 
-    Area load_area
+    AreaJyotyuType_ get_jyotyu_type
     (
-        const Editor::Environment& env,
-        const Editor::AreaSource& source
+        const Area& area,
+        const IO::ByteArray ov0,
+        const sz_t& ov0_offset
+    );
+
+    Area load_area_from_disk
+    (
+        const std::filesystem::path& header_file,
+        const std::filesystem::path& bgdat_file,
+        const sz_t& index
     );
 
     void save_area
     (
-        NSMB::Area& level,
+        Area& level,
         std::string bgdat_fn
     );
 
+
+
     void add_item
     (   
-        NSMB::Area& level,
+        Area& level,
         UI::AreaRenderItem& item
     );
 
     void remove_item
     (
-        NSMB::Area& level,
+        Area& level,
         UI::AreaRenderItem& remove
     );
 }

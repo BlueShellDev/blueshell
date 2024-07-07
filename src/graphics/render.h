@@ -42,7 +42,7 @@ namespace Render
 
     struct RenderManager
     {
-        int                                     number_of_textures_to_gen   = 0;
+        sz_t                                    number_of_textures_to_gen   = 0;
         std::vector<GLuint>                     texture_list                = { 0 };
         std::map<TextureSlot_, PixelBuffer*>    buffer_table;
 

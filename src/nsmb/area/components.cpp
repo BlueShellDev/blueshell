@@ -9,22 +9,20 @@ namespace NSMB::LevelComponents
         sz_t& at
     )
     {
-        item_type = UI::AreaItemType::AreaItemType_BgDat;
+        item_type = UI::AreaItemType_BgDat;
 
         u16 packed = IO::read<u16>(from, at);
 
-        UI::PropertyEntry object_id;
-        object_id.display_name = "Object ID";
-        object_id.type = ImGuiDataType_U16;
-        object_id.value = packed & 0xFFF;
+        UI::PropertyEntry entry;
+        entry.display_name = "Object ID";
+        entry.type = ImGuiDataType_U16;
+        entry.value = packed & 0xFFF;
+        properties.push_back(entry);
 
-        UI::PropertyEntry tileset_id;
-        tileset_id.display_name = "Tileset ID";
-        tileset_id.type = ImGuiDataType_U8;
-        tileset_id.value = (packed >> 12) & 0xF;
-
-        properties.push_back(object_id);
-        properties.push_back(tileset_id);
+        entry.display_name = "Tileset ID";
+        entry.type = ImGuiDataType_U8;
+        entry.value = (packed >> 12) & 0xF;
+        properties.push_back(entry);
 
         transform.x = IO::read<u16>(from, at);
         transform.y = IO::read<u16>(from, at);
@@ -57,7 +55,7 @@ namespace NSMB::LevelComponents
         sz_t& at
     )
     {
-        item_type = UI::AreaItemType::AreaItemType_StageObject;
+        item_type = UI::AreaItemType_StageObject;
 
         UI::PropertyEntry stage_obj_id;
         stage_obj_id.display_name = "Sprite Type";
@@ -94,7 +92,7 @@ namespace NSMB::LevelComponents
         sz_t& at
     )
     {
-        item_type = UI::AreaItemType::AreaItemType_Entrance;
+        item_type = UI::AreaItemType_Entrance;
 
         transform.pixels_per_unit = { 1, 1 };
         transform.x = IO::read<u16>(from, at);
@@ -181,7 +179,7 @@ namespace NSMB::LevelComponents
         sz_t& at
     )
     {
-        item_type = UI::AreaItemType::AreaItemType_View;
+        item_type = UI::AreaItemType_View;
 
         transform.pixels_per_unit = { 1, 1 };
         transform.x = IO::read<u16>(from, at);
@@ -240,23 +238,6 @@ namespace NSMB::LevelComponents
     {
     }
 
-    /* zone  */
-    void Zone::unpack
-    (
-        IO::ByteArray& from, 
-        sz_t& at
-    )
-    {
-    }
-
-    void Zone::pack
-    (
-        IO::ByteArray& to, 
-        sz_t& at
-    )
-    {
-    }
-
     /* paths */
     void Path::unpack
     (
@@ -268,23 +249,7 @@ namespace NSMB::LevelComponents
 
     void Path::pack
     (
-        IO::ByteArray& to, 
-        sz_t& at
-    )
-    {
-    }
-
-    void ProgressPath::unpack
-    (
-        IO::ByteArray& from, 
-        sz_t& at
-    )
-    {
-    }
-
-    void ProgressPath::pack
-    (
-        IO::ByteArray& to, 
+        IO::ByteArray& to,
         sz_t& at
     )
     {

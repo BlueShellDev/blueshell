@@ -2,7 +2,7 @@
 
 project(
     BlueShell
-    VERSION 0.2.3
+    VERSION 0.2.4
 )
 
 find_package(glfw3 REQUIRED)
@@ -61,11 +61,11 @@ if (WIN32)
     )
 elseif(APPLE)
     target_link_libraries(
-	${PROJECT_NAME}
-	PRIVATE
-	glfw
-	GLEW::GLEW
-	imgui::imgui
+	    ${PROJECT_NAME}
+	    PRIVATE
+	    glfw
+	    GLEW::GLEW
+	    imgui::imgui
     )
 else()
     target_link_libraries(

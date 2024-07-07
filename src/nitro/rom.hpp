@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../util/byteio.hpp"
+#include "../util/util.hpp"
+#include "overlay.h"
 
 namespace Nitro
 {
@@ -38,9 +39,9 @@ namespace Nitro
 
     struct Directory
     {
-        u16 directory_id;
-        u16 initial_file_id;
-        u32 sub_fnt_offset;
+        u16 directory_id = 0;
+        u16 initial_file_id = 0;
+        u32 sub_fnt_offset = 0;
 
         std::string name;
         std::vector<FileMetaData>   files;
@@ -54,7 +55,7 @@ namespace Nitro
     };
 
     // returns recursive directory of specified directory
-    Directory parse_directory_filename_table
+    static Directory parse_directory_filename_table
     (
         IO::ByteArray& fnt_bin,
         const u16& directory_id
@@ -112,7 +113,12 @@ namespace Nitro
         return root;
     }
 
-    bool search_dir(const Directory& root, const u16& file_id, std::string& return_name)
+    static bool search_dir
+    (
+        const Directory& root, 
+        const u16& file_id, 
+        std::string& return_name
+    )
     {
         for (auto& file : root.files)
         {
@@ -134,7 +140,37 @@ namespace Nitro
         return false;
     }
 
-    FileAllocationTable load_fat
+    static std::filesystem::path sys_path_from_file_id
+    (
+        const std::filesystem::path& sys_root,
+        const Directory& rom_root,
+        const u16& file_id
+    )
+    {
+        const std::filesystem::recursive_directory_iterator sys_root_it(sys_root);
+
+        std::filesystem::path found_sys_path;
+        std::string rom_filename = "";
+
+        if (Nitro::search_dir(rom_root, file_id, rom_filename))
+        {
+            for (auto& p : sys_root_it)
+            {
+                if (!p.is_directory())
+                {
+                    const std::filesystem::path& sys_path = p.path();
+                    if (rom_filename == sys_path.filename().string())
+                    {
+                        found_sys_path = sys_path;
+                    }
+                }
+            }
+        }
+
+        return found_sys_path;
+    }
+
+    static FileAllocationTable load_fat
     (
         const IO::ByteArray& raw
     )

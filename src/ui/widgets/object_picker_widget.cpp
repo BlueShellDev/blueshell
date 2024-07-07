@@ -105,17 +105,33 @@ namespace UI
         items.clear();
         _alias_selected_item();
 
+        switch (tileset->type)
+        {
+        case NSMB::TilesetType_Jyotyu:
+            display_name = "General";
+            break;
+        case NSMB::TilesetType_Main:
+            display_name = "Stage";
+            break;
+        case NSMB::TilesetType_Sub:
+            display_name = "Goal";
+            break;
+        default:
+            display_name = "???";
+        }
+
         sz_t id = 0;
         for (auto& object : tileset->objects)
         {
             ObjectPickerItem item;
+            item.tileset = tileset;
             item.object = &object;
             item.item_id = id;
             items.push_back(item);
             id++;
         }
 
-        draw_env.scale = 2.0f;
+        draw_env.scale = 2;
     }
 
     void ObjectPickerWidget::draw
@@ -150,7 +166,6 @@ namespace UI
         _position_items();
         _draw_items(render_mgr, draw_env);
         _outline_selected_item();
-        check_mouse_tooltip();
 
         if (ImGui::IsWindowHovered())
         {
@@ -162,6 +177,8 @@ namespace UI
                 _check_mouse_items();
                 _alias_selected_item();
             }
+
+            check_mouse_tooltip();
         }
 
         ImGui::EndChild();
