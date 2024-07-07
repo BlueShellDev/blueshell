@@ -9,12 +9,6 @@
 Editor::Application      editor;
 Editor::ApplicationUI    ui;
 
-//for (sz_t i = 0; i < bit_width; i++)
-//{
-//    u8 bit = IO::read_bit(bytes, at);
-//    value |= ((sz_t)bit << i);
-//}
-
 void main_loop()
 {
     while (!glfwWindowShouldClose(ui.main_window))
