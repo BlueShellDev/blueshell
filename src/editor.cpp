@@ -115,6 +115,7 @@ namespace Editor
             object_picker_widgets.at(i).tileset = &area->tilesets.at(i);
             object_picker_widgets.at(i).populate();
         }
+        area_editor.selection.clear();
         area_editor.area = area;
     }
 

@@ -47,13 +47,12 @@ namespace NSMB
         const sz_t& index
     );
 
-    void save_area
+    void save_area_to_disk
     (
-        Area& level,
-        std::string bgdat_fn
+        const Area& area,
+        const std::filesystem::path& header_file,
+        const std::filesystem::path& bgdat_file
     );
-
-
 
     void add_item
     (   

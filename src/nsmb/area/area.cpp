@@ -117,19 +117,25 @@ namespace NSMB
         return area;
     }
 
-    void save_area
+    void save_area_to_disk
     (
-        Area& level,
-        std::string bgdat_fn
+        const Area& area,
+        const std::filesystem::path& header_file,
+        const std::filesystem::path& bgdat_file
     )
     {
-        //std::ofstream out = Util::begin_ofstream(bgdat_fn);
-        //IO::ByteArray raw_data;
+        std::ofstream out = Util::begin_ofstream(bgdat_file);
+        IO::ByteArray raw_data;
 
-        //raw_data.resize((loaded_area.objects.size() * 10) + 2);
-
+        for (auto& item : area.items)
+        {
+            if (item.item_type == UI::AreaItemType_BgDat)
+            {
+                
+            }
+        }
         //sz_t addr = 0;
-        //for (auto& object : loaded_area.objects)
+        //for (auto& item : loaded_area.objects)
         //{
         //    object.pack(raw_data, addr);
         //}

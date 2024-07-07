@@ -46,7 +46,7 @@ void main_loop()
         // area editor window
         ImGui::Begin("AreaEditorWindow");
         if (ui.area_editor.area)
-            ui.area_editor.draw(&editor.render_manager, { 256, 256 });
+            ui.area_editor.draw(&editor.render_manager, { 512, 256 });
         ImGui::End();
 
         // toolbox window
@@ -90,12 +90,12 @@ void main_loop()
 
         ui.draw_selection_window();
 
-        if (ImGui::IsKeyPressed(ImGuiKey_PageUp))
+        if (ImGui::IsKeyDown(ImGuiMod_Shift) && ImGui::IsKeyPressed(ImGuiKey_UpArrow))
         {
             editor.change_current_area(editor.curr_area.area_index + 1);
             ui.relink_widgets_to_area(&editor.curr_area);
         }
-        if (ImGui::IsKeyPressed(ImGuiKey_PageDown))
+        if (ImGui::IsKeyDown(ImGuiMod_Shift) && ImGui::IsKeyPressed(ImGuiKey_DownArrow))
         {
             editor.change_current_area(editor.curr_area.area_index - 1);
             ui.relink_widgets_to_area(&editor.curr_area);
