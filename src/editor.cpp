@@ -118,7 +118,7 @@ namespace Editor
         area_editor.area = area;
     }
 
-    void ApplicationUI::draw_fix_env_popup(Environment& env)
+    void ApplicationUI::draw_fix_env_popup(Application& app)
     {
         // shown when the user needs to fix their environment variables due to a invalid result at boot
         if (ImGui::BeginPopupModal("Fix Environment Variables###fix_env_popup", 0, ImGuiWindowFlags_AlwaysAutoResize))
@@ -137,7 +137,7 @@ namespace Editor
             ImGui::TextColored
             (
                 { 0.85f, 0.85f, 1.0f, 1.0f }, 
-                "'%s'", (env.fs).string().c_str()
+                "'%s'", (app.env.fs).string().c_str()
             );
             if (dir_browser.HasSelected())
             {
@@ -162,16 +162,22 @@ namespace Editor
             {
                 if (ImGui::ButtonEx("Next..."))
                 {
-                    env.fs = dir_browser.GetSelected();
-                    if (!env.validate_paths())
+                    app.env.fs = dir_browser.GetSelected();
+                    if (!app.env.validate_paths())
                     {
-                        env.copy_paths_from_json();
+                        app.env.copy_paths_from_json();
                         ImGui::OpenPopup("###invalid-selection");
                     }
                     else
                     {
-                        env.copy_paths_to_json();
+                        app.env.copy_paths_to_json();
                         ImGui::OpenPopup("###valid-selection");
+                        Debug::log("loading required ROM files...");
+
+                        app.load_overlays();
+                        app.load_filename_lookup(0xF000);
+
+                        Debug::log("required ROM files loaded");
                     }
                 }
             }

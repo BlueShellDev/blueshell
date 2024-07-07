@@ -24,7 +24,6 @@ void main_loop()
 
         ui.init_dock_space();
         ui.draw_main_menu_bar();
-        ui.draw_selection_window();
 
         // popup logic
         if (ui.open_setup_popup)
@@ -33,8 +32,16 @@ void main_loop()
             ImGui::OpenPopup("###fix_env_popup");
         if (ui.open_level_select_popup)
             ImGui::OpenPopup("###level_select_popup");
-        ui.draw_fix_env_popup(editor.env);
-        ui.draw_level_select_popup(editor);
+
+        try
+        {
+            ui.draw_fix_env_popup(editor);
+            ui.draw_level_select_popup(editor);
+        }
+        catch (const std::runtime_error& e)
+        {
+            Debug::log(e.what());
+        }
 
         // area editor window
         ImGui::Begin("AreaEditorWindow");
@@ -80,6 +87,8 @@ void main_loop()
         ImGui::SameLine();
         ImGui::Text(std::format("{} FPS", (int)ImGui::GetIO().Framerate).c_str());
         ImGui::End();
+
+        ui.draw_selection_window();
 
         if (ImGui::IsKeyPressed(ImGuiKey_PageUp))
         {
@@ -230,8 +239,7 @@ int main()
         Debug::log("required ROM files loaded");
     }
 
-    Debug::log("initialization complete, now entering main loop...");
-    ui.open_level_select_popup = true;
+    Debug::log("entering main loop...");
     main_loop();
     glfwTerminate();
     Debug::log("program ended sucessfully");

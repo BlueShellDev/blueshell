@@ -1,7 +1,7 @@
 {
     "sys-paths": {
         "settings": "settings/",
-        "rom_fs": "D:\\nsmbdump"
+        "rom_fs": ""
     },
 
     "dirs": {

@@ -127,7 +127,7 @@ namespace Editor
         void draw_selection_window();
 
         // popup logic
-        void draw_fix_env_popup(Environment& env);
+        void draw_fix_env_popup(Application& app);
         void draw_level_select_popup(Application& app);
     };
 
@@ -137,5 +137,6 @@ namespace Editor
         const sz_t&
         num_textures
     );
+
     void set_editor_style();
 }
