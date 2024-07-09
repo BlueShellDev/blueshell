@@ -482,7 +482,7 @@ namespace UI
                 paste_selection();
 
             // delete handling
-            if ((ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_X)) || ImGui::IsKeyPressed(ImGuiKey_Delete))
+            if ((ctrl_mod && ImGui::IsKeyPressed(ImGuiKey_X)) || ImGui::IsKeyPressed(ImGuiKey_Delete) || ImGui::IsKeyPressed(ImGuiKey_Backspace))
                 delete_selection();
 
             // visibility command handling
