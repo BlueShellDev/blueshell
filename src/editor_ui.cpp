@@ -116,41 +116,75 @@ namespace Editor
         ImGui::BeginMainMenuBar();
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open Level by Name...", "Ctrl+O"))
+#ifdef __APPLE__
+            const char* open_shortcut = "CMD+O";
+            const char* save_shortcut = "CMD+S";
+#else
+            const char* open_shortcut = "Ctrl+O";
+            const char* save_shortcut = "Ctrl+S";
+#endif
+            if (ImGui::MenuItem("Open Level by Name...", open_shortcut))
                 open_level_select_popup = true;
             ImGui::Separator();
-            if (ImGui::MenuItem("Save Level", "Ctrl+S"))
+            if (ImGui::MenuItem("Save Level", save_shortcut)) 
             {
-
+                // TODO: why isn't this implemented yet??
             }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))
         {
-            if (ImGui::MenuItem("Copy", "Ctrl+C"))
-            {
-            }
-            if (ImGui::MenuItem("Paste", "Ctrl+V"))
-            {
-            }
-            if (ImGui::MenuItem("Delete", "Ctrl+X/Del"))
-            {
-            }
+#ifdef __APPLE__
+            const char* copy_shortcut = "CMD+C";
+            const char* paste_shortcut = "CMD+V";
+            const char* delete_shortcut = "Delete";
+            const char* cut_shortcut = "CMD+X";
+#else
+            const char* copy_shortcut = "Ctrl+C";
+            const char* paste_shortcut = "Ctrl+V";
+            const char* delete_shortcut = "Del";
+            const char* cut_shortcut = "Ctrl+X";
+#endif
+            if (ImGui::MenuItem("Copy", copy_shortcut))
+                area_editor.copy_selection();
+            if (ImGui::MenuItem("Paste", paste_shortcut))
+                area_editor.paste_selection();
+            if (ImGui::MenuItem("Delete", delete_shortcut))
+                area_editor.delete_selection();
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("View"))
         {
-            ImGui::MenuItem("Show Objects", "Ctrl+Alt+O", &area_editor.show_objects);
-            ImGui::MenuItem("Show Sprites", "Ctrl+Alt+A", &area_editor.show_actors);
-            ImGui::MenuItem("Show Entrances", "Ctrl+Alt+E", &area_editor.show_entrances);
-            ImGui::MenuItem("Show Views/Zones", "Ctrl+Alt+V", &area_editor.show_views);
-            ImGui::MenuItem("Show Paths", "Ctrl+Alt+P", &area_editor.show_paths);
+#ifdef __APPLE__
+            const char* object_shortcut = "CMD+Option+O";
+            const char* actor_shortcut = "CMD+Option+A";
+            const char* entrance_shortcut = "CMD+Option+E";
+            const char* view_shortcut = "CMD+Option+V";
+            const char* path_shortcut = "CMD+Option+P";
+            const char* zoom_in_shortcut = "CMD+=";
+            const char* zoom_reset_shortcut = "CMD+0";
+            const char* zoom_out_shortcut = "CMD+-";
+#else
+            const char* object_shortcut = "Ctrl+Alt+O";
+            const char* actor_shortcut = "Ctrl+Alt+A";
+            const char* entrance_shortcut = "Ctrl+Alt+E";
+            const char* view_shortcut = "Ctrl+Alt+V";
+            const char* path_shortcut = "Ctrl+Alt+P";
+            const char* zoom_in_shortcut = "Ctrl+=";
+            const char* zoom_reset_shortcut = "Ctrl+0";
+            const char* zoom_out_shortcut = "Ctrl+-";
+#endif
+            ImGui::MenuItem("Show Objects", object_shortcut, &area_editor.show_objects);
+            ImGui::MenuItem("Show Sprites", actor_shortcut, &area_editor.show_actors);
+            ImGui::MenuItem("Show Entrances", entrance_shortcut, &area_editor.show_entrances);
+            ImGui::MenuItem("Show Views/Zones", view_shortcut, &area_editor.show_views);
+            ImGui::MenuItem("Show Paths", path_shortcut, &area_editor.show_paths);
             ImGui::Separator();
-            if (ImGui::MenuItem("Scale +25%", "Ctrl+="))
+            if (ImGui::MenuItem("Scale +25%", zoom_in_shortcut))
                 area_editor.scale(area_editor.draw_env.scale += 0.25);
-            if (ImGui::MenuItem("Reset Scale", "Ctrl+0"))
+            if (ImGui::MenuItem("Reset Scale", zoom_reset_shortcut))
                 area_editor.scale(1.0f);
-            if (ImGui::MenuItem("Scale -25%", "Ctrl+-"))
+            if (ImGui::MenuItem("Scale -25%", zoom_out_shortcut))
                 area_editor.scale(area_editor.draw_env.scale -= 0.25);
             ImGui::EndMenu();
         }
