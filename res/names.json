@@ -1,4 +1,386 @@
 {
+    "tilesets": [
+        {
+            "id": 0,
+            "name": "Grassland",
+            "unused": false
+        },
+        {
+            "id": 1,
+            "name": "Castle",
+            "unused": false
+        },
+        {
+            "id": 2,
+            "name": "Desert",
+            "unused": false
+        },
+        {
+            "id": 3,
+            "name": "Icy Underground",
+            "unused": false
+        },
+        {
+            "id": 4,
+            "name": "Athletic",
+            "unused": false
+        },
+        {
+            "id": 5,
+            "name": "Underwater",
+            "unused": false
+        },
+        {
+            "id": 6,
+            "name": "Desert",
+            "unused": false
+        },
+        {
+            "id": 7,
+            "name": "Volcano (Brown)",
+            "unused": false
+        },
+        {
+            "id": 8,
+            "name": "Grassland",
+            "unused": false
+        },
+        {
+            "id": 9,
+            "name": "Beach (Blue)",
+            "unused": false
+        },
+        {
+            "id": 10,
+            "name": "Beach (Blue)",
+            "unused": false
+        },
+        {
+            "id": 11,
+            "name": "Forest",
+            "unused": false
+        },
+        {
+            "id": 12,
+            "name": "Grassland",
+            "unused": false
+        },
+        {
+            "id": 13,
+            "name": "Athletic 2",
+            "unused": false
+        },
+        {
+            "id": 14,
+            "name": "Athletic 2",
+            "unused": false
+        },
+        {
+            "id": 15,
+            "name": "Volcano (Black 1)",
+            "unused": false
+        },
+        {
+            "id": 16,
+            "name": "Volcano (Black 2)",
+            "unused": false
+        },
+        {
+            "id": 17,
+            "name": "Snow and Ice",
+            "unused": false
+        },
+        {
+            "id": 18,
+            "name": "Snow",
+            "unused": false
+        },
+        {
+            "id": 19,
+            "name": "Forest",
+            "unused": false
+        },
+        {
+            "id": 20,
+            "name": "Oasis in Desert",
+            "unused": false
+        },
+        {
+            "id": 21,
+            "name": "Bonus Room",
+            "unused": false
+        },
+        {
+            "id": 22,
+            "name": "Volcano (Black 2)",
+            "unused": true
+        },
+        {
+            "id": 23,
+            "name": "Ghost House",
+            "unused": false
+        },
+        {
+            "id": 24,
+            "name": "Mountains",
+            "unused": false
+        },
+        {
+            "id": 25,
+            "name": "Mountains",
+            "unused": false
+        },
+        {
+            "id": 26,
+            "name": "Snow and Ice",
+            "unused": false
+        },
+        {
+            "id": 27,
+            "name": "Grassland",
+            "unused": false
+        },
+        {
+            "id": 28,
+            "name": "Snow And Ice",
+            "unused": false
+        },
+        {
+            "id": 29,
+            "name": "Bricks",
+            "unused": false
+        },
+        {
+            "id": 30,
+            "name": "Sewer",
+            "unused": false
+        },
+        {
+            "id": 31,
+            "name": "Volcano (Yellow)",
+            "unused": false
+        },
+        {
+            "id": 32,
+            "name": "Castle",
+            "unused": false
+        },
+        {
+            "id": 33,
+            "name": "Athletic 2",
+            "unused": false
+        },
+        {
+            "id": 34,
+            "name": "Grassland",
+            "unused": false
+        },
+        {
+            "id": 35,
+            "name": "Underground",
+            "unused": false
+        },
+        {
+            "id": 36,
+            "name": "Underground (Dark Blue)",
+            "unused": true
+        },
+        {
+            "id": 37,
+            "name": "Dark World (Purple)",
+            "unused": false
+        },
+        {
+            "id": 38,
+            "name": "Dark World (Brown)",
+            "unused": false
+        },
+        {
+            "id": 39,
+            "name": "Tower",
+            "unused": false
+        },
+        {
+            "id": 40,
+            "name": "Ghost House (Outside)",
+            "unused": false
+        },
+        {
+            "id": 41,
+            "name": "Bowser's Castle",
+            "unused": false
+        },
+        {
+            "id": 42,
+            "name": "Toad House A",
+            "unused": false
+        },
+        {
+            "id": 43,
+            "name": "Toad House B",
+            "unused": false
+        },
+        {
+            "id": 44,
+            "name": "Toad House C",
+            "unused": false
+        },
+        {
+            "id": 45,
+            "name": "Bowser's Castle",
+            "unused": false
+        },
+        {
+            "id": 46,
+            "name": "Toad House D",
+            "unused": false
+        },
+        {
+            "id": 47,
+            "name": "Bowser Jr. Arena",
+            "unused": false
+        },
+        {
+            "id": 48,
+            "name": "Beach (Blue)",
+            "unused": false
+        },
+        {
+            "id": 49,
+            "name": "Boss Arena",
+            "unused": false
+        },
+        {
+            "id": 50,
+            "name": "Athletic 2",
+            "unused": false
+        },
+        {
+            "id": 51,
+            "name": "Forest",
+            "unused": false
+        },
+        {
+            "id": 52,
+            "name": "Desert",
+            "unused": false
+        },
+        {
+            "id": 53,
+            "name": "Desert",
+            "unused": false
+        },
+        {
+            "id": 54,
+            "name": "Forest",
+            "unused": false
+        },
+        {
+            "id": 55,
+            "name": "Final Bowser Arena",
+            "unused": false
+        },
+        {
+            "id": 56,
+            "name": "Volcano (Black)",
+            "unused": false
+        },
+        {
+            "id": 57,
+            "name": "Underwater",
+            "unused": false
+        },
+        {
+            "id": 58,
+            "name": "Castle (Light Gray)",
+            "unused": false
+        },
+        {
+            "id": 59,
+            "name": "Athletic 3",
+            "unused": false
+        },
+        {
+            "id": 60,
+            "name": "Beach (Turquoise)",
+            "unused": false
+        },
+        {
+            "id": 61,
+            "name": "W6 & W7 Boss Arena",
+            "unused": false
+        },
+        {
+            "id": 62,
+            "name": "Boss Arena",
+            "unused": false
+        },
+        {
+            "id": 63,
+            "name": "W2 Boss Arena",
+            "unused": false
+        },
+        {
+            "id": 64,
+            "name": "Oasis in Desert",
+            "unused": false
+        },
+        {
+            "id": 65,
+            "name": "Desert",
+            "unused": false
+        },
+        {
+            "id": 66,
+            "name": "Oasis in Desert",
+            "unused": false
+        },
+        {
+            "id": 67,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 68,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 69,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 70,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 71,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 72,
+            "name": "Bonus Room",
+            "unused": true
+        },
+        {
+            "id": 73,
+            "name": "Underground (Gold)",
+            "unused": true
+        },
+        {
+            "id": 74,
+            "name": "Bonus Room",
+            "unused": false
+        },
+        {
+            "id": 75,
+            "name": "Grassland",
+            "unused": false
+        }
+    ],
     "worlds": [
         {
             "letter": "A",

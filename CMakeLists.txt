@@ -1,9 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.12)
 
-project(
-    BlueShell
-    VERSION 0.2.4
-)
+project(BlueShell)
 
 find_package(glfw3 REQUIRED)
 set(OpenGL_GL_PREFERENCE GLVND)

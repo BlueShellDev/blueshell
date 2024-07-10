@@ -25,6 +25,7 @@
 // internal
 #include "sources.h"
 #include "graphics/render.h"
+#include "environment.h"
 #include "util/lz.hpp"
 
 // ui
@@ -36,38 +37,9 @@
 
 namespace Editor
 {
-    // enviroment variables
-    struct Environment
-    {
-        std::filesystem::path settings_dir = "settings/";
-        std::filesystem::path resources_dir = "res/";
-        std::filesystem::path env_file = settings_dir / "environment.json";
-
-        /* jsons, should these live here? kinda confusing */
-        nlohmann::json overrides_json,
-            tilesets_json,
-            worlds_json,
-            env_json;
-
-        /* paths to-be-loaded from json */
-        std::filesystem::path fs,
-            root,
-            overlays,
-            stages,
-            characters,
-            palettes,
-            metatiles,
-            objects,
-            textures;
-
-        void copy_paths_from_json();
-        bool validate_paths();
-        void copy_paths_to_json();
-    };
-
     struct Application
     {
-        /* program paths, lives here */
+        /* application environment */
         Environment env;
 
         /* handles pixbufs, lives here */
@@ -86,19 +58,25 @@ namespace Editor
         NSMB::Area curr_area; // the 3 loaded tilesets live in this structure
 
         /* methods */
-        void load_names_from_json();
+        void load_names_from_env();
         void load_overlays();
-        void load_filename_lookup(const u16& root_dir_id);
+        void load_filenames(const u16& root_dir_id);
         void change_current_area(const sz_t& new_area_id);
     };
 
+    // ui layer of application
     struct ApplicationUI
     {
+        /* link to main application */
+        Application* app = nullptr;
+
+        /* main app window */
         GLFWwindow* main_window = nullptr;
 
         /* imgui addons */
-        ImGui::FileBrowser dir_browser = ImGui::FileBrowser(ImGuiFileBrowserFlags_SelectDirectory);
-        ImGui::FileBrowser file_browser = ImGui::FileBrowser();
+        ImGui::FileBrowser 
+        dir_browser = ImGui::FileBrowser(ImGuiFileBrowserFlags_SelectDirectory),
+        file_browser = ImGui::FileBrowser();
 
         /* editor-specific ui elements */
         UI::AreaRenderWidget area_editor;
@@ -110,6 +88,7 @@ namespace Editor
         open_fix_env_popup = false,
         open_level_select_popup = false;
 
+        // boilerplate shit
         void init_main_window
         (
             const std::string&  title, 
@@ -118,17 +97,21 @@ namespace Editor
             const bool&         maximize = true
         );
         void new_frame();
-
         void init_dock_space();
-        void relink_widgets_to_area(NSMB::Area* area);
 
         // main ui elements
         void draw_main_menu_bar();
+        void draw_area_editor_window(const ImVec2& content_size_units);
+        void draw_toolbox_window();
+        void draw_status_window();
         void draw_selection_window();
 
-        // popup logic
-        void draw_fix_env_popup(Application& app);
-        void draw_level_select_popup(Application& app);
+        // popups
+        void draw_fix_env_popup();
+        void draw_level_select_popup();
+
+        // interesting function
+        void relink_widgets_to_area(NSMB::Area* area);
     };
 
     void init_render_mgr

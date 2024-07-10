@@ -17,13 +17,12 @@ namespace NSMB
         sz_t            id      = 0;
         TilesetType_    type    = TilesetType_Jyotyu;
 
-        bool use_overrides = false;
-
         std::vector<Graphics::Character>    characters;
         std::vector<Graphics::Palette>      palettes;
         std::vector<Graphics::Map16Tile>    metatiles;
         std::vector<Graphics::Object>       objects;
-        std::vector<int>                    overrides;
+
+        bool use_overrides = false;
     };
 
     Tileset load_tileset_from_raw

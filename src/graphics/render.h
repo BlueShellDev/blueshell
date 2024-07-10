@@ -9,6 +9,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "../sources.h"
 #include "../nsmb/tileset.h"
 #include "../util/util.hpp"
 
@@ -49,9 +50,8 @@ namespace Render
         /* this character will be used when trying to render a character that doesn't exist */
         Graphics::Character                     null_character;
 
-        nlohmann::json                          overrides_json;
+        std::vector<Editor::OverrideEntry>      overrides_table;
         GLuint                                  overrides_texture = 0;
-        GLuint                                  pipes_texture     = 0;
     };
 
     /* opengl related functions */

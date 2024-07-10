@@ -36,7 +36,7 @@ namespace UI
         std::vector<AreaRenderItem>  clipboard;
         std::vector<AreaRenderItem>  trashcan;
 
-        ObjectPickerItem* paint_item;
+        ObjectPickerItem* paint_item = nullptr;
 
         ImVec2 click_cache;
 

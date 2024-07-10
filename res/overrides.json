@@ -1,117 +1,629 @@
 {
-    "112": 26,
-    "113": 27,
-    "114": 53,
-    "115": 55,
-    "116": 28,
-    "117": 57,
-    "118": 0,
-    "119": 1,
-    "120": 4,
-    "121": 5,
-    "122": 30,
-    "123": 31,
-    "124": 8,
-    "125": 9,
-    "126": 20,
-    "127": 21,
-    "128": 24,
-    "129": 25,
-    "130": 54,
-    "131": 56,
-    "132": 29,
-    "133": 58,
-    "134": 2,
-    "135": 3,
-    "136": 6,
-    "137": 7,
-    "138": 12,
-    "139": 13,
-    "140": 10,
-    "141": 11,
-    "142": 22,
-    "143": 23,
-    "145": 32,
-    "146": 19,
-    "147": 17,
-    "148": 18,
-    "149": 14,
-    "150": 22,
-    "151": 23,
-    "152": 71,
-    "153": 72,
-    "154": 15,
-    "155": 16,
-    "156": 20,
-    "157": 21,
-    "158": 28,
-    "159": 29,
-    "160": 71,
-    "161": 72,
-    "171": 53,
-    "172": 57,
-    "173": 55,
-    "174": 26,
-    "175": 27,
-    "187": 54,
-    "188": 58,
-    "189": 56,
-    "190": 24,
-    "191": 25,
-    "192": 59,
-    "193": 63,
-    "194": 61,
-    "195": 65,
-    "196": 69,
-    "197": 67,
-    "198": 33,
-    "199": 34,
-    "200": 41,
-    "201": 42,
-    "202": 37,
-    "203": 38,
-    "204": 47,
-    "205": 48,
-    "206": 51,
-    "207": 52,
-    "208": 60,
-    "209": 64,
-    "210": 62,
-    "211": 66,
-    "212": 70,
-    "213": 68,
-    "214": 35,
-    "215": 36,
-    "216": 43,
-    "217": 44,
-    "218": 39,
-    "219": 40,
-    "220": 49,
-    "221": 50,
-    "222": 45,
-    "223": 46,
-    "228": 41,
-    "229": 42,
-    "230": 45,
-    "231": 65,
-    "232": 69,
-    "233": 67,
-    "234": 47,
-    "235": 48,
-    "236": 52,
-    "237": 59,
-    "238": 63,
-    "239": 61,
-    "244": 43,
-    "245": 44,
-    "246": 46,
-    "247": 66,
-    "248": 70,
-    "249": 68,
-    "250": 49,
-    "251": 50,
-    "252": 51,
-    "253": 60,
-    "254": 64,
-    "255": 62
+    "override-lookup": [
+        {
+            "overrides": 64,
+            "x-offset": 1,
+            "y-offset": 1
+        },
+        {
+            "overrides": 65,
+            "x-offset": 2,
+            "y-offset": 1
+        },
+        {
+            "overrides": 66,
+            "x-offset": 3,
+            "y-offset": 1
+        },
+        {
+            "overrides": 67,
+            "x-offset": 4,
+            "y-offset": 1
+        },
+        {
+            "overrides": 68,
+            "x-offset": 8,
+            "y-offset": 1
+        },
+        {
+            "overrides": 69,
+            "x-offset": 6,
+            "y-offset": 1
+        },
+        {
+            "overrides": 70,
+            "x-offset": 11,
+            "y-offset": 1
+        },
+        {
+            "overrides": 71,
+            "x-offset": 10,
+            "y-offset": 1
+        },
+        {
+            "overrides": 72,
+            "x-offset": 7,
+            "y-offset": 1
+        },
+        {
+            "overrides": 73,
+            "x-offset": 0,
+            "y-offset": 1
+        },
+        {
+            "overrides": 74,
+            "x-offset": 0,
+            "y-offset": 1
+        },
+        {
+            "overrides": 81,
+            "x-offset": 1,
+            "y-offset": 1
+        },
+        {
+            "overrides": 82,
+            "x-offset": 2,
+            "y-offset": 1
+        },
+        {
+            "overrides": 83,
+            "x-offset": 4,
+            "y-offset": 1
+        },
+        {
+            "overrides": 84,
+            "x-offset": 10,
+            "y-offset": 1
+        },
+        {
+            "overrides": 85,
+            "x-offset": 12,
+            "y-offset": 1
+        },
+        {
+            "overrides": 176,
+            "x-offset": 8,
+            "y-offset": 2
+        },
+        {
+            "overrides": 177,
+            "x-offset": 9,
+            "y-offset": 2
+        },
+        {
+            "overrides": 178,
+            "x-offset": 10,
+            "y-offset": 2
+        },
+        {
+            "overrides": 179,
+            "x-offset": 11,
+            "y-offset": 2
+        },
+        {
+            "overrides": 180,
+            "x-offset": 12,
+            "y-offset": 2
+        },
+        {
+            "overrides": 181,
+            "x-offset": 13,
+            "y-offset": 2
+        },
+        {
+            "overrides": 6,
+            "x-offset": 7,
+            "y-offset": 1
+        },
+        {
+            "overrides": 77,
+            "x-offset": 5,
+            "y-offset": 1
+        },
+        {
+            "overrides": 36,
+            "x-offset": 13,
+            "y-offset": 1
+        },
+        {
+            "overrides": 1,
+            "x-offset": 0,
+            "y-offset": 2
+        },
+        {
+            "overrides": 2,
+            "x-offset": 1,
+            "y-offset": 2
+        },
+        {
+            "overrides": 3,
+            "x-offset": 2,
+            "y-offset": 2
+        },
+        {
+            "overrides": 4,
+            "x-offset": 3,
+            "y-offset": 2
+        },
+        {
+            "overrides": 5,
+            "x-offset": 4,
+            "y-offset": 2
+        },
+        {
+            "overrides": 6,
+            "x-offset": 5,
+            "y-offset": 2
+        },
+        {
+            "overrides": 7,
+            "x-offset": 6,
+            "y-offset": 2
+        },
+        {
+            "overrides": 8,
+            "x-offset": 7,
+            "y-offset": 2
+        },
+        {
+            "overrides": 112,
+            "x-offset": 26
+        },
+        {
+            "overrides": 113,
+            "x-offset": 27
+        },
+        {
+            "overrides": 114,
+            "x-offset": 53
+        },
+        {
+            "overrides": 115,
+            "x-offset": 55
+        },
+        {
+            "overrides": 116,
+            "x-offset": 28
+        },
+        {
+            "overrides": 117,
+            "x-offset": 57
+        },
+        {
+            "overrides": 118,
+            "x-offset": 0
+        },
+        {
+            "overrides": 119,
+            "x-offset": 1
+        },
+        {
+            "overrides": 120,
+            "x-offset": 4
+        },
+        {
+            "overrides": 121,
+            "x-offset": 5
+        },
+        {
+            "overrides": 122,
+            "x-offset": 30
+        },
+        {
+            "overrides": 123,
+            "x-offset": 31
+        },
+        {
+            "overrides": 124,
+            "x-offset": 8
+        },
+        {
+            "overrides": 125,
+            "x-offset": 9
+        },
+        {
+            "overrides": 126,
+            "x-offset": 20
+        },
+        {
+            "overrides": 127,
+            "x-offset": 21
+        },
+        {
+            "overrides": 128,
+            "x-offset": 24
+        },
+        {
+            "overrides": 129,
+            "x-offset": 25
+        },
+        {
+            "overrides": 130,
+            "x-offset": 54
+        },
+        {
+            "overrides": 131,
+            "x-offset": 56
+        },
+        {
+            "overrides": 132,
+            "x-offset": 29
+        },
+        {
+            "overrides": 133,
+            "x-offset": 58
+        },
+        {
+            "overrides": 134,
+            "x-offset": 2
+        },
+        {
+            "overrides": 135,
+            "x-offset": 3
+        },
+        {
+            "overrides": 136,
+            "x-offset": 6
+        },
+        {
+            "overrides": 137,
+            "x-offset": 7
+        },
+        {
+            "overrides": 138,
+            "x-offset": 12
+        },
+        {
+            "overrides": 139,
+            "x-offset": 13
+        },
+        {
+            "overrides": 140,
+            "x-offset": 10
+        },
+        {
+            "overrides": 141,
+            "x-offset": 11
+        },
+        {
+            "overrides": 142,
+            "x-offset": 22
+        },
+        {
+            "overrides": 143,
+            "x-offset": 23
+        },
+        {
+            "overrides": 145,
+            "x-offset": 32
+        },
+        {
+            "overrides": 146,
+            "x-offset": 19
+        },
+        {
+            "overrides": 147,
+            "x-offset": 17
+        },
+        {
+            "overrides": 148,
+            "x-offset": 18
+        },
+        {
+            "overrides": 149,
+            "x-offset": 14
+        },
+        {
+            "overrides": 150,
+            "x-offset": 22
+        },
+        {
+            "overrides": 151,
+            "x-offset": 23
+        },
+        {
+            "overrides": 152,
+            "x-offset": 71
+        },
+        {
+            "overrides": 153,
+            "x-offset": 72
+        },
+        {
+            "overrides": 154,
+            "x-offset": 15
+        },
+        {
+            "overrides": 155,
+            "x-offset": 16
+        },
+        {
+            "overrides": 156,
+            "x-offset": 20
+        },
+        {
+            "overrides": 157,
+            "x-offset": 21
+        },
+        {
+            "overrides": 158,
+            "x-offset": 28
+        },
+        {
+            "overrides": 159,
+            "x-offset": 29
+        },
+        {
+            "overrides": 160,
+            "x-offset": 71
+        },
+        {
+            "overrides": 161,
+            "x-offset": 72
+        },
+        {
+            "overrides": 171,
+            "x-offset": 53
+        },
+        {
+            "overrides": 172,
+            "x-offset": 57
+        },
+        {
+            "overrides": 173,
+            "x-offset": 55
+        },
+        {
+            "overrides": 174,
+            "x-offset": 26
+        },
+        {
+            "overrides": 175,
+            "x-offset": 27
+        },
+        {
+            "overrides": 187,
+            "x-offset": 54
+        },
+        {
+            "overrides": 188,
+            "x-offset": 58
+        },
+        {
+            "overrides": 189,
+            "x-offset": 56
+        },
+        {
+            "overrides": 190,
+            "x-offset": 24
+        },
+        {
+            "overrides": 191,
+            "x-offset": 25
+        },
+        {
+            "overrides": 192,
+            "x-offset": 59
+        },
+        {
+            "overrides": 193,
+            "x-offset": 63
+        },
+        {
+            "overrides": 194,
+            "x-offset": 61
+        },
+        {
+            "overrides": 195,
+            "x-offset": 65
+        },
+        {
+            "overrides": 196,
+            "x-offset": 69
+        },
+        {
+            "overrides": 197,
+            "x-offset": 67
+        },
+        {
+            "overrides": 198,
+            "x-offset": 33
+        },
+        {
+            "overrides": 199,
+            "x-offset": 34
+        },
+        {
+            "overrides": 200,
+            "x-offset": 41
+        },
+        {
+            "overrides": 201,
+            "x-offset": 42
+        },
+        {
+            "overrides": 202,
+            "x-offset": 37
+        },
+        {
+            "overrides": 203,
+            "x-offset": 38
+        },
+        {
+            "overrides": 204,
+            "x-offset": 47
+        },
+        {
+            "overrides": 205,
+            "x-offset": 48
+        },
+        {
+            "overrides": 206,
+            "x-offset": 51
+        },
+        {
+            "overrides": 207,
+            "x-offset": 52
+        },
+        {
+            "overrides": 208,
+            "x-offset": 60
+        },
+        {
+            "overrides": 209,
+            "x-offset": 64
+        },
+        {
+            "overrides": 210,
+            "x-offset": 62
+        },
+        {
+            "overrides": 211,
+            "x-offset": 66
+        },
+        {
+            "overrides": 212,
+            "x-offset": 70
+        },
+        {
+            "overrides": 213,
+            "x-offset": 68
+        },
+        {
+            "overrides": 214,
+            "x-offset": 35
+        },
+        {
+            "overrides": 215,
+            "x-offset": 36
+        },
+        {
+            "overrides": 216,
+            "x-offset": 43
+        },
+        {
+            "overrides": 217,
+            "x-offset": 44
+        },
+        {
+            "overrides": 218,
+            "x-offset": 39
+        },
+        {
+            "overrides": 219,
+            "x-offset": 40
+        },
+        {
+            "overrides": 220,
+            "x-offset": 49
+        },
+        {
+            "overrides": 221,
+            "x-offset": 50
+        },
+        {
+            "overrides": 222,
+            "x-offset": 45
+        },
+        {
+            "overrides": 223,
+            "x-offset": 46
+        },
+        {
+            "overrides": 228,
+            "x-offset": 41
+        },
+        {
+            "overrides": 229,
+            "x-offset": 42
+        },
+        {
+            "overrides": 230,
+            "x-offset": 45
+        },
+        {
+            "overrides": 231,
+            "x-offset": 65
+        },
+        {
+            "overrides": 232,
+            "x-offset": 69
+        },
+        {
+            "overrides": 233,
+            "x-offset": 67
+        },
+        {
+            "overrides": 234,
+            "x-offset": 47
+        },
+        {
+            "overrides": 235,
+            "x-offset": 48
+        },
+        {
+            "overrides": 236,
+            "x-offset": 52
+        },
+        {
+            "overrides": 237,
+            "x-offset": 59
+        },
+        {
+            "overrides": 238,
+            "x-offset": 63
+        },
+        {
+            "overrides": 239,
+            "x-offset": 61
+        },
+        {
+            "overrides": 244,
+            "x-offset": 43
+        },
+        {
+            "overrides": 245,
+            "x-offset": 44
+        },
+        {
+            "overrides": 246,
+            "x-offset": 46
+        },
+        {
+            "overrides": 247,
+            "x-offset": 66
+        },
+        {
+            "overrides": 248,
+            "x-offset": 70
+        },
+        {
+            "overrides": 249,
+            "x-offset": 68
+        },
+        {
+            "overrides": 250,
+            "x-offset": 49
+        },
+        {
+            "overrides": 251,
+            "x-offset": 50
+        },
+        {
+            "overrides": 252,
+            "x-offset": 51
+        },
+        {
+            "overrides": 253,
+            "x-offset": 60
+        },
+        {
+            "overrides": 254,
+            "x-offset": 64
+        },
+        {
+            "overrides": 255,
+            "x-offset": 62
+        }
+    ]
 }
