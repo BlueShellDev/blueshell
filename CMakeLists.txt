@@ -37,7 +37,7 @@ file(
     ${CMAKE_SOURCE_DIR}/src/*.h
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE} "src/environment.h" "src/environment.cpp" "src/editor_ui.cpp")
+add_executable(${PROJECT_NAME} ${SOURCE})
 add_dependencies(${PROJECT_NAME} res)
 
 target_link_libraries(
