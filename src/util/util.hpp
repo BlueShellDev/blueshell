@@ -9,6 +9,7 @@ namespace Util
 {
     static std::ifstream begin_ifstream(const std::filesystem::path& filename)
     {
+        Debug::log("opening a file for reading: '" + filename.string() + "'");
         std::ifstream in
         (
             filename,
@@ -26,6 +27,7 @@ namespace Util
 
     static std::ofstream begin_ofstream(const std::filesystem::path& filename)
     {
+        Debug::log("opening a file for writing: '" + filename.string() + "'");
         std::ofstream out
         (
             filename,
@@ -41,10 +43,16 @@ namespace Util
         return out;
     }
 
-    static nlohmann::json read_json_from_disk(const std::filesystem::path& filename)
+    static nlohmann::json load_json_from_disk(const std::filesystem::path& filename)
     {
         return nlohmann::json::parse(begin_ifstream(filename));
     }
+
+    static void save_json_to_disk(const std::filesystem::path& filename, const nlohmann::json& json)
+    {
+        begin_ofstream(filename) << json;
+    }
+
 
     struct Data
     {

@@ -1,9 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.12)
 
-project(
-    BlueShell
-    VERSION 0.2.4
-)
+project(BlueShell)
 
 find_package(glfw3 REQUIRED)
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -40,7 +37,7 @@ file(
     ${CMAKE_SOURCE_DIR}/src/*.h
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE})
+add_executable(${PROJECT_NAME} ${SOURCE} "src/environment.h" "src/environment.cpp" "src/editor_ui.cpp")
 add_dependencies(${PROJECT_NAME} res)
 
 target_link_libraries(

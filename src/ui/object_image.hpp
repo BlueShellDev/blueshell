@@ -24,9 +24,10 @@ namespace UI
     )
     {
         const Render::PixelBuffer* buffer = render_mgr->buffer_table.at
-                                            (
-                                                static_cast<Render::TextureSlot_>(6 + (sz_t)tileset.type)
-                                            );
+        (
+            static_cast<Render::TextureSlot_>(6 + (sz_t)tileset.type)
+        );
+
         sz_t tile_x, tile_y;
 
         sz_t offset;
@@ -63,159 +64,28 @@ namespace UI
             (tile_y + 1) / (buffer->height / 16.f)
         };
 
-        if (tile.map16_tile_offset < 1)
+        canvas->AddImage
+        (
+            (ImTextureID)*buffer->link_to_texture,
+            { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
+            { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
+            tile_uv_0,
+            tile_uv_1
+        );
+
+        if (tileset.use_overrides)
         {
-            return;
-        }
-
-        else
-        {
-            if (!tileset.use_overrides)
+            for (auto& entry : render_mgr->overrides_table)
             {
-                canvas->AddImage
-                (
-                    (ImTextureID)*buffer->link_to_texture,
-                    { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                    { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                    tile_uv_0,
-                    tile_uv_1
-                );
-            }
-            else
-            {
-                if (tile.map16_tile_offset >= 64 && tile.map16_tile_offset < 78)
+                if (entry.overrides == tile.map16_tile_offset)
                 {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
-                        { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
-                    );
-
                     canvas->AddImage
                     (
                         (ImTextureID)render_mgr->overrides_texture,
-                        { draw_at.x + (x * 16 * scale) + (0 * scale),  draw_at.y + (y * 16 * scale) + (0 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (0 + tile.map16_tile_offset - 64) / 63.f, 0 },
-                        { (1 + tile.map16_tile_offset - 64) / 63.f, 1 / 1.f },
-                        0xFFFFFFFF
-                    );
-                }
-
-                else if (tile.map16_tile_offset >= 48 && tile.map16_tile_offset < 50)
-                {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
                         { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
                         { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
-                    );
-
-                    canvas->AddImage
-                    (
-                        (ImTextureID)render_mgr->overrides_texture,
-                        { draw_at.x + (x * 16 * scale) + (0 * scale),  draw_at.y + (y * 16 * scale) + (0 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (14 + tile.map16_tile_offset - 48) / 63.f, 0 },
-                        { (15 + tile.map16_tile_offset - 48) / 63.f, 1 / 1.f },
-                        0xFFFFFFFF
-                    );
-                }
-
-                else if (tile.map16_tile_offset >= 36 && tile.map16_tile_offset < 37)
-                {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
-                        { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
-                    );
-
-
-                    canvas->AddImage
-                    (
-                        (ImTextureID)render_mgr->overrides_texture,
-                        { draw_at.x + (x * 16 * scale) + (0 * scale),  draw_at.y + (y * 16 * scale) + (0 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (62 + tile.map16_tile_offset - 36) / 63.f, 0 },
-                        { (63 + tile.map16_tile_offset - 36) / 63.f, 1 / 1.f },
-                        0xFFFFFFFF
-                    );
-                }
-
-                else if (tile.map16_tile_offset >= 80 && tile.map16_tile_offset < 89)
-                {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
-                        { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
-                    );
-
-                    canvas->AddImage
-                    (
-                        (ImTextureID)render_mgr->overrides_texture,
-                        { draw_at.x + (x * 16 * scale) + (0 * scale),  draw_at.y + (y * 16 * scale) + (0 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (32 + tile.map16_tile_offset - 80) / 63.f, 0 },
-                        { (33 + tile.map16_tile_offset - 80) / 63.f, 1 / 1.f },
-                        0xFFFFFFFF
-                    );
-                }
-
-                else if (tile.map16_tile_offset >= 176 && tile.map16_tile_offset < 182)
-                {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
-                        { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
-                    );
-
-                    canvas->AddImage
-                    (
-                        (ImTextureID)render_mgr->overrides_texture,
-                        { draw_at.x + (x * 16 * scale) + (0 * scale),  draw_at.y + (y * 16 * scale) + (0 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (50 + tile.map16_tile_offset - 176) / 63.f, 0 },
-                        { (51 + tile.map16_tile_offset - 176) / 63.f, 1 / 1.f },
-                        0xFFFFFFFF
-                    );
-                }
-
-                else if (tileset.overrides.at(tile.map16_tile_offset) > -1)
-                {
-                    const sz_t override_offset = tileset.overrides.at(tile.map16_tile_offset);
-                    canvas->AddImage
-                    (
-                        (ImTextureID)render_mgr->pipes_texture,
-                        { draw_at.x + (x * 16 * scale)               , draw_at.y + (y * 16 * scale) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale), draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        { (override_offset) / 73.f, 0.f },
-                        { (override_offset + 1) / 73.f, 1.f }
-                    );
-                }
-
-                else
-                {
-                    canvas->AddImage
-                    (
-                        (ImTextureID)*buffer->link_to_texture,
-                        { draw_at.x + (x * 16 * scale),                 draw_at.y + (y * (16 * scale)) },
-                        { draw_at.x + (x * 16 * scale) + (16 * scale),  draw_at.y + (y * 16 * scale) + (16 * scale) },
-                        tile_uv_0,
-                        tile_uv_1
+                        { entry.x_offset / 73.0f, entry.y_offset / 3.0f },
+                        { (entry.x_offset + 1) / 73.0f, (entry.y_offset + 1) / 3.0f }
                     );
                 }
             }

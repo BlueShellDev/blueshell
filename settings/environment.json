@@ -1,22 +1,16 @@
 {
     "sys-paths": {
-        "settings": "settings/",
-        "rom_fs": "D:\\nsmbdump"
+        "dump": "D:\\nsmbdump"
     },
 
-    "dirs": {
+    "rom-fs": {
         "root": "root/",
-        "overlay": "overlay9/"
-    },
-
-    "subdirs": {
-        "stages": "course/",
-        "graphics": {
-            "characters": "BG_ncg/",
-            "palettes": "BG_ncl/",
-            "metatiles": "BG_pnl/",
-            "objects": "BG_unt/",
-            "textures": "polygon_unit/"
-        }
+        "overlays": "overlay9/",
+        "stages": "root/course/",
+        "characters": "root/BG_ncg/",
+        "palettes": "root/BG_ncl/",
+        "metatiles": "root/BG_pnl/",
+        "objects": "root/BG_unt/",
+        "textures": "root/polygon_unit/"
     }
 }

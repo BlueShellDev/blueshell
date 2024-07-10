@@ -6,40 +6,35 @@ namespace UI
     {
         selection = nullptr;
         for (auto& item : items)
-        {
             if (item.is_selected)
             {
                 selection = &item;
             }
-        }
     }
 
     void ObjectPickerWidget::_check_mouse_items()
     {
         for (auto& item : items)
-        {
             item.is_selected = UI::is_imvec2_inside(item.transform, draw_env.mouse_pos);
-        }
     }
 
     void ObjectPickerWidget::check_mouse_tooltip()
     {
         for (auto& item : items)
-        {
             if (UI::is_imvec2_inside(item.transform, draw_env.mouse_pos))
             {
                 ImGui::BeginTooltip();
                 ImGui::Text(std::format("Object {}", item.object->_id).c_str());
                 ImGui::EndTooltip();
             }
-        }
     }
 
     void ObjectPickerWidget::_position_items()
     {
-        u16 max_h = 0,
-            next_x = x_padding,
-            next_y = y_padding;
+        u16 
+        max_h = 0,
+        next_x = x_padding,
+        next_y = y_padding;
 
         for (auto& item : items)
         {
@@ -123,15 +118,19 @@ namespace UI
         sz_t id = 0;
         for (auto& object : tileset->objects)
         {
-            ObjectPickerItem item;
-            item.tileset = tileset;
-            item.object = &object;
-            item.item_id = id;
-            items.push_back(item);
-            id++;
+            //if (tileset->type == NSMB::TilesetType_Jyotyu && object._id < 9)
+            //{
+            //}
+            //else
+            {
+                ObjectPickerItem item;
+                item.tileset = tileset;
+                item.object = &object;
+                item.item_id = id;
+                items.push_back(item);
+                id++;
+            }
         }
-
-        draw_env.scale = 2;
     }
 
     void ObjectPickerWidget::draw
