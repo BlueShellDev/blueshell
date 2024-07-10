@@ -5,3 +5,7 @@
 /CMakeFiles
 .vs
 CMakeUserPresets.json
+build.sh
+.DS_Store
+
+imgui.ini

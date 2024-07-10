@@ -72,7 +72,7 @@ void main_loop()
         if (ui.area_editor.area)
             ImGui::Text
             (
-                std::format("Area {} of {} (PgUp/PgDown)", 
+                std::format("Area {} of {} (Shift + Up/Down Arrow)", 
                 ui.area_editor.area->area_index + 1, 
                 editor.curr_level_source.areas.size()).c_str()
             );

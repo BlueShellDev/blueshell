@@ -244,10 +244,18 @@ namespace Editor
         ImGui::BeginMainMenuBar();
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open Level by Name...", "Ctrl+O"))
+            #ifdef __APPLE__
+            const char* openShortcut = "CMD+O";
+            const char* saveShortcut = "CMD+S";
+            #else
+            const char* openShortcut = "Ctrl+O";
+            const char* saveShortcut = "Ctrl+S";
+            #endif
+
+            if (ImGui::MenuItem("Open Level by Name...", openShortcut))
                 open_level_select_popup = true;
             ImGui::Separator();
-            if (ImGui::MenuItem("Save Level", "Ctrl+S"))
+            if (ImGui::MenuItem("Save Level", saveShortcut))
             {
 
             }
@@ -255,30 +263,62 @@ namespace Editor
         }
         if (ImGui::BeginMenu("Edit"))
         {
-            if (ImGui::MenuItem("Copy", "Ctrl+C"))
+            #ifdef __APPLE__
+            const char* copyShortcut = "CMD+C";
+            const char* pasteShortcut = "CMD+V";
+            const char* deleteShortcut = "Delete";
+            const char* cutShortcut = "CMD+X";
+            #else
+            const char* copyShortcut = "Ctrl+C";
+            const char* pasteShortcut = "Ctrl+V";
+            const char* deleteShortcut = "Del";
+            const char* cutShortcut = "Ctrl+X";
+            #endif
+
+            if (ImGui::MenuItem("Copy", copyShortcut))
             {
             }
-            if (ImGui::MenuItem("Paste", "Ctrl+V"))
+            if (ImGui::MenuItem("Paste", pasteShortcut))
             {
             }
-            if (ImGui::MenuItem("Cut", "Ctrl+X/Del"))
+            if (ImGui::MenuItem("Delete", deleteShortcut))
             {
             }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("View"))
         {
-            ImGui::MenuItem("Show Objects", "Ctrl+Alt+O", &area_editor.show_objects);
-            ImGui::MenuItem("Show Sprites", "Ctrl+Alt+A", &area_editor.show_actors);
-            ImGui::MenuItem("Show Entrances", "Ctrl+Alt+E", &area_editor.show_entrances);
-            ImGui::MenuItem("Show Views/Zones", "Ctrl+Alt+V", &area_editor.show_views);
-            ImGui::MenuItem("Show Paths", "Ctrl+Alt+P", &area_editor.show_paths);
+            #ifdef __APPLE__
+            const char* objectShortcut = "CMD+Option+O";
+            const char* actorShortcut = "CMD+Option+A";
+            const char* entranceShortcut = "CMD+Option+E";
+            const char* viewShortcut = "CMD+Option+V";
+            const char* pathShortcut = "CMD+Option+P";
+            const char* zoomInShortcut = "CMD+=";
+            const char* zoomResetShortcut = "CMD+0";
+            const char* zoomOutShortcut = "CMD+-";
+            #else
+            const char* objectShortcut = "Ctrl+Alt+O";
+            const char* actorShortcut = "Ctrl+Alt+A";
+            const char* entranceShortcut = "Ctrl+Alt+E";
+            const char* viewShortcut = "Ctrl+Alt+V";
+            const char* pathShortcut = "Ctrl+Alt+P";
+            const char* zoomInShortcut = "Ctrl+=";
+            const char* zoomResetShortcut = "Ctrl+0";
+            const char* zoomOutShortcut = "Ctrl+-";
+            #endif
+
+            ImGui::MenuItem("Show Objects", objectShortcut, &area_editor.show_objects);
+            ImGui::MenuItem("Show Actors", actorShortcut, &area_editor.show_actors);
+            ImGui::MenuItem("Show Entrances", entranceShortcut, &area_editor.show_entrances);
+            ImGui::MenuItem("Show Views/Zones", viewShortcut, &area_editor.show_views);
+            ImGui::MenuItem("Show Paths", pathShortcut, &area_editor.show_paths);
             ImGui::Separator();
-            if (ImGui::MenuItem("Scale +25%", "Ctrl+="))
+            if (ImGui::MenuItem("Scale +25%", zoomInShortcut))
                 area_editor.scale(area_editor.draw_env.scale += 0.25);
-            if (ImGui::MenuItem("Reset Scale", "Ctrl+0"))
+            if (ImGui::MenuItem("Reset Scale", zoomResetShortcut))
                 area_editor.scale(1.0f);
-            if (ImGui::MenuItem("Scale -25%", "Ctrl+-"))
+            if (ImGui::MenuItem("Scale -25%", zoomOutShortcut))
                 area_editor.scale(area_editor.draw_env.scale -= 0.25);
             ImGui::EndMenu();
         }
