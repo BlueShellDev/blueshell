@@ -18,6 +18,10 @@ target_include_directories(imfilebrowser INTERFACE ${CMAKE_SOURCE_DIR}/deps/imfi
 add_library(stb INTERFACE)
 target_include_directories(stb INTERFACE ${CMAKE_SOURCE_DIR}/deps/stb)
 
+find_library(GAME_SDK discord_game_sdk)
+find_library(CPP_GAME_SDK discord_game_sdk_cpp)
+find_path(GAME_SDK_INCLUDE discord-game-sdk/discord.h)
+
 add_custom_target(
     res
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/res
@@ -40,12 +44,16 @@ file(
 add_executable(${PROJECT_NAME} ${SOURCE})
 add_dependencies(${PROJECT_NAME} res)
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${GAME_SDK_INCLUDE})
+
 target_link_libraries(
     ${PROJECT_NAME} 
     PRIVATE 
     nlohmann_json::nlohmann_json
     imfilebrowser 
     stb
+    ${GAME_SDK}
+    ${CPP_GAME_SDK}
 )
 
 if (WIN32)
@@ -58,11 +66,11 @@ if (WIN32)
     )
 elseif(APPLE)
     target_link_libraries(
-	    ${PROJECT_NAME}
-	    PRIVATE
-	    glfw
-	    GLEW::GLEW
-	    imgui::imgui
+        ${PROJECT_NAME}
+        PRIVATE
+        glfw
+        GLEW::GLEW
+        imgui::imgui
     )
 else()
     target_link_libraries(

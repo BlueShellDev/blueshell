@@ -7,6 +7,7 @@
 
 Editor::Application      editor;
 Editor::ApplicationUI    ui;
+Editor::DiscordIntegration  discord_integration;
 
 void main_loop()
 {
@@ -18,10 +19,17 @@ void main_loop()
         ui.init_dock_space();
 
         // popup logic
-        if (ui.open_fix_env_popup)
+        if (ui.open_fix_env_popup){
+            discord_integration.activity.SetDetails("Picking a ROM dump folder...");
+            discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             ImGui::OpenPopup("###fix_env_popup");
-        if (ui.open_level_select_popup)
+        }
+        if (ui.open_level_select_popup){
+            discord_integration.activity.SetDetails("Choosing a level");
+            discord_integration.activity.SetState("");
+            discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             ImGui::OpenPopup("###level_select_popup");
+        }
 
         try
         {
@@ -37,11 +45,17 @@ void main_loop()
             {
                 editor.change_current_area(editor.curr_area.area_index + 1);
                 ui.relink_widgets_to_area(&editor.curr_area);
+                discord_integration.activity.SetDetails("Editing a level");
+                discord_integration.activity.SetState(editor.curr_level_source.name.c_str());
+                discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             }
             if (ImGui::IsKeyDown(ImGuiMod_Shift) && ImGui::IsKeyPressed(ImGuiKey_DownArrow))
             {
                 editor.change_current_area(editor.curr_area.area_index - 1);
                 ui.relink_widgets_to_area(&editor.curr_area);
+                discord_integration.activity.SetDetails("Editing a level");
+                discord_integration.activity.SetState(editor.curr_level_source.name.c_str());
+                discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             }
         }
         catch (const nlohmann::json::parse_error& e)
@@ -62,6 +76,8 @@ void main_loop()
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(ui.main_window);
         glfwPollEvents();
+
+        ::discord_integration.core->RunCallbacks();
     }
 }
 
@@ -93,6 +109,10 @@ int main()
 
     // ok we made it, setup look and feel
     Editor::set_editor_style();
+
+    // Initalize Discord activity status
+    discord::Core::Create(1260663285988982837, DiscordCreateFlags_Default, &discord_integration.core);
+    discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
 
     // load program jsons
     Debug::log("loading json files...");

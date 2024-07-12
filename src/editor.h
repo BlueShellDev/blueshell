@@ -22,6 +22,9 @@
 // stb
 #include "stb_image.h"
 
+// Discord
+#include "discord-game-sdk/discord.h"
+
 // internal
 #include "sources.h"
 #include "graphics/render.h"
@@ -112,6 +115,13 @@ namespace Editor
 
         // interesting function
         void relink_widgets_to_area(NSMB::Area* area);
+    };
+
+    // Discord integration
+    struct DiscordIntegration
+    {
+        discord::Activity activity{};
+        discord::Core* core{};
     };
 
     void init_render_mgr

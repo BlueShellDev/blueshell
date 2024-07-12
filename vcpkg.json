@@ -1,15 +1,16 @@
 {
     "dependencies": [
 	"glew",
-        "glfw3",
-        {
-            "name": "imgui",
-            "features": [
-                "docking-experimental",
-                "glfw-binding",
-                "opengl3-binding"
-            ]
-        },
-        "nlohmann-json"
+    "glfw3",
+    {
+        "name": "imgui",
+        "features": [
+            "docking-experimental",
+            "glfw-binding",
+            "opengl3-binding"
+        ]
+    },
+    "nlohmann-json",
+    "discord-game-sdk"
     ]
 }
