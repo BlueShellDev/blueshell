@@ -9,6 +9,23 @@ Editor::Application      editor;
 Editor::ApplicationUI    ui;
 Editor::DiscordIntegration  discord_integration;
 
+std::string transformString(const std::string& input) {
+    // Step 1: Convert to lowercase
+    std::string result = input;
+    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+
+    // Step 2: Replace spaces with hyphens
+    std::replace(result.begin(), result.end(), ' ', '-');
+
+    // Step 3: Remove the last segment after the last hyphen
+    size_t lastHyphenPos = result.find_last_of('-');
+    if (lastHyphenPos != std::string::npos) {
+        result = result.substr(0, lastHyphenPos);
+    }
+
+    return result;
+}
+
 void main_loop()
 {
     while (!glfwWindowShouldClose(ui.main_window))
@@ -46,6 +63,7 @@ void main_loop()
                 editor.change_current_area(editor.curr_area.area_index + 1);
                 ui.relink_widgets_to_area(&editor.curr_area);
                 discord_integration.activity.SetDetails("Editing a level");
+                discord_integration.activity.GetAssets().SetSmallImage(transformString(editor.curr_level_source.name).c_str());
                 discord_integration.activity.SetState(editor.curr_level_source.name.c_str());
                 discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             }
@@ -54,6 +72,7 @@ void main_loop()
                 editor.change_current_area(editor.curr_area.area_index - 1);
                 ui.relink_widgets_to_area(&editor.curr_area);
                 discord_integration.activity.SetDetails("Editing a level");
+                discord_integration.activity.GetAssets().SetSmallImage(transformString(editor.curr_level_source.name).c_str());
                 discord_integration.activity.SetState(editor.curr_level_source.name.c_str());
                 discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
             }
@@ -112,6 +131,7 @@ int main()
 
     // Initalize Discord activity status
     discord::Core::Create(1260663285988982837, DiscordCreateFlags_Default, &discord_integration.core);
+    discord_integration.activity.GetAssets().SetLargeImage("blue-shell");
     discord_integration.core->ActivityManager().UpdateActivity(discord_integration.activity, [](discord::Result result){});
 
     // load program jsons
