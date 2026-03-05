@@ -1,6 +1,6 @@
 #include "glfw_util.h"
 
-std::string BS::Util::GetShaderVersion()
+std::string Core::GetGLSLVersion()
 {
 #if defined(IMGUI_IMPL_OPENGL_ES2)
     // GL ES 2.0 + GLSL 100 (WebGL 1.0)
@@ -30,7 +30,7 @@ std::string BS::Util::GetShaderVersion()
     return glsl_version;
 }
 
-GLFWwindow *BS::Util::MakeGLFWWindow(const char *title, int width, int height)
+GLFWwindow *Core::MakeGLFWWindow(const char *title, int width, int height)
 {
     GLFWwindow *window = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (!window)
@@ -42,7 +42,7 @@ GLFWwindow *BS::Util::MakeGLFWWindow(const char *title, int width, int height)
     return window;
 }
 
-void BS::Util::ClearGLFWWindowWithColor(GLFWwindow *window, float r, float g, float b, float a)
+void Core::ClearGLFWWindowWithColor(GLFWwindow *window, float r, float g, float b, float a)
 {
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);

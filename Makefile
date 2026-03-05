@@ -1,9 +1,8 @@
 #CXX = g++
 #CXX = clang++
 
-IMGUI_DIR 			:= imgui
-IMGUI_EXTRAS_DIR 	:= imgui-extras
-STB_DIR 			:= stb
+IMGUI_DIR			:= imgui
+INC_DIR				:= include
 SRC_DIR 			:= src
 BUILD_DIR 			:= build
 BIN_DIR 			:= bin
@@ -25,29 +24,18 @@ SRCS += $(SRC_DIR)/core/util/glfw_util.cpp
 SRCS += $(SRC_DIR)/core/util/imgui_util.cpp
 
 # core systems
-SRCS += $(SRC_DIR)/core/systems/command/command_manager.cpp
-SRCS += $(SRC_DIR)/core/systems/io/binary_file.cpp
-SRCS += $(SRC_DIR)/core/systems/render/render.cpp
-SRCS += $(SRC_DIR)/core/systems/render/texture.cpp
-
-# nitro
-SRCS += $(SRC_DIR)/nitro/graphics/ncg.cpp
-SRCS += $(SRC_DIR)/nitro/graphics/ncl.cpp
-SRCS += $(SRC_DIR)/nitro/graphics/nsc.cpp
-
-# nsmb
-SRCS += $(SRC_DIR)/nsmb/tileset/tileset_definition.cpp
-SRCS += $(SRC_DIR)/nsmb/tileset/tileset_object.cpp
-SRCS += $(SRC_DIR)/nsmb/tileset/map16/map16.cpp
+SRCS += $(SRC_DIR)/core/command/command_manager.cpp
+SRCS += $(SRC_DIR)/core/io/binary_file.cpp
+SRCS += $(SRC_DIR)/core/render/render.cpp
+SRCS += $(SRC_DIR)/core/render/texture.cpp
 
 # program ui
-SRCS += $(SRC_DIR)/ui/windows/console_viewer.cpp
-SRCS += $(SRC_DIR)/ui/windows/textures_viewer.cpp
-SRCS += $(SRC_DIR)/ui/windows/tileset_definitions_editor.cpp
+SRCS += $(SRC_DIR)/blueshell/ui/windows/console_viewer.cpp
+SRCS += $(SRC_DIR)/blueshell/ui/windows/textures_viewer.cpp
 
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRCS)))
 
-CXXFLAGS := -std=c++20 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(STB_DIR) -I$(IMGUI_EXTRAS_DIR) -I./$(SRC_DIR)
+CXXFLAGS := -std=c++20 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(INC_DIR) -I./$(SRC_DIR)
 CXXFLAGS += -g -Wall -Wformat
 LIBS :=
 
@@ -93,23 +81,25 @@ $(BUILD_DIR)/%.o: $(IMGUI_EXTRAS_DIR)/backends/%.cpp | dirs
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/commands/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/ui/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/ui/windows/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/commands/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/util/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/systems/command/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/systems/console/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/systems/render/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/render/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/systems/io/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/io/%.cpp | dirs 
 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/filesystem/%.cpp | dirs 

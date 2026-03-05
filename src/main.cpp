@@ -7,61 +7,50 @@
 #include "core/util/imgui_util.h"
 #include "imfilebrowser.h"
 
-#include "ui/windows/console_viewer.h"
-#include "ui/windows/textures_viewer.h"
-#include "ui/windows/tileset_definitions_editor.h"
+#include "nsmb/simple_nsmb.h"
 
-bool BS::IO::ByteArray::LogReadsAndWrites = false;
+#include "blueshell/ui/windows/console_viewer.h"
+#include "blueshell/ui/windows/textures_viewer.h"
+
+bool Core::ByteArray::LogReadsAndWrites = false;
 
 int main(int, char **)
 {
     if (!glfwInit())
     {
-        BS::Console::Global().Err("Failed to initialize GLFW!");
+        Core::Console::Global().Err("Failed to initialize GLFW!");
         return EXIT_FAILURE;
     }
-    BS::Console::Global().Log("Initialized GLFW successfully.");
+    Core::Console::Global().Log("Initialized GLFW successfully.");
 
-    std::string glsl_version = BS::Util::GetShaderVersion();
+    std::string glsl_version = Core::GetGLSLVersion();
     if (glsl_version.empty())
     {
-        BS::Console::Global().Err("Failed to determine GLSL version string!");
+        Core::Console::Global().Err("Failed to determine GLSL version string!");
         glfwTerminate();
         return EXIT_FAILURE;
     }
-    BS::Console::Global().Log("Using GLSL: {}", glsl_version);
+    Core::Console::Global().Log("Using GLSL: {}", glsl_version);
 
-    GLFWwindow *window = BS::Util::MakeGLFWWindow("BlueShell", 1920, 1080);
+    GLFWwindow *window = Core::MakeGLFWWindow("BlueShell", 1920, 1080);
     if (window == nullptr)
     {
-        BS::Console::Global().Err("Failed to create main GLFW window!");
+        Core::Console::Global().Err("Failed to create main GLFW window!");
         glfwTerminate();
         return EXIT_FAILURE;
     }
-    BS::Util::BeginImGui(window, glsl_version, true);
+    Core::BeginImGui(window, glsl_version, true);
     ImGui::StyleColorsClassic();
     ImGui::GetStyle().WindowRounding = 5.0f;
     ImGui::GetStyle().FrameRounding = 5.0f;
     ImGui::GetStyle().ChildRounding = 5.0f;
     ImGui::GetStyle().CellPadding = ImVec2(6, 6);
 
-    BS::BSContext mainContext{};
-    mainContext.basePath = std::filesystem::current_path();
-    BS::Console::Global().Log("Set base path to: {}", mainContext.basePath.string());
-
-    mainContext.tilesetTableOffsets = {.entryCount = 76, // eventually load these from a config file or something instead of hardcoding them, but for now this is fine since they shouldn't ever change and if they do change then the editor user probably knows what they're doing and can change these values themselves
-                                       .NCGBaseOffset = 0x00030EA4,
-                                       .NCLBaseOffset = 0x00031494,
-                                       .PNLBaseOffset = 0x000316F4,
-                                       .UNTBaseOffset = 0x0002FA14,
-                                       .CHKBaseOffset = 0x0002FB44};
-    mainContext.tilesetDefinitions = BS::NSMB::ReadTilesetIndexFromOverlay0(mainContext.overlay0, mainContext.tilesetTableOffsets);
-
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        BS::Util::BeginImGuiFrame();
-        BS::Util::InitializeImGuiDockspace("MainDockspace");
+        Core::BeginImGuiFrame();
+        Core::InitializeImGuiDockspace("MainDockspace");
 
         static bool showConsole = true;
         static bool showTextureViewer = true;
@@ -71,8 +60,6 @@ int main(int, char **)
             BS::UI::ShowConsoleWindow(showConsole);
         if (showTextureViewer)
             BS::UI::ShowTexturesWindow(showTextureViewer);
-        if (showTilesetProperties)
-            BS::UI::ShowTilesetDefinitionsEditor(showTilesetProperties, mainContext);
         if (showAboutPopup)
             ImGui::OpenPopup("About BlueShell");
 
@@ -94,6 +81,7 @@ int main(int, char **)
             ImGui::EndChild();
             ImGui::EndPopup();
         }
+
 
         if (ImGui::BeginMainMenuBar())
         {
@@ -123,12 +111,12 @@ int main(int, char **)
             ImGui::EndMainMenuBar();
         }
 
-        BS::Util::ClearGLFWWindowWithColor(window, 0.2f, 0.2f, 0.2f, 1.0f);
-        BS::Util::EndImGuiFrame();
+        Core::ClearGLFWWindowWithColor(window, 0.2f, 0.2f, 0.2f, 1.0f);
+        Core::EndImGuiFrame();
         glfwSwapBuffers(window);
     }
     // end imgui context after loop
-    BS::Util::EndImGui();
+    Core::EndImGui();
     // terminate glfw
     glfwDestroyWindow(window);
     glfwTerminate();

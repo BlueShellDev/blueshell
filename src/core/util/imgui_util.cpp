@@ -1,7 +1,7 @@
 #include "core/util/imgui_util.h"
 #include "imgui_util.h"
 
-void BS::Util::BeginImGui(GLFWwindow *mainWindow, std::string glslVersion, bool supportDocking = true)
+void Core::BeginImGui(GLFWwindow *mainWindow, std::string glslVersion, bool supportDocking = true)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -16,14 +16,14 @@ void BS::Util::BeginImGui(GLFWwindow *mainWindow, std::string glslVersion, bool 
     ImGui_ImplOpenGL3_Init(glslVersion.c_str());
 }
 
-void BS::Util::BeginImGuiFrame()
+void Core::BeginImGuiFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void BS::Util::InitializeImGuiDockspace(std::string dockspaceID)
+void Core::InitializeImGuiDockspace(std::string dockspaceID)
 {
     ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
@@ -44,13 +44,13 @@ void BS::Util::InitializeImGuiDockspace(std::string dockspaceID)
     ImGui::End();
 }
 
-void BS::Util::EndImGuiFrame()
+void Core::EndImGuiFrame()
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void BS::Util::EndImGui()
+void Core::EndImGui()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
