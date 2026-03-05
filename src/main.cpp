@@ -11,6 +11,7 @@
 
 #include "blueshell/ui/windows/console_viewer.h"
 #include "blueshell/ui/windows/textures_viewer.h"
+#include "core/console.h"
 
 bool Core::ByteArray::LogReadsAndWrites = false;
 
@@ -62,6 +63,13 @@ int main(int, char **)
             BS::UI::ShowTexturesWindow(showTextureViewer);
         if (showAboutPopup)
             ImGui::OpenPopup("About BlueShell");
+
+        if(ImGui::Button("Log warning"))
+            Core::Console::Global().Warn("warn");
+        if(ImGui::Button("Log err"))
+            Core::Console::Global().Err("err");
+        if(ImGui::Button("Log normal"))
+            Core::Console::Global().Log("test");
 
         if (ImGui::BeginPopupModal("About BlueShell", &showAboutPopup, ImGuiWindowFlags_AlwaysAutoResize))
         {

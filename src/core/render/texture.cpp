@@ -3,6 +3,7 @@
 #include <stb_image.h>
 #include "core/console.h"
 
+// wrapper around MakeTextureFromBytes, uses stb_image to extract bytes from a typical image format
 Core::Texture Core::MakeTextureFromFile(const std::string &filePath, Texture::Format format)
 {
     Texture newTexture{};
@@ -17,6 +18,7 @@ Core::Texture Core::MakeTextureFromFile(const std::string &filePath, Texture::Fo
     return MakeTextureFromBytes(data, newTexture.width, newTexture.height, format);
 }
 
+// creates an OpenGL texture from specified bytes and format, currently only RGBA8888 & BGR565
 Core::Texture Core::MakeTextureFromBytes(const u8 *data, i32 width, i32 height, Texture::Format format)
 {
     Texture newTexture{};

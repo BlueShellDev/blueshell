@@ -22,6 +22,7 @@ namespace Core
         Texture(u32 id, i32 width, i32 height, Format format) : id(id), width(width), height(height), format(format) {}
     };
 
+    // wrapper around glIsTexture, returns false if Texture::id is not a real texture
     inline bool IsTextureValid(const Texture &texture) { return glIsTexture(texture.id); };
     Texture MakeTextureFromFile(const std::string &filePath, Texture::Format format);
     Texture MakeTextureFromBytes(const u8 *data, i32 width, i32 height, Texture::Format format);
