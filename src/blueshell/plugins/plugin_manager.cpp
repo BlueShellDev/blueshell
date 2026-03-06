@@ -67,20 +67,27 @@ bool BS::Plugins::PluginManager::DiscoverPlugins(std::string *out_error)
                 continue;
 
             const PluginManifestLoadResult manifest_result = LoadPluginManifestFromPath(plugin_manifest_path);
+            const std::string plugin_id = manifest_result.ok ? manifest_result.manifest.id : BuildPluginKey(manifest_result, plugin_dir);
 
-            PluginRecord record;
+            auto [it, inserted] = plugins_.try_emplace(plugin_id);
+            if (!inserted)
+            {
+                // Keep first-discovered plugin if duplicate IDs exist.
+                Core::Console::Global().Warn("[Plugin] Duplicate plugin id '{}' at '{}'; skipping duplicate", plugin_id, plugin_dir.string());
+                continue;
+            }
+
+            PluginRecord &record = it->second;
             record.directoryPath = plugin_dir;
-            record.id = BuildPluginKey(manifest_result, plugin_dir);
+            record.id = plugin_id;
 
             if (!manifest_result.ok)
             {
                 record.status = PluginStatus::InvalidManifest;
                 record.statusMessage = manifest_result.error;
-                plugins_[record.id] = std::move(record);
                 continue;
             }
 
-            record.id = manifest_result.manifest.id;
             record.manifest = manifest_result.manifest;
             record.status = PluginStatus::Discovered;
             record.statusMessage.clear();
@@ -93,7 +100,6 @@ bool BS::Plugins::PluginManager::DiscoverPlugins(std::string *out_error)
                 {
                     record.status = PluginStatus::InvalidManifest;
                     record.statusMessage = std::format("Invalid grants file: {}", grants_error);
-                    plugins_[record.id] = std::move(record);
                     continue;
                 }
             }
@@ -104,7 +110,6 @@ bool BS::Plugins::PluginManager::DiscoverPlugins(std::string *out_error)
                 {
                     record.status = PluginStatus::InvalidManifest;
                     record.statusMessage = std::format("Failed to create default grants file: {}", grants_error);
-                    plugins_[record.id] = std::move(record);
                     continue;
                 }
             }
@@ -113,14 +118,11 @@ bool BS::Plugins::PluginManager::DiscoverPlugins(std::string *out_error)
             {
                 record.status = PluginStatus::Disabled;
                 record.statusMessage = "Plugin is disabled";
-                plugins_[record.id] = std::move(record);
                 continue;
             }
 
             if (!LoadPluginInternal(record, &record.statusMessage))
                 record.status = PluginStatus::LoadError;
-
-            plugins_[record.id] = std::move(record);
         }
 
         return true;
