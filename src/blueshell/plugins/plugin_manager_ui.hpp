@@ -56,7 +56,10 @@ namespace BS::Plugins::UI
         ImGui::Separator();
 
         ImGui::BeginChild("##plugin_list", ImVec2(430, 0), true);
-        if (ImGui::BeginTable("##plugins_table", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY))
+        if (ImGui::BeginTable(
+                "##plugins_table",
+                5,
+                ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable))
         {
             ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
             ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_WidthStretch);
