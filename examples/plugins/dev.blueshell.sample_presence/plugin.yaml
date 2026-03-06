@@ -1,0 +1,14 @@
+id: dev.blueshell.sample_presence
+name: Sample Presence Plugin
+version: 0.1.0
+apiVersion: 1
+entry:
+  windows: bin/sample_presence.dll
+  linux: bin/libsample_presence.so
+  macos: bin/libsample_presence.dylib
+apis:
+  - RequestEditorContext
+  - HostLog
+permissions:
+  - editor.context.read
+  - host.log.write
