@@ -2,7 +2,7 @@
 
 namespace
 {
-    inline Core::Addr32 ConsumeObjectRow(const Core::ByteArray &bytes, Core::Addr32 read_at)
+    inline Core::Addr32 ConsumeTilesetObjectRow(const Core::ByteArray &bytes, Core::Addr32 read_at)
     {
         while (read_at < bytes.bytes.size())
         {
@@ -21,7 +21,7 @@ namespace
         return static_cast<Core::Addr32>(bytes.bytes.size());
     }
 
-    inline Core::Addr32 ConsumeObject(const Core::ByteArray &bytes, Core::Addr32 read_at)
+    inline Core::Addr32 ConsumeTilesetObject(const Core::ByteArray &bytes, Core::Addr32 read_at)
     {
         while (read_at < bytes.bytes.size())
         {
@@ -29,7 +29,7 @@ namespace
             if (control == NSMB::GFX::TilesetObjectControlFlag_TerminateObject)
                 return read_at + 1;
 
-            read_at = ConsumeObjectRow(bytes, read_at);
+            read_at = ConsumeTilesetObjectRow(bytes, read_at);
         }
 
         return static_cast<Core::Addr32>(bytes.bytes.size());
@@ -92,7 +92,7 @@ NSMB::GFX::TilesetObjectRow NSMB::GFX::ReadTilesetObjectRowFromBytes(const Core:
 {
     TilesetObjectRow row;
     row.id = static_cast<TilesetObjectRowID>(read_at / TilesetObjectTileSizeBytes);
-    (void)ConsumeObjectRow(bytes, read_at);
+    (void)ConsumeTilesetObjectRow(bytes, read_at);
     return row;
 }
 
@@ -100,7 +100,7 @@ NSMB::GFX::TilesetObject NSMB::GFX::ReadTilesetObjectFromBytes(const Core::ByteA
 {
     TilesetObject object;
     object.id = static_cast<TilesetObjectID>(read_at);
-    (void)ConsumeObject(bytes, read_at);
+    (void)ConsumeTilesetObject(bytes, read_at);
     return object;
 }
 
@@ -121,7 +121,7 @@ NSMB::GFX::TilesetObjectSet NSMB::GFX::ReadTilesetObjectSetFromBytes(const Core:
         object.id = id++;
         object_set.push_back(object);
 
-        const Core::Addr32 next = ConsumeObject(bytes, offset);
+        const Core::Addr32 next = ConsumeTilesetObject(bytes, offset);
         if (next <= offset)
             break;
         offset = next;

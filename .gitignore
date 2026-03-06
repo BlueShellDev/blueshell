@@ -3,3 +3,5 @@ bin
 build
 imgui.ini
 .vscode
+src/nsmb-old
+src/nitro-old

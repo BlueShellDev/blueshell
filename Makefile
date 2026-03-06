@@ -19,10 +19,6 @@ SRCS += $(IMGUI_DIR)/imgui_widgets.cpp
 SRCS += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp 
 SRCS += $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 
-# core utils
-SRCS += $(SRC_DIR)/core/util/glfw_util.cpp
-SRCS += $(SRC_DIR)/core/util/imgui_util.cpp
-
 # core systems
 SRCS += $(SRC_DIR)/core/command/command_manager.cpp
 SRCS += $(SRC_DIR)/core/io/binary_file.cpp
@@ -30,8 +26,9 @@ SRCS += $(SRC_DIR)/core/render/render.cpp
 SRCS += $(SRC_DIR)/core/render/texture.cpp
 
 # program ui
-SRCS += $(SRC_DIR)/blueshell/ui/windows/console_viewer.cpp
-SRCS += $(SRC_DIR)/blueshell/ui/windows/textures_viewer.cpp
+SRCS += $(SRC_DIR)/blueshell/ui/util/glfw_util.cpp
+SRCS += $(SRC_DIR)/blueshell/ui/util/imgui_util.cpp
+SRCS += $(SRC_DIR)/blueshell/blueshell.cpp
 
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRCS)))
 
@@ -76,9 +73,6 @@ $(BUILD_DIR)/%.o: $(IMGUI_DIR)/%.cpp | dirs
 $(BUILD_DIR)/%.o: $(IMGUI_DIR)/backends/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/%.o: $(IMGUI_EXTRAS_DIR)/backends/%.cpp | dirs
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
@@ -88,11 +82,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/commands/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/util/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/%.hpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/popups/%.hpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/util/%.cpp | dirs
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/%.cpp | dirs 
@@ -100,19 +96,11 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/core/%.cpp | dirs
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/render/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/io/%.cpp | dirs 
-
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/filesystem/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/graphics/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-
+$(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/tileset/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/tileset/map16/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 run: all

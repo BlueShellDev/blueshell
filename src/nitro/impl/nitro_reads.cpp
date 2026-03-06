@@ -1,6 +1,5 @@
 #include "nitro/simple_nitro.h"
 
-
 Nitro::Character Nitro::ReadCharacterFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
     Character character;

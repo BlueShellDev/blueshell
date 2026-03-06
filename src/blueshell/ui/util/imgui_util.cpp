@@ -1,29 +1,23 @@
-#include "core/util/imgui_util.h"
 #include "imgui_util.h"
 
-void Core::BeginImGui(GLFWwindow *mainWindow, std::string glslVersion, bool supportDocking = true)
+ImGuiContext* BS::UI::BeginImGui(GLFWwindow *mainWindow, std::string glslVersion)
 {
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    // imgui configs
-    if (supportDocking)
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigWindowsMoveFromTitleBarOnly = true;
-    ImGui::StyleColorsDark();
+    ImGuiContext* imgui_ctx = ImGui::CreateContext();
 
     ImGui_ImplGlfw_InitForOpenGL(mainWindow, true);
     ImGui_ImplOpenGL3_Init(glslVersion.c_str());
+    return imgui_ctx;
 }
 
-void Core::BeginImGuiFrame()
+void BS::UI::BeginImGuiFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void Core::InitializeImGuiDockspace(std::string dockspaceID)
+void BS::UI::InitializeImGuiDockspace(std::string dockspaceID)
 {
     ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
@@ -38,21 +32,22 @@ void Core::InitializeImGuiDockspace(std::string dockspaceID)
                                     ImGuiWindowFlags_NoMove |
                                     ImGuiWindowFlags_NoBringToFrontOnFocus |
                                     ImGuiWindowFlags_NoNavFocus;
+
     ImGui::Begin("Dockspace", NULL, window_flags);
     ImGuiID mainDockspaceID = ImGui::GetID(dockspaceID.c_str());
     ImGui::DockSpace(mainDockspaceID);
     ImGui::End();
 }
 
-void Core::EndImGuiFrame()
+void BS::UI::EndImGuiFrame()
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Core::EndImGui()
+void BS::UI::EndImGui(ImGuiContext* imgui_ctx)
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    ImGui::DestroyContext(imgui_ctx);
 }

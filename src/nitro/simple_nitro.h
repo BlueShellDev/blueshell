@@ -65,15 +65,15 @@ namespace Nitro
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteCharacterToBytes           (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteBitmapToBytes              (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteCharacterToBytes           (const Character &character, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteBitmapToBytes              (const CharacterBitmap& char_bmp, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
-    inline void                 WritePalette16ToBytes           (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WritePalette256ToBytes          (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteExPaletteToBytes           (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WritePalette16ToBytes           (const Palette16& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WritePalette256ToBytes          (const Palette256& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteExPaletteToBytes           (const ExPalette& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
-    inline void                 WriteScreenTileToBytes          (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteScreenToBytes              (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteScreenTileToBytes          (const ScreenTile& scr_tile, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteScreenToBytes              (const Screen& scr, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
     //
     // FUNCTIONS: UTILITY
@@ -174,5 +174,5 @@ namespace Nitro::FS
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteFilePathTableToBytes       (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    inline void                 WriteFilePathTableToBytes       (const FilePathTable& table, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 };

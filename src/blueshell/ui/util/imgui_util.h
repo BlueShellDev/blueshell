@@ -5,11 +5,11 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-namespace Core
+namespace BS::UI
 {
-    void BeginImGui(GLFWwindow *mainWindow, std::string glslVersion, bool supportDocking);
+    ImGuiContext* BeginImGui(GLFWwindow *mainWindow, std::string glslVersion);
     void BeginImGuiFrame();
     void InitializeImGuiDockspace(std::string dockspaceID);
     void EndImGuiFrame();
-    void EndImGui();
+    void EndImGui(ImGuiContext* imgui_ctx);
 }

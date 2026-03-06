@@ -3,7 +3,7 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
 
-namespace Core
+namespace BS::UI
 {
     std::string GetGLSLVersion();
     GLFWwindow *MakeGLFWWindow(const char *title, int width, int height);

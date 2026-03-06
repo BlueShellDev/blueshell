@@ -96,8 +96,6 @@ namespace NSMB::GFX
     inline constexpr size_t     TilesetBehaviorTileSizeBytes    = 4;
     
     inline constexpr size_t     TilesetObjectTileSizeBytes      = 3;
-    inline constexpr size_t     TilesetObjectRowSizeBytes       (const TilesetObjectRow &objectRow);
-    inline constexpr size_t     TilesetObjectSizeBytes          (const TilesetObject &object);
 
     //
     // FUNCTIONS: READS
@@ -118,16 +116,16 @@ namespace NSMB::GFX
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteTilesetMap16TileToBytes    (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetMap16SetToBytes     (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetMap16TileToBytes    (const TilesetMap16Tile& map16_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetMap16SetToBytes     (const TilesetMap16Set& map16, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
-    inline void                 WriteTilesetBehaviorTileToBytes (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetBehaviorSetToBytes  (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetBehaviorTileToBytes (const TilesetBehaviorTile& behav_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetBehaviorSetToBytes  (const TilesetBehaviorSet& behav_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
     
-    inline void                 WriteTilesetObjectTileToBytes   (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectRowToBytes    (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectToBytes       (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectSetToBytes    (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetObjectTileToBytes   (const TilesetObjectTile& obj_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetObjectRowToBytes    (const TilesetObjectRow& obj_row, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetObjectToBytes       (const TilesetObject& obj, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteTilesetObjectSetToBytes    (const TilesetObjectSet& obj_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
     //
     // STRUCTURES
@@ -212,7 +210,7 @@ namespace NSMB::GFX
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteBackgroundToBytes          (const Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    inline void                 WriteBackgroundToBytes          (const Background& bg, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
     //
     // FUNCTIONS: UTILITIES
