@@ -1,5 +1,6 @@
 #include "blueshell.h"
 #include "core/io/byte_array.h"
+#include "plugins/plugin_manager_ui.hpp"
 #include "ui/windows/popups/all_popups.h"
 #include "ui/windows/all_windows.h"
 
@@ -15,17 +16,22 @@ void BS::RunUI(MainContext *ctx)
     ImGui::GetStyle().FrameRounding         = 5.0f;
     ImGui::GetStyle().ChildRounding         = 5.0f;
     ImGui::GetStyle().CellPadding           = ImVec2(6, 6);
+    double last_frame_time = glfwGetTime();
 
     while (!glfwWindowShouldClose(ctx->window))
     {
         glfwPollEvents();
         BS::UI::BeginImGuiFrame();
         BS::UI::InitializeImGuiDockspace("bs_dockspace");
+        const double frame_time = glfwGetTime();
+        const double delta_seconds = frame_time - last_frame_time;
+        last_frame_time = frame_time;
 
         static bool showConsole             = true;
         static bool showTextureViewer       = true;
         static bool showAboutPopup          = false;
         static bool showDebugWindow         = false;
+        static bool showPluginManager       = false;
 
         if (ImGui::BeginMainMenuBar())
         {
@@ -48,6 +54,8 @@ void BS::RunUI(MainContext *ctx)
                 ImGui::Separator();
                 if (ImGui::MenuItem("Show Debug Window", nullptr, showDebugWindow))
                     showDebugWindow = !showDebugWindow;
+                if (ImGui::MenuItem("Show Plugin Manager", nullptr, showPluginManager))
+                    showPluginManager = !showPluginManager;
 
                 ImGui::EndMenu();
             }
@@ -74,6 +82,10 @@ void BS::RunUI(MainContext *ctx)
 
         if (showDebugWindow)
             BS::UI::ShowDebugWindow("Debug", &showDebugWindow, ctx);
+        if (showPluginManager)
+            BS::Plugins::UI::ShowPluginManagerWindow("Plugin Manager", &showPluginManager, &ctx->pluginManager);
+
+        ctx->pluginManager.TickAll(delta_seconds);
 
         BS::UI::ClearGLFWWindowWithColor(ctx->window, 0.2f, 0.2f, 0.2f, 1.0f);
         BS::UI::EndImGuiFrame();
@@ -112,11 +124,15 @@ bool BS::InitContext(MainContext *ctx, const std::string &win_title, const int &
         return false;
     }
 
+    if (!ctx->pluginManager.Initialize("./plugins", ctx->editorStateProvider, ctx->levelEditSink))
+        Core::Console::Global().Err("Plugin manager initialization failed; continuing with empty plugin registry");
+
     return true;
 }
 
 void BS::DestroyContext(MainContext *ctx)
 {
+    ctx->pluginManager.Shutdown();
     BS::UI::EndImGui(ctx->imgui_ctx);
     glfwDestroyWindow(ctx->window);
     glfwTerminate();

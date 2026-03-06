@@ -7,6 +7,7 @@ SRC_DIR 			:= src
 BUILD_DIR 			:= build
 BIN_DIR 			:= bin
 EXE 				:= $(BIN_DIR)/BlueShell
+YAML_CPP_DIR		:= deps/yaml-cpp
 
 SRCS := $(SRC_DIR)/main.cpp
 
@@ -29,10 +30,13 @@ SRCS += $(SRC_DIR)/core/render/texture.cpp
 SRCS += $(SRC_DIR)/blueshell/ui/util/glfw_util.cpp
 SRCS += $(SRC_DIR)/blueshell/ui/util/imgui_util.cpp
 SRCS += $(SRC_DIR)/blueshell/blueshell.cpp
+SRCS += $(wildcard $(SRC_DIR)/blueshell/plugins/*.cpp)
+SRCS += $(wildcard $(YAML_CPP_DIR)/src/*.cpp)
 
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRCS)))
 
 CXXFLAGS := -std=c++20 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(INC_DIR) -I./$(SRC_DIR)
+CXXFLAGS += -I./$(YAML_CPP_DIR)/include
 CXXFLAGS += -g -Wall -Wformat
 LIBS :=
 
@@ -40,7 +44,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
     ECHO_MESSAGE := Linux
     LINUX_GL_LIBS := -lGL
-    LIBS += $(LINUX_GL_LIBS) -lX11 `pkg-config --static --libs glfw3`
+    LIBS += $(LINUX_GL_LIBS) -lX11 -ldl `pkg-config --static --libs glfw3`
     CXXFLAGS += `pkg-config --cflags glfw3`
 endif
 
@@ -88,6 +92,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/%.hpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/popups/%.hpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/plugins/%.cpp | dirs
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
@@ -101,6 +107,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/core/io/%.cpp | dirs
 $(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(YAML_CPP_DIR)/src/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 run: all

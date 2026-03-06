@@ -5,3 +5,4 @@ imgui.ini
 .vscode
 src/nsmb-old
 src/nitro-old
+/plugins
