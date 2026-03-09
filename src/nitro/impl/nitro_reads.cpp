@@ -1,5 +1,7 @@
 #include "nitro/simple_nitro.h"
 
+// none of these do bounds checking!!
+
 Nitro::Character Nitro::ReadCharacterFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
     Character character;
@@ -28,7 +30,10 @@ Nitro::Palette16 Nitro::ReadPalette16FromBytes(const Core::ByteArray &bytes, Cor
 {
     Palette16 palette;
     for (size_t i = 0; i < Palette16SizeColors; ++i)
+    {
         palette.colors[i] = bytes.Read<Color>(read_at + i * sizeof(Color));
+        NitroBGRToTrueBGR(palette.colors[i]);
+    }
     return palette;
 }
 
@@ -36,19 +41,23 @@ Nitro::Palette256 Nitro::ReadPalette256FromBytes(const Core::ByteArray &bytes, C
 {
     Palette256 palette;
     for (size_t i = 0; i < Palette256SizeColors; ++i)
+    {
         palette.colors[i] = bytes.Read<Color>(read_at + i * sizeof(Color));
+        NitroBGRToTrueBGR(palette.colors[i]);
+    }
     return palette;
 }
 
 Nitro::ExPalette Nitro::ReadExPaletteFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    ExPalette palette;
+    ExPalette ex_palette;
     for (size_t i = 0; i < ExPaletteMaxPaletteCount; ++i)
     {
-        palette.palettes[i] = ReadPalette256FromBytes(bytes, read_at + i * Palette256SizeBytes);
-        palette.palettes[i].id = i;
+        Palette256 sub_palette = ReadPalette256FromBytes(bytes, read_at + i * Palette256SizeBytes);
+        sub_palette.id = i;
+        ex_palette.pals.push_back(sub_palette);
     }
-    return palette;
+    return ex_palette;
 }
 
 Nitro::ScreenTile Nitro::ReadScreenTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)

@@ -44,30 +44,29 @@ namespace NSMB
     //
 };
 
-namespace NSMB::GFX
+namespace NSMB::Tilesets
 {
-    /// BEG-SECTION: TILESETS ///
-
     //
     // TYPES
     //
 
-    struct TilesetMap16Tile;
-    struct TilesetBehaviorTile;
-    struct TilesetObject;
-    struct TilesetObjectRow;
-    struct TilesetObjectTile;
+    struct Map16Tile;
+    struct BehaviorTile;
+    struct Object;
+    struct ObjectRow;
+    struct ObjectTile;
     struct Tileset;
     
+    using Map16TileID                                           = u16;
+    using Map16                                                 = std::vector<Map16Tile>;
+    using BehaviorTileID                                        = u16;
+    using BehaviorSet                                           = std::vector<BehaviorTile>;
+    using ObjectTileID                                          = u16;
+    using ObjectRowID                                           = u16;
+    using ObjectID                                              = u16;
+    using ObjectSet                                             = std::vector<Object>;
     using TilesetID                                             = u8;
-    using TilesetMap16TileID                                    = u16;
-    using TilesetMap16Set                                       = std::vector<TilesetMap16Tile>;
-    using TilesetBehaviorTileID                                 = u16;
-    using TilesetBehaviorSet                                    = std::vector<TilesetBehaviorTile>;
-    using TilesetObjectTileID                                   = u16;
-    using TilesetObjectRowID                                    = u16;
-    using TilesetObjectID                                       = u16;
-    using TilesetObjectSet                                      = std::vector<TilesetObject>;
+
 
     enum TilesetObjectControlFlag : u8
     {
@@ -91,79 +90,84 @@ namespace NSMB::GFX
     //
 
     // TOOD: add background constants?
-    inline constexpr size_t     TilesetMap16TileSizeBytes       = 4 * Nitro::ScreenTileSizeBytes;
+    inline constexpr size_t     Map16TileWidthTiles             = 2;
+    inline constexpr size_t     Map16TileHeightTiles            = 2;
+    inline constexpr size_t     Map16TileSizeTiles              = Map16TileWidthTiles * Map16TileHeightTiles;                  
+    inline constexpr size_t     Map16TileSizeBytes              = Map16TileSizeTiles * Nitro::ScreenTileSizeBytes;
 
-    inline constexpr size_t     TilesetBehaviorTileSizeBytes    = 4;
+    inline constexpr size_t     BehaviorTileSizeBytes           = 4;
     
-    inline constexpr size_t     TilesetObjectTileSizeBytes      = 3;
+    inline constexpr size_t     ObjectTileSizeBytes             = 3;
 
     //
     // FUNCTIONS: READS
     //
 
-    inline TilesetMap16Tile     ReadTilesetMap16TileFromBytes   (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline TilesetMap16Set      ReadTilesetMap16SetFromBytes    (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Map16Tile                   ReadMap16TileFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Map16                       ReadMap16FromBytes              (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
-    inline TilesetBehaviorTile  ReadTilesetBehaviorTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline TilesetBehaviorSet   ReadTilesetBehaviorSetFromBytes (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    BehaviorTile                ReadBehaviorTileFromBytes       (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    BehaviorSet                 ReadBehaviorSetFromBytes        (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
     
-    inline TilesetObjectTile    ReadTilesetObjectTileFromBytes  (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline TilesetObjectRow     ReadTilesetObjectRowFromBytes   (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline TilesetObject        ReadTilesetObjectFromBytes      (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline TilesetObjectSet     ReadTilesetObjectSetFromBytes   (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    ObjectTile                  ReadObjectTileFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    ObjectRow                   ReadObjectRowFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Object                      ReadObjectFromBytes             (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    ObjectSet                   ReadObjectSetFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
     //
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteTilesetMap16TileToBytes    (const TilesetMap16Tile& map16_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetMap16SetToBytes     (const TilesetMap16Set& map16, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteMap16TileToBytes           (const Map16Tile& map16_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteMap16ToBytes               (const Map16& map16, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
-    inline void                 WriteTilesetBehaviorTileToBytes (const TilesetBehaviorTile& behav_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetBehaviorSetToBytes  (const TilesetBehaviorSet& behav_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteBehaviorTileToBytes        (const BehaviorTile& behav_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteBehaviorSetToBytes         (const BehaviorSet& behav_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
     
-    inline void                 WriteTilesetObjectTileToBytes   (const TilesetObjectTile& obj_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectRowToBytes    (const TilesetObjectRow& obj_row, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectToBytes       (const TilesetObject& obj, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-    inline void                 WriteTilesetObjectSetToBytes    (const TilesetObjectSet& obj_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteObjectTileToBytes          (const ObjectTile& obj_tile, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteObjectRowToBytes           (const ObjectRow& obj_row, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteObjectToBytes              (const Object& obj, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
+    void                        WriteObjectSetToBytes           (const ObjectSet& obj_set, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
     //
     // STRUCTURES
     //
 
-    struct TilesetMap16Tile
+    struct Map16Tile
     {
-        TilesetMap16TileID      id;
+        Map16TileID             id;
 
-        inline                  TilesetMap16Tile()              {};
+        Nitro::ScreenTile       scr_tiles[Map16TileWidthTiles][Map16TileHeightTiles];
+
+        inline                  Map16Tile()                     {};
     };
 
-    struct TilesetBehaviorTile
+    struct BehaviorTile
     {
-        TilesetBehaviorTileID   id;
+        BehaviorTileID          id;
 
-        inline                  TilesetBehaviorTile()           {};
+        inline                  BehaviorTile()                  {};
     };
 
-    struct TilesetObjectTile
+    struct ObjectTile
     {
-        TilesetObjectTileID     id;
+        ObjectTileID            id;
 
-        inline                  TilesetObjectTile()             {};
+        inline                  ObjectTile()                    {};
     };
 
-    struct TilesetObjectRow
+    struct ObjectRow
     {
-        TilesetObjectRowID      id;
+        ObjectRowID             id;
 
-        inline                  TilesetObjectRow()              {};
+        inline                  ObjectRow()                     {};
     };
 
-    struct TilesetObject
+    struct Object
     {
-        TilesetObjectID         id;
+        ObjectID                id;
 
-        inline                  TilesetObject()                 {};
+        inline                  Object()                        {};
     };
 
     struct Tileset
@@ -172,24 +176,22 @@ namespace NSMB::GFX
 
         Nitro::CharacterBitmap  characterBitmap;
         Nitro::ExPalette        extendedPalette;
-        TilesetMap16Set         map16;
-        TilesetObjectSet        objects;
-        TilesetBehaviorSet      behaviors;
+        Map16                   map16;
+        BehaviorSet             behaviors;
+        ObjectSet               objects;
 
         inline                  Tileset()                       { id = 0; };
     };
-    
-    /// END-SECTION: TILESETS ///
-    /// BEG-SECTION: BACKGROUNDS ///
+}
 
+namespace NSMB::Backgrounds
+{
     //
     // TYPES
     //
 
     struct Background;
-
     using BackgroundID                                          = u8;
-
     enum class BackgroundType
     {
         Top,
@@ -197,24 +199,16 @@ namespace NSMB::GFX
     };
 
     //
-    // CONSTANTS
-    //
-
-    //
     // FUNCTIONS: READS
     //
 
-    inline Background           ReadBackgroundFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Background                  ReadBackgroundFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
     //
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteBackgroundToBytes          (const Background& bg, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
-
-    //
-    // FUNCTIONS: UTILITIES
-    //
+    void                        WriteBackgroundToBytes          (const Background& bg, Core::ByteArray &bytes, Core::Addr32 Write_at = 0);
 
     //
     // STRUCTURES
@@ -226,6 +220,4 @@ namespace NSMB::GFX
 
         inline                  Background()                    {};
     };
-
-    /// END-SECTION: BACKGROUNDS ///
 };

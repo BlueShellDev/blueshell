@@ -19,13 +19,13 @@ namespace Core
             switch (t)
             {
                 case Type::Log:
-                    text = "[LOG] " + msg + '\n';
+                    text = " [*] " + msg + '\n';
                     break;
                 case Type::Warning:
-                    text = "[WAR] " + msg + '\n';
+                    text = " [!] " + msg + '\n';
                     break;
                 case Type::Error:
-                    text = "[ERR] " + msg + '\n';
+                    text = " [X] " + msg + '\n';
                     break;
                 default:
                     break;
@@ -57,7 +57,7 @@ namespace Core
         {
             ConsoleMsg message(ConsoleMsg::Type::Log, std::vformat(fmt.get(), std::make_format_args(args...)));
             buffer.emplace_back(message);
-            std::cout << message.text;
+            std::cout << "\033[0m" << message.text;
         };
 
         template <class... _Args>
@@ -65,7 +65,7 @@ namespace Core
         {
             ConsoleMsg message(ConsoleMsg::Type::Warning, std::vformat(fmt.get(), std::make_format_args(args...)));
             buffer.emplace_back(message);
-            std::cout << message.text;
+            std::cout << "\e[0;33m" << message.text;
         };
 
         template <class... _Args>
@@ -73,7 +73,7 @@ namespace Core
         {
             ConsoleMsg message(ConsoleMsg::Type::Error, std::vformat(fmt.get(), std::make_format_args(args...)));
             buffer.emplace_back(message);
-            std::cout << message.text;
+            std::cout << "\033[31m" << message.text;
         };
     };
 }

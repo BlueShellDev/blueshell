@@ -7,15 +7,15 @@ namespace
         while (read_at < bytes.bytes.size())
         {
             const u8 control = bytes.Read<u8>(read_at);
-            if (control == NSMB::GFX::TilesetObjectControlFlag_TerminateRow)
+            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateRow)
                 return read_at + 1;
 
-            if (control & NSMB::GFX::TilesetObjectControlFlag_Slope)
+            if (control & NSMB::Tilesets::TilesetObjectControlFlag_Slope)
                 ++read_at;
 
-            if (read_at + NSMB::GFX::TilesetObjectTileSizeBytes > bytes.bytes.size())
+            if (read_at + NSMB::Tilesets::ObjectTileSizeBytes > bytes.bytes.size())
                 return static_cast<Core::Addr32>(bytes.bytes.size());
-            read_at += NSMB::GFX::TilesetObjectTileSizeBytes;
+            read_at += NSMB::Tilesets::ObjectTileSizeBytes;
         }
 
         return static_cast<Core::Addr32>(bytes.bytes.size());
@@ -26,7 +26,7 @@ namespace
         while (read_at < bytes.bytes.size())
         {
             const u8 control = bytes.Read<u8>(read_at);
-            if (control == NSMB::GFX::TilesetObjectControlFlag_TerminateObject)
+            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateObject)
                 return read_at + 1;
 
             read_at = ConsumeTilesetObjectRow(bytes, read_at);
@@ -36,79 +36,81 @@ namespace
     }
 }
 
-NSMB::GFX::TilesetMap16Tile NSMB::GFX::ReadTilesetMap16TileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::Map16Tile NSMB::Tilesets::ReadMap16TileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    (void)bytes;
-    TilesetMap16Tile tile;
-    tile.id = static_cast<TilesetMap16TileID>(read_at / TilesetMap16TileSizeBytes);
+    Map16Tile tile;
+    for (size_t y = 0; y < Map16TileHeightTiles; y++)
+        for (size_t x = 0; x < Map16TileWidthTiles; x++)
+            tile.scr_tiles[y][x] = Nitro::ReadScreenTileFromBytes(bytes, read_at + ((x * Map16TileWidthTiles + y) * Map16TileSizeBytes));
+    //tile.id = static_cast<Map16TileID>(read_at / Map16TileSizeBytes);
     return tile;
 }
 
-NSMB::GFX::TilesetMap16Set NSMB::GFX::ReadTilesetMap16SetFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::Map16 NSMB::Tilesets::ReadMap16FromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetMap16Set map16_set;
+    Map16 map16_set;
     Core::Addr32 offset = read_at;
-    TilesetMap16TileID id = 0;
-    while (offset + TilesetMap16TileSizeBytes <= bytes.bytes.size())
+    Map16TileID id = 0;
+    while (offset + Map16TileSizeBytes <= bytes.bytes.size())
     {
-        TilesetMap16Tile tile = ReadTilesetMap16TileFromBytes(bytes, offset);
+        Map16Tile tile = ReadMap16TileFromBytes(bytes, offset);
         tile.id = id++;
         map16_set.push_back(tile);
-        offset += TilesetMap16TileSizeBytes;
+        offset += Map16TileSizeBytes;
     }
     return map16_set;
 }
 
-NSMB::GFX::TilesetBehaviorTile NSMB::GFX::ReadTilesetBehaviorTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::BehaviorTile NSMB::Tilesets::ReadBehaviorTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetBehaviorTile tile;
-    tile.id = bytes.Read<TilesetBehaviorTileID>(read_at);
+    BehaviorTile tile;
+    tile.id = bytes.Read<BehaviorTileID>(read_at);
     return tile;
 }
 
-NSMB::GFX::TilesetBehaviorSet NSMB::GFX::ReadTilesetBehaviorSetFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::BehaviorSet NSMB::Tilesets::ReadBehaviorSetFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetBehaviorSet behavior_set;
+    BehaviorSet behavior_set;
     Core::Addr32 offset = read_at;
-    TilesetBehaviorTileID id = 0;
-    while (offset + TilesetBehaviorTileSizeBytes <= bytes.bytes.size())
+    BehaviorTileID id = 0;
+    while (offset + BehaviorTileSizeBytes <= bytes.bytes.size())
     {
-        TilesetBehaviorTile tile = ReadTilesetBehaviorTileFromBytes(bytes, offset);
+        BehaviorTile tile = ReadBehaviorTileFromBytes(bytes, offset);
         tile.id = id++;
         behavior_set.push_back(tile);
-        offset += TilesetBehaviorTileSizeBytes;
+        offset += BehaviorTileSizeBytes;
     }
     return behavior_set;
 }
 
-NSMB::GFX::TilesetObjectTile NSMB::GFX::ReadTilesetObjectTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::ObjectTile NSMB::Tilesets::ReadObjectTileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetObjectTile tile;
-    tile.id = bytes.Read<TilesetObjectTileID>(read_at + 1);
+    ObjectTile tile;
+    tile.id = bytes.Read<ObjectTileID>(read_at + 1);
     return tile;
 }
 
-NSMB::GFX::TilesetObjectRow NSMB::GFX::ReadTilesetObjectRowFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::ObjectRow NSMB::Tilesets::ReadObjectRowFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetObjectRow row;
-    row.id = static_cast<TilesetObjectRowID>(read_at / TilesetObjectTileSizeBytes);
+    ObjectRow row;
+    row.id = static_cast<ObjectRowID>(read_at / ObjectTileSizeBytes);
     (void)ConsumeTilesetObjectRow(bytes, read_at);
     return row;
 }
 
-NSMB::GFX::TilesetObject NSMB::GFX::ReadTilesetObjectFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::Object NSMB::Tilesets::ReadObjectFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetObject object;
-    object.id = static_cast<TilesetObjectID>(read_at);
+    Object object;
+    object.id = static_cast<ObjectID>(read_at);
     (void)ConsumeTilesetObject(bytes, read_at);
     return object;
 }
 
-NSMB::GFX::TilesetObjectSet NSMB::GFX::ReadTilesetObjectSetFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Tilesets::ObjectSet NSMB::Tilesets::ReadObjectSetFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    TilesetObjectSet object_set;
+    ObjectSet object_set;
     Core::Addr32 offset = read_at;
-    TilesetObjectID id = 0;
+    ObjectID id = 0;
     while (offset < bytes.bytes.size())
     {
         if (bytes.Read<u8>(offset) == TilesetObjectControlFlag_TerminateObject)
@@ -117,7 +119,7 @@ NSMB::GFX::TilesetObjectSet NSMB::GFX::ReadTilesetObjectSetFromBytes(const Core:
             continue;
         }
 
-        TilesetObject object = ReadTilesetObjectFromBytes(bytes, offset);
+        Object object = ReadObjectFromBytes(bytes, offset);
         object.id = id++;
         object_set.push_back(object);
 
@@ -129,7 +131,7 @@ NSMB::GFX::TilesetObjectSet NSMB::GFX::ReadTilesetObjectSetFromBytes(const Core:
     return object_set;
 }
 
-NSMB::GFX::Background NSMB::GFX::ReadBackgroundFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+NSMB::Backgrounds::Background NSMB::Backgrounds::ReadBackgroundFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
     Background background;
     if (read_at < bytes.bytes.size())

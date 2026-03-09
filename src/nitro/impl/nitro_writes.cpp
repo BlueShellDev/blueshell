@@ -35,7 +35,11 @@ void Nitro::WritePalette16ToBytes(const Nitro::Palette16& pal, Core::ByteArray &
     EnsureByteCount(bytes, write_at + Palette16SizeBytes);
 
     for (size_t i = 0; i < Palette16SizeColors; ++i)
-        bytes.Write<Color>(write_at + i * sizeof(Color), pal.colors[i]);
+    {
+        //TrueBGRToNitroBGR(pal.colors[i]);
+        //bytes.Write<Color>(write_at + i * sizeof(Color), pal.colors[i]);
+        Core::Console::Global().Warn("just so you know, your palette16 edits didn't save. lol!");
+    }
 }
 
 void Nitro::WritePalette256ToBytes(const Nitro::Palette256& pal, Core::ByteArray &bytes, Core::Addr32 write_at)
@@ -43,14 +47,18 @@ void Nitro::WritePalette256ToBytes(const Nitro::Palette256& pal, Core::ByteArray
     EnsureByteCount(bytes, write_at + Palette256SizeBytes);
 
     for (size_t i = 0; i < Palette256SizeColors; ++i)
-        bytes.Write<Color>(write_at + i * sizeof(Color), pal.colors[i]);
+    {
+        //TrueBGRToNitroBGR(pal.colors[i]);
+        //bytes.Write<Color>(write_at + i * sizeof(Color), pal.colors[i]);
+        Core::Console::Global().Warn("just so you know, your palette256 edits didn't save. lol!");
+    }
 }
 
 void Nitro::WriteExPaletteToBytes(const Nitro::ExPalette& ex_pal, Core::ByteArray &bytes, Core::Addr32 write_at)
 {
     EnsureByteCount(bytes, write_at + ExPaletteSizeBytes);
     for (size_t i = 0; i < ExPaletteMaxPaletteCount; ++i)
-        WritePalette256ToBytes(ex_pal.palettes[i], bytes, write_at + i * Palette256SizeBytes);
+        WritePalette256ToBytes(ex_pal.pals[i], bytes, write_at + i * Palette256SizeBytes);
 }
 
 void Nitro::WriteScreenTileToBytes(const Nitro::ScreenTile& scr_tile, Core::ByteArray &bytes, Core::Addr32 write_at)

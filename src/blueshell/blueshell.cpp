@@ -1,6 +1,12 @@
 #include "blueshell.h"
+
+#include "core/io/binary_file.h"
 #include "core/io/byte_array.h"
+
 #include "plugins/plugin_manager_ui.hpp"
+
+#include "nitro/simple_nitro.h"
+
 #include "ui/windows/popups/all_popups.h"
 #include "ui/windows/all_windows.h"
 
@@ -8,31 +14,35 @@ bool Core::ByteArray::LogReadsAndWrites = false;
 
 void BS::RunUI(MainContext *ctx)
 {
+    // lets configure the ui
     ImGuiIO& io                             = ctx->imgui_ctx->IO;
     io.ConfigFlags                         |= ImGuiConfigFlags_DockingEnable;
     io.ConfigWindowsMoveFromTitleBarOnly    = true;
-    ImGui::StyleColorsClassic();
     ImGui::GetStyle().WindowRounding        = 5.0f;
     ImGui::GetStyle().FrameRounding         = 5.0f;
     ImGui::GetStyle().ChildRounding         = 5.0f;
     ImGui::GetStyle().CellPadding           = ImVec2(6, 6);
-    double last_frame_time = glfwGetTime();
+    ImGui::StyleColorsClassic();
 
+    Nitro::ExPalette pal    = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("bad_filename"));
+    pal                     = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("data/jyotyu_ncl.bin"));
+
+    double last_frame_time = glfwGetTime();
     while (!glfwWindowShouldClose(ctx->window))
     {
         glfwPollEvents();
         BS::UI::BeginImGuiFrame();
         BS::UI::InitializeImGuiDockspace("bs_dockspace");
+        
         const double frame_time = glfwGetTime();
         const double delta_seconds = frame_time - last_frame_time;
         last_frame_time = frame_time;
 
-        static bool showConsole             = true;
-        static bool showTextureViewer       = true;
-        static bool showAboutPopup          = false;
-        static bool showDebugWindow         = false;
-        static bool showPluginManager       = false;
-
+        static bool show_console             = true;
+        static bool show_texture_viewer       = true;
+        static bool show_about_popup          = false;
+        static bool show_debug_window         = false;
+        static bool show_plugin_manager       = false;
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
@@ -45,17 +55,19 @@ void BS::RunUI(MainContext *ctx)
 
             if (ImGui::BeginMenu("Window"))
             {
-                if (ImGui::MenuItem("Show Console", nullptr, showConsole))
-                    showConsole = !showConsole;
+                if (ImGui::MenuItem("Show Console", nullptr, show_console))
+                    show_console = !show_console;
 
-                if (ImGui::MenuItem("Show Texture Viewer", nullptr, showTextureViewer))
-                    showTextureViewer = !showTextureViewer;
+                if (ImGui::MenuItem("Show Texture Viewer", nullptr, show_texture_viewer))
+                    show_texture_viewer = !show_texture_viewer;
 
                 ImGui::Separator();
-                if (ImGui::MenuItem("Show Debug Window", nullptr, showDebugWindow))
-                    showDebugWindow = !showDebugWindow;
-                if (ImGui::MenuItem("Show Plugin Manager", nullptr, showPluginManager))
-                    showPluginManager = !showPluginManager;
+                if (ImGui::MenuItem("Show Plugin Manager", nullptr, show_plugin_manager))
+                    show_plugin_manager = !show_plugin_manager;
+
+                ImGui::Separator();
+                if (ImGui::MenuItem("Show Debug Window", nullptr, show_debug_window))
+                    show_debug_window = !show_debug_window;
 
                 ImGui::EndMenu();
             }
@@ -63,7 +75,7 @@ void BS::RunUI(MainContext *ctx)
             if (ImGui::BeginMenu("Help"))
             {
                 if (ImGui::MenuItem("About BlueShell..."))
-                    showAboutPopup = true;
+                    show_about_popup = true;
 
                 ImGui::EndMenu();
             }
@@ -71,22 +83,21 @@ void BS::RunUI(MainContext *ctx)
             ImGui::EndMainMenuBar();
         }
 
-        if (showConsole)
-            BS::UI::ShowConsoleWindow("Console", &showConsole);
+        if (show_console)
+            BS::UI::ShowConsoleWindow("Console", &show_console);
             
-        if (showTextureViewer)
-            BS::UI::ShowTexturesWindow("Textures", &showTextureViewer);
+        if (show_texture_viewer)
+            BS::UI::ShowTexturesWindow("Textures", &show_texture_viewer);
 
-        if (showAboutPopup)
-            BS::UI::ShowAboutPopup("About BlueShell", &showAboutPopup);
+        if (show_about_popup)
+            BS::UI::ShowAboutPopup("About BlueShell", &show_about_popup);
 
-        if (showDebugWindow)
-            BS::UI::ShowDebugWindow("Debug", &showDebugWindow, ctx);
-        if (showPluginManager)
-            BS::Plugins::UI::ShowPluginManagerWindow("Plugin Manager", &showPluginManager, &ctx->pluginManager);
+        if (show_debug_window)
+            BS::UI::ShowDebugWindow("Debug", &show_debug_window, ctx);
+        if (show_plugin_manager)
+            BS::Plugins::UI::ShowPluginManagerWindow("Plugin Manager", &show_plugin_manager, &ctx->pluginManager);
 
         ctx->pluginManager.TickAll(delta_seconds);
-
         BS::UI::ClearGLFWWindowWithColor(ctx->window, 0.2f, 0.2f, 0.2f, 1.0f);
         BS::UI::EndImGuiFrame();
         glfwSwapBuffers(ctx->window);

@@ -51,36 +51,37 @@ namespace Nitro
     // FUNCTIONS: READS
     //
 
-    inline Character            ReadCharacterFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline CharacterBitmap      ReadBitmapFromBytes             (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Character                   ReadCharacterFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    CharacterBitmap             ReadBitmapFromBytes             (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
-    inline Palette16            ReadPalette16FromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline Palette256           ReadPalette256FromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline ExPalette            ReadExPaletteFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Palette16                   ReadPalette16FromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Palette256                  ReadPalette256FromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    ExPalette                   ReadExPaletteFromBytes          (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
-    inline ScreenTile           ReadScreenTileFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
-    inline Screen               ReadScreenFromBytes             (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    ScreenTile                  ReadScreenTileFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    Screen                      ReadScreenFromBytes             (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
     //
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteCharacterToBytes           (const Character &character, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteBitmapToBytes              (const CharacterBitmap& char_bmp, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteCharacterToBytes           (const Character &character, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteBitmapToBytes              (const CharacterBitmap& char_bmp, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
-    inline void                 WritePalette16ToBytes           (const Palette16& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WritePalette256ToBytes          (const Palette256& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteExPaletteToBytes           (const ExPalette& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WritePalette16ToBytes           (const Palette16& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WritePalette256ToBytes          (const Palette256& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteExPaletteToBytes           (const ExPalette& pal, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
-    inline void                 WriteScreenTileToBytes          (const ScreenTile& scr_tile, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
-    inline void                 WriteScreenToBytes              (const Screen& scr, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteScreenTileToBytes          (const ScreenTile& scr_tile, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteScreenToBytes              (const Screen& scr, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
     //
     // FUNCTIONS: UTILITY
     //
 
     // ehhhh i dont like the semantics of this function
-    inline void                 NitroBGRToTrueBGR(const Color &colorToTransform);
+    void                        NitroBGRToTrueBGR(Color &to_true);
+    void                        TrueBGRToNitroBGR(Color &to_nitro);
 
     //
     // STRUCTURES
@@ -126,7 +127,7 @@ namespace Nitro
 
     struct ExPalette
     {
-        Palette256              palettes[ExPaletteMaxPaletteCount];
+        std::vector<Palette256> pals;
 
         inline                  ExPalette()                     {};
     };

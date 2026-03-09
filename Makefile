@@ -1,45 +1,58 @@
 #CXX = g++
 #CXX = clang++
 
-IMGUI_DIR			:= imgui
-INC_DIR				:= include
-SRC_DIR 			:= src
 BUILD_DIR 			:= build
 BIN_DIR 			:= bin
-EXE 				:= $(BIN_DIR)/BlueShell
-YAML_CPP_DIR		:= deps/yaml-cpp
+DEPS_DIR			:= deps
+INC_DIR				:= include
+SRC_DIR 			:= src
 
-SRCS := $(SRC_DIR)/main.cpp
+IMGUI_DIR			:= ./$(DEPS_DIR)/imgui
+YAML_CPP_DIR  		:= ./$(DEPS_DIR)/yaml-cpp
+
+EXE 				:= $(BIN_DIR)/BlueShell
+
+# blueshell
+SRC_CPP := $(SRC_DIR)/main.cpp
 
 # imgui 
-SRCS += $(IMGUI_DIR)/imgui.cpp 
-SRCS += $(IMGUI_DIR)/imgui_demo.cpp 
-SRCS += $(IMGUI_DIR)/imgui_draw.cpp 
-SRCS += $(IMGUI_DIR)/imgui_tables.cpp 
-SRCS += $(IMGUI_DIR)/imgui_widgets.cpp
-SRCS += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp 
-SRCS += $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+SRC_CPP += $(wildcard $(IMGUI_DIR)/*.cpp)
+SRC_CPP += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp 
+SRC_CPP += $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 
-# core systems
-SRCS += $(SRC_DIR)/core/command/command_manager.cpp
-SRCS += $(SRC_DIR)/core/io/binary_file.cpp
-SRCS += $(SRC_DIR)/core/render/render.cpp
-SRCS += $(SRC_DIR)/core/render/texture.cpp
+SRC_CPP += $(SRC_DIR)/core/io/binary_file.cpp
+SRC_CPP += $(SRC_DIR)/core/render/render.cpp
+SRC_CPP += $(SRC_DIR)/core/render/texture.cpp
+SRC_CPP += $(SRC_DIR)/core/command/command_manager.cpp
+SRC_CPP += $(wildcard $(SRC_DIR)/nitro/impl/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/nsmb/impl/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/commands/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/plugins/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/util/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/windows/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/widgets/*.cpp)
 
-# program ui
-SRCS += $(SRC_DIR)/blueshell/ui/util/glfw_util.cpp
-SRCS += $(SRC_DIR)/blueshell/ui/util/imgui_util.cpp
-SRCS += $(SRC_DIR)/blueshell/blueshell.cpp
-SRCS += $(wildcard $(SRC_DIR)/blueshell/plugins/*.cpp)
-SRCS += $(wildcard $(YAML_CPP_DIR)/src/*.cpp)
+# yamlcpp
+SRC_CPP += $(wildcard $(YAML_CPP_DIR)/src/*.cpp)
 
-OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRCS)))
+OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRC_CPP)))
 
-CXXFLAGS := -std=c++20 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(INC_DIR) -I./$(SRC_DIR)
+CXXFLAGS := -std=c++20
+# add includes for imgui
+CXXFLAGS += -I$(IMGUI_DIR) 
+CXXFLAGS += -I$(IMGUI_DIR)/backends
+# blueshell/imgui extension shit
+CXXFLAGS += -I$(INC_DIR) 
+CXXFLAGS += -I$(INC_DIR)/imgui-3rd-party
+CXXFLAGS += -I./$(SRC_DIR)
+# add includes for yamlcpp
 CXXFLAGS += -I./$(YAML_CPP_DIR)/include
-CXXFLAGS += -g -Wall -Wformat
-LIBS :=
 
+CXXFLAGS += -g -Wall -Wformat
+
+LIBS :=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
     ECHO_MESSAGE := Linux
@@ -76,8 +89,24 @@ $(BUILD_DIR)/%.o: $(IMGUI_DIR)/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(IMGUI_DIR)/backends/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(YAML_CPP_DIR)/src/%.cpp | dirs
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/render/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/core/io/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/impl/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/impl/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/%.cpp | dirs 
@@ -90,25 +119,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/util/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/%.hpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/popups/%.hpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/windows/popups/%.hpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/widgets/%.hpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/plugins/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/render/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/core/io/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nitro/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/%.cpp | dirs 
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-$(BUILD_DIR)/%.o: $(YAML_CPP_DIR)/src/%.cpp | dirs
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/render/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 run: all
