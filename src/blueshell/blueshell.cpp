@@ -6,6 +6,7 @@
 #include "plugins/plugin_manager_ui.hpp"
 
 #include "nitro/simple_nitro.h"
+#include "nsmb/simple_nsmb.h"
 
 #include "ui/windows/visibility_state.h"
 #include "ui/windows/popups/all_popups.h"
@@ -31,6 +32,7 @@ void BS::RunUI(MainContext *ctx)
     // which files are NOT recognized by the nitrorom, letting the user know they need to be inserted
     Nitro::FS::FileNameTable rom_fns = Nitro::FS::ReadFileNameTableFromBytes(Core::ReadByteArrayFromFile("data/fnt.bin"), 0xF000);
     Nitro::ExPalette pal = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("data/jyotyu_ncl.bin"));
+    NSMB::AreaHeader area_header = NSMB::ReadAreaHeaderFromBytes(Core::ReadByteArrayFromFile("data/area.bin"));
 
     double last_frame_time = glfwGetTime();
     while (!glfwWindowShouldClose(ctx->glfwCtx))

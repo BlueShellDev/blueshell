@@ -10,8 +10,11 @@ namespace NSMB
     // TYPES
     //
 
-    struct BGDatObject;
+    using AreaBlockID                                           = u8;
+    struct AreaBlockDefinition;
+    struct AreaHeader;
     struct AreaSettings;
+    struct AreaCamera;
     struct AreaScreen;
     struct AreaEntrance;
     struct AreaObject;
@@ -21,21 +24,54 @@ namespace NSMB
     struct AreaPathNode;
     struct Area;
 
+    struct BGDatObject;
+
+    enum AreaBlockType : AreaBlockID
+    {
+
+        SettingsBlock,
+        CameraBlock,
+        BottomBackgroundBlock,
+        TilesetBlock,
+        TopBackgoundBlock,
+        EntrancesBlock,
+        SpritesBlock,
+        ViewsBlock,
+        ZonesBlock,
+        ProgressPathsBlock,
+        PathsBlock,
+        ProgressPathNodesBlock,
+        PathNodesBlock,
+        ObjectBanksBlock
+    };
+
     //
     // CONSTANTS
     //
 
+    inline constexpr size_t     AreaBlockDefSizeBytes           = 8;
+    inline constexpr size_t     AreaHeaderBlockDefCount         = 14;
+    inline constexpr size_t     AreaHeaderSizeBytes             = AreaHeaderBlockDefCount * AreaBlockDefSizeBytes;
+
     //
     // FUNCTIONS: READS
     //
-    BGDatObject                 ReadBGDatObjectFromBytes        (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+
+    AreaBlockDefinition         ReadAreaBlockDefFromBytes       (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    AreaHeader                  ReadAreaHeaderFromBytes         (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
     AreaSettings                ReadAreaSettingsFromBytes       (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+
+    BGDatObject                 ReadBGDatObjectFromBytes        (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
     //
     // FUNCTION: WRITES
     //
-    void                        WriteBGDatObjectToBytes         (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+
+    void                        WriteAreaBlockDefToBytes        (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteAreaHeaderToBytes          (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
     void                        WriteAreaSettingsToBytes        (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+
+    void                        WriteBGDatObjectToBytes         (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
     //
     // FUNCTION: UTILITIES
@@ -44,6 +80,18 @@ namespace NSMB
     //
     // STRUCTURES
     //
+
+    struct AreaBlockDefinition
+    {
+        AreaBlockID             id;
+        Core::Addr32            base;
+        size_t                  size;
+    };
+
+    struct AreaHeader
+    {
+        AreaBlockDefinition blockDefinitions[AreaHeaderBlockDefCount];
+    };
 };
 
 namespace NSMB::Tilesets

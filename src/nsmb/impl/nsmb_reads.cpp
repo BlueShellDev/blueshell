@@ -1,39 +1,24 @@
 #include "nsmb/simple_nsmb.h"
 
-namespace 
+NSMB::AreaBlockDefinition NSMB::ReadAreaBlockDefFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
 {
-    inline Core::Addr32 ConsumeTilesetObjectRow(const Core::ByteArray &bytes, Core::Addr32 read_at)
+    AreaBlockDefinition def;
+    def.base = bytes.Read<Core::Addr32>(read_at);
+    read_at += sizeof(Core::Addr32);
+    def.size = bytes.Read<Core::Addr32>(read_at);
+    return def;
+}
+
+NSMB::AreaHeader NSMB::ReadAreaHeaderFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+{
+    AreaHeader header;
+    for (AreaBlockID i = 0; i < AreaHeaderBlockDefCount; i++)
     {
-        while (read_at < bytes.bytes.size())
-        {
-            const u8 control = bytes.Read<u8>(read_at);
-            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateRow)
-                return read_at + 1;
-
-            if (control & NSMB::Tilesets::TilesetObjectControlFlag_Slope)
-                ++read_at;
-
-            if (read_at + NSMB::Tilesets::ObjectTileSizeBytes > bytes.bytes.size())
-                return static_cast<Core::Addr32>(bytes.bytes.size());
-            read_at += NSMB::Tilesets::ObjectTileSizeBytes;
-        }
-
-        return static_cast<Core::Addr32>(bytes.bytes.size());
+        header.blockDefinitions[i] = ReadAreaBlockDefFromBytes(bytes, read_at);
+        header.blockDefinitions[i].id = i;
+        read_at += AreaBlockDefSizeBytes;
     }
-
-    inline Core::Addr32 ConsumeTilesetObject(const Core::ByteArray &bytes, Core::Addr32 read_at)
-    {
-        while (read_at < bytes.bytes.size())
-        {
-            const u8 control = bytes.Read<u8>(read_at);
-            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateObject)
-                return read_at + 1;
-
-            read_at = ConsumeTilesetObjectRow(bytes, read_at);
-        }
-
-        return static_cast<Core::Addr32>(bytes.bytes.size());
-    }
+    return header;
 }
 
 NSMB::Tilesets::Map16Tile NSMB::Tilesets::ReadMap16TileFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
@@ -88,6 +73,42 @@ NSMB::Tilesets::ObjectTile NSMB::Tilesets::ReadObjectTileFromBytes(const Core::B
     ObjectTile tile;
     tile.id = bytes.Read<ObjectTileID>(read_at + 1);
     return tile;
+}
+
+namespace 
+{
+    inline Core::Addr32 ConsumeTilesetObjectRow(const Core::ByteArray &bytes, Core::Addr32 read_at)
+    {
+        while (read_at < bytes.bytes.size())
+        {
+            const u8 control = bytes.Read<u8>(read_at);
+            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateRow)
+                return read_at + 1;
+
+            if (control & NSMB::Tilesets::TilesetObjectControlFlag_Slope)
+                ++read_at;
+
+            if (read_at + NSMB::Tilesets::ObjectTileSizeBytes > bytes.bytes.size())
+                return static_cast<Core::Addr32>(bytes.bytes.size());
+            read_at += NSMB::Tilesets::ObjectTileSizeBytes;
+        }
+
+        return static_cast<Core::Addr32>(bytes.bytes.size());
+    }
+
+    inline Core::Addr32 ConsumeTilesetObject(const Core::ByteArray &bytes, Core::Addr32 read_at)
+    {
+        while (read_at < bytes.bytes.size())
+        {
+            const u8 control = bytes.Read<u8>(read_at);
+            if (control == NSMB::Tilesets::TilesetObjectControlFlag_TerminateObject)
+                return read_at + 1;
+
+            read_at = ConsumeTilesetObjectRow(bytes, read_at);
+        }
+
+        return static_cast<Core::Addr32>(bytes.bytes.size());
+    }
 }
 
 NSMB::Tilesets::ObjectRow NSMB::Tilesets::ReadObjectRowFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
