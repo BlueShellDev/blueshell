@@ -173,14 +173,15 @@ namespace NSMB::Tilesets
     struct Tileset
     {
         TilesetID               id;
+        TilesetType             type;
 
-        Nitro::CharacterBitmap  characterBitmap;
-        Nitro::ExPalette        extendedPalette;
+        Nitro::CharacterBitmap  bitmap;
+        Nitro::ExPalette        palette;
         Map16                   map16;
         BehaviorSet             behaviors;
         ObjectSet               objects;
 
-        inline                  Tileset()                       { id = 0; };
+        inline                  Tileset()                       {};
     };
 }
 
@@ -217,6 +218,7 @@ namespace NSMB::Backgrounds
     struct Background
     {
         BackgroundID            id;
+        BackgroundType          type;
 
         inline                  Background()                    {};
     };
