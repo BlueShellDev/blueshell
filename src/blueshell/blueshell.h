@@ -10,16 +10,16 @@ namespace BS
 {
     struct MainContext
     {
-        GLFWwindow* window;
-        ImGuiContext* imgui_ctx;
+        GLFWwindow* glfwCtx;
+        ImGuiContext* guiCtx;
         Plugins::PluginManager pluginManager;
         Plugins::EditorStateProvider *editorStateProvider;
         Plugins::LevelEditSink *levelEditSink;
 
         MainContext()
         {
-            window = nullptr;
-            imgui_ctx = nullptr;
+            glfwCtx = nullptr;
+            guiCtx = nullptr;
             editorStateProvider = nullptr;
             levelEditSink = nullptr;
         };

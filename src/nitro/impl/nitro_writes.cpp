@@ -9,7 +9,7 @@ namespace
     }
 }
 
-void Nitro::FS::WriteFilePathTableToBytes(const Nitro::FS::FilePathTable& table, Core::ByteArray &bytes, Core::Addr32 write_at)
+void Nitro::FS::WriteFilePathTableToBytes(const Nitro::FS::FileNameTable& table, Core::ByteArray &bytes, Core::Addr32 write_at)
 {
     (void)bytes;
     (void)write_at;

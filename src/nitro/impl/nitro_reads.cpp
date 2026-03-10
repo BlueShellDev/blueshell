@@ -86,9 +86,48 @@ Nitro::Screen Nitro::ReadScreenFromBytes(const Core::ByteArray &bytes, Core::Add
     return screen;
 }
 
-Nitro::FS::FilePathTable Nitro::FS::ReadFilePathTableFromBytes(const Core::ByteArray &bytes, Core::Addr32 read_at)
+Nitro::FS::FileNameTable Nitro::FS::ReadFileNameTableFromBytes(const Core::ByteArray &bytes, DirectoryID starting_dir)
 {
-    (void)bytes;
-    (void)read_at;
-    return {};
+    // this is a super bare bones scraper of the fnt; just getting filenames mapped to ids
+    FileNameTable filetable;
+    Core::Addr32 metadata_offset = TranslateDirectoryIDToOffset(starting_dir);
+
+    using TableCtrl = u8;
+    enum TableCtrlFlag : TableCtrl
+    {
+        Reserved = 0x00,
+        EndOfTable = 0x80
+    };
+
+    Core::Addr32 table_offset = bytes.ReadEx<Core::Addr32>(metadata_offset);
+    FileID first_file_id = bytes.ReadEx<FileID>(metadata_offset);
+    while (table_offset < bytes.bytes.size())
+    {
+        TableCtrl ctrl = bytes.ReadEx<TableCtrl>(table_offset);
+        // if the flag is ONLY 0x00 or 0x80 then its a special case, else treat as flag
+        if (ctrl == TableCtrlFlag::Reserved)
+            break;
+        
+        if (ctrl == TableCtrlFlag::EndOfTable)
+            break;
+
+        const bool is_dir = (ctrl & TableCtrlFlag::EndOfTable);
+        // filenames can have 127 chars
+        std::string name("", ctrl & 0x7F);
+        for (char &ch : name)
+            ch = (char)bytes.ReadEx<u8>(table_offset);
+        
+        if (!is_dir)
+        {
+            filetable.insert({first_file_id, name});
+            first_file_id++;
+        }
+        else
+        {
+            FileNameTable sub_table = ReadFileNameTableFromBytes(bytes, bytes.ReadEx<DirectoryID>(table_offset));
+            filetable.insert(sub_table.begin(), sub_table.end());
+        }
+    }
+
+    return filetable;
 }

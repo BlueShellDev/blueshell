@@ -17,7 +17,7 @@ bool Core::ByteArray::LogReadsAndWrites = false;
 void BS::RunUI(MainContext *ctx)
 {
     // lets configure the ui
-    ImGuiIO& io                             = ctx->imgui_ctx->IO;
+    ImGuiIO& io                             = ctx->guiCtx->IO;
     io.ConfigFlags                         |= ImGuiConfigFlags_DockingEnable;
     io.ConfigWindowsMoveFromTitleBarOnly    = true;
     ImGui::GetStyle().WindowRounding        = 5.0f;
@@ -26,11 +26,15 @@ void BS::RunUI(MainContext *ctx)
     ImGui::GetStyle().CellPadding           = ImVec2(6, 6);
     ImGui::StyleColorsClassic();
 
-    Nitro::ExPalette pal    = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("bad_filename"));
-    pal                     = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("data/jyotyu_ncl.bin"));
+    
+    // so this gives us a bare name table of what files are recognized in the rom
+    // if we also have a file browser that shows the extracted rom on your local FS, we could highlight
+    // which files are NOT recognized by the nitrorom, letting the user know they need to be inserted
+    Nitro::FS::FileNameTable rom_fns = Nitro::FS::ReadFileNameTableFromBytes(Core::ReadByteArrayFromFile("data/fnt.bin"), 0xF000);
+    Nitro::ExPalette pal = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("data/jyotyu_ncl.bin"));
 
     double last_frame_time = glfwGetTime();
-    while (!glfwWindowShouldClose(ctx->window))
+    while (!glfwWindowShouldClose(ctx->glfwCtx))
     {
         // 
         const double frame_time = glfwGetTime();
@@ -43,7 +47,7 @@ void BS::RunUI(MainContext *ctx)
         BS::UI::InitializeImGuiDockspace("bs_dockspace");
 
         static BS::UI::VisibilityState window_visibility;
-        BS::UI::DrawMainMenuBar(ctx->window, window_visibility);
+        BS::UI::DrawMainMenuBar(ctx->glfwCtx, window_visibility);
 
         if (window_visibility.ShowConsole)
             BS::UI::ShowConsoleWindow("Console",                        &window_visibility.ShowConsole);
@@ -54,13 +58,17 @@ void BS::RunUI(MainContext *ctx)
         if (window_visibility.ShowPluginMgr)
             BS::Plugins::UI::ShowPluginManagerWindow("Plugin Manager",  &window_visibility.ShowPluginMgr,
                                                                         &ctx->pluginManager);
+        if (window_visibility.ShowFileNameTableViewer)
+            BS::UI::ShowFileNameTableViewer("Filenames in ROM",         &window_visibility.ShowFileNameTableViewer,
+                                                                        rom_fns);
         if (window_visibility.ShowAboutPopup)
             BS::UI::ShowAboutPopup("About BlueShell",                   &window_visibility.ShowAboutPopup);
+    
 
         ctx->pluginManager.TickAll(delta_seconds);
-        BS::UI::ClearGLFWWindowWithColor(ctx->window, 0.2f, 0.2f, 0.2f, 1.0f);
+        BS::UI::ClearGLFWWindowWithColor(ctx->glfwCtx, 0.2f, 0.2f, 0.2f, 1.0f);
         BS::UI::EndImGuiFrame();
-        glfwSwapBuffers(ctx->window);
+        glfwSwapBuffers(ctx->glfwCtx);
     }
 }
 
@@ -79,16 +87,16 @@ bool BS::InitContext(MainContext *ctx, const std::string &win_title, const int &
     Core::Console::Global().Log("Initialized GLFW successfully");
     Core::Console::Global().Log("Using GLSL: {}", BS::UI::GetGLSLVersion());
 
-    ctx->window = BS::UI::MakeGLFWWindow(win_title.c_str(), win_w, win_h);
-    if (ctx->window == nullptr)
+    ctx->glfwCtx = BS::UI::MakeGLFWWindow(win_title.c_str(), win_w, win_h);
+    if (ctx->glfwCtx == nullptr)
     {
         Core::Console::Global().Err("Failed to create a GLFW window!");
         glfwTerminate();
         return false;
     }
 
-    ctx->imgui_ctx = BS::UI::BeginImGui(ctx->window, BS::UI::GetGLSLVersion());
-    if (ctx->imgui_ctx == nullptr)
+    ctx->guiCtx = BS::UI::BeginImGui(ctx->glfwCtx, BS::UI::GetGLSLVersion());
+    if (ctx->guiCtx == nullptr)
     {
         Core::Console::Global().Err("Failed to initialize ImGui!");
         glfwTerminate();
@@ -104,8 +112,8 @@ bool BS::InitContext(MainContext *ctx, const std::string &win_title, const int &
 void BS::DestroyContext(MainContext *ctx)
 {
     ctx->pluginManager.Shutdown();
-    BS::UI::EndImGui(ctx->imgui_ctx);
-    glfwDestroyWindow(ctx->window);
+    BS::UI::EndImGui(ctx->guiCtx);
+    glfwDestroyWindow(ctx->glfwCtx);
     glfwTerminate();
     delete ctx;
 }

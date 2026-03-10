@@ -6,12 +6,13 @@ namespace BS::UI
     struct VisibilityState
     {
         // windows
-        bool ShowConsole        {true};
-        bool ShowDebug          {false};
-        bool ShowTextureViewer  {false};
-        bool ShowPluginMgr      {false};
+        bool ShowConsole            {true};
+        bool ShowDebug              {false};
+        bool ShowTextureViewer      {false};
+        bool ShowFileNameTableViewer{true};
+        bool ShowPluginMgr          {false};
 
         // popups
-        bool ShowAboutPopup     {false};
+        bool ShowAboutPopup         {false};
     };
 }

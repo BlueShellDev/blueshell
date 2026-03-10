@@ -13,3 +13,18 @@ void Nitro::TrueBGRToNitroBGR(Color &to_nitro)
 {
     // transform BBBBBGGGGGGRRRRR To GBBBBBGGGGGRRRRR
 }
+
+bool Nitro::FS::GetFileIDOfFilename(const FileNameTable& table, const std::filesystem::path &query, FileID& out_id)
+{
+    auto it = std::find_if(table.begin(), table.end(), [&query](const std::pair<Nitro::FS::FileID, Nitro::FS::FilePath> &pair)
+    {
+        return (pair.second == query);
+    });
+    if (it != table.end())
+    {
+        out_id = it->first;
+        return true;
+    }
+    else
+        return false;
+}

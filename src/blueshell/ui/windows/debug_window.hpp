@@ -8,7 +8,7 @@ namespace BS::UI
     {
         ImGui::Begin(id.c_str(), is_open, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::BeginChild("##debug_mainchild", ImVec2(400, 200), true);
-        ImGui::BulletText("Framerate [ImGUi::GetIO().Framerate]: %.0f fps", pgm_ctx->imgui_ctx->IO.Framerate);
+        ImGui::BulletText("Framerate [ImGUi::GetIO().Framerate]: %.0f fps", pgm_ctx->guiCtx->IO.Framerate);
         ImGui::EndChild();
         ImGui::End();
     };

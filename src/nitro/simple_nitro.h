@@ -1,8 +1,9 @@
 // single-header dead simple nitro lib (blueshell '26)
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <vector>
+#include <filesystem>
 #include "core/io/byte_array.h"
 #include "core/types.h"
 
@@ -159,21 +160,29 @@ namespace Nitro::FS
     // TYPES
     //
 
-    using FileAddr                                              = u32;
+    using DirectoryID                                           = u16;
     using FileID                                                = u16;
     using ExFileID                                              = u32;
-    using FilePath                                              = std::string;
-    using FilePathTable                                         = std::unordered_map<FileID, FilePath>;
+    using FilePath                                              = std::filesystem::path;
+    using FileNameTable                                         = std::map<FileID, FilePath>;
 
     //
     // FUNCTIONS: READS
     //
 
-    inline FilePathTable        ReadFilePathTableFromBytes      (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    FileNameTable               ReadFileNameTableFromBytes      (const Core::ByteArray &bytes, DirectoryID starting_dir);
 
     //
     // FUNCTIONS: WRITES
     //
 
-    inline void                 WriteFilePathTableToBytes       (const FilePathTable& table, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteFilePathTableToBytes       (const FileNameTable& table, Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+
+    //
+    // FUNCTIONS: UTILS
+    //
+
+    inline Core::Addr32          TranslateDirectoryIDToOffset    (const DirectoryID dir_id) { return (dir_id & 0xFFF) * 8; /*sourcing this from my old code that i sourced from gbatek docs on nitrofs*/ };
+    // returns false if filename doesn't exist in table
+    bool                        GetFileIDOfFilename             (const FileNameTable& table, const std::filesystem::path &query, FileID& out_id);
 };

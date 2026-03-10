@@ -18,12 +18,12 @@ namespace Core
             BigEndian
         } endianness{Endianness::LittleEndian};
 
-        ByteArray() = default;
-        ByteArray(const std::vector<u8> &data, Endianness endianness = Endianness::LittleEndian) : bytes(data), endianness(endianness) {}
+        inline ByteArray() = default;
+        inline ByteArray(const std::vector<u8> &data, Endianness endianness = Endianness::LittleEndian) : bytes(data), endianness(endianness) {}
 
         // probably should do a concept and check T is an integral type or something but for now just assume it's used correctly
         template <typename T>
-        T Read(size_t offset, const T &mask = ~0) const
+        T Read(Addr32 offset, const T &mask = ~0) const
         {
             T value{};
             if (offset + sizeof(T) > bytes.size())
@@ -45,7 +45,7 @@ namespace Core
         }
 
         template <typename T>
-        T ReadEx(size_t &offset, const T &mask = ~0) const
+        T ReadEx(Addr32 &offset, const T &mask = ~0) const
         {
             T value = Read<T>(offset, mask);
             offset += sizeof(T);
@@ -53,7 +53,7 @@ namespace Core
         }
 
         template <typename T>
-        std::vector<T> ReadArray(size_t offset, size_t size, const T &entry_mask = ~0ULL) const
+        std::vector<T> ReadArray(Addr32 offset, size_t size, const T &entry_mask = ~0ULL) const
         {
             std::vector<T> array;
             size_t current{offset};
@@ -63,7 +63,7 @@ namespace Core
         }
 
         template <typename T>
-        void Write(size_t offset, T value)
+        void Write(Addr32 offset, T value)
         {
             if (offset + sizeof(T) > bytes.size())
                 return; // or throw an exception
@@ -82,14 +82,14 @@ namespace Core
         }
 
         template <typename T>
-        void WriteEx(size_t &offset, T value)
+        void WriteEx(Addr32 &offset, T value)
         {
             Write<T>(offset, value);
             offset += sizeof(T);
         }
 
         template <typename T>
-        void WriteArray(size_t offset, const std::vector<T> &values)
+        void WriteArray(Addr32 offset, const std::vector<T> &values)
         {
             for (const T &value : values)
                 Write(offset, value);
