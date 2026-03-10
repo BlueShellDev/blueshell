@@ -1,6 +1,6 @@
 #include "nsmb/simple_nsmb.h"
 
-namespace
+namespace 
 {
     inline Core::Addr32 ConsumeTilesetObjectRow(const Core::ByteArray &bytes, Core::Addr32 read_at)
     {

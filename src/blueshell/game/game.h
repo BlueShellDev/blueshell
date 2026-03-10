@@ -20,4 +20,7 @@ namespace BS::Game
         Nitro::FS::FileID objectFileID;
         Nitro::FS::FileID behaviorFileID;
     };
+
+    // will house functions like
+    // LoadArea, LoadTileset, LoadBackground
 };

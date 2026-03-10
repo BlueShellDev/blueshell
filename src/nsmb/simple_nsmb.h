@@ -10,7 +10,7 @@ namespace NSMB
     // TYPES
     //
 
-    struct Area;
+    struct BGDatObject;
     struct AreaSettings;
     struct AreaScreen;
     struct AreaEntrance;
@@ -19,9 +19,7 @@ namespace NSMB
     struct AreaZone;
     struct AreaPath;
     struct AreaPathNode;
-
-    struct AreaBGDat;
-    struct AreaBGDatObject;
+    struct Area;
 
     //
     // CONSTANTS
@@ -30,10 +28,14 @@ namespace NSMB
     //
     // FUNCTIONS: READS
     //
+    BGDatObject                 ReadBGDatObjectFromBytes        (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
+    AreaSettings                ReadAreaSettingsFromBytes       (const Core::ByteArray &bytes, Core::Addr32 read_at = 0);
 
     //
     // FUNCTION: WRITES
     //
+    void                        WriteBGDatObjectToBytes         (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
+    void                        WriteAreaSettingsToBytes        (Core::ByteArray &bytes, Core::Addr32 write_at = 0);
 
     //
     // FUNCTION: UTILITIES

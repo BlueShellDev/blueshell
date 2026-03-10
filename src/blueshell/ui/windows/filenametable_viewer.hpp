@@ -7,8 +7,8 @@ namespace BS::UI
     inline void ShowFileNameTableViewer(const std::string& id, bool* is_open, 
         const Nitro::FS::FileNameTable& fn_table)
     {
-        ImGui::Begin(id.c_str(), is_open);
-        ImGui::BeginChild("#filetable_child");
+        ImGui::Begin(id.c_str(), is_open, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::BeginChild("#filetable_child", ImVec2(800, 800));
         if(ImGui::BeginTable("#filetable_table", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable))
         {
             ImGui::TableSetupColumn("File ID (u16)", ImGuiTableColumnFlags_WidthFixed, 50.f);
