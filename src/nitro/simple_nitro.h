@@ -182,7 +182,7 @@ namespace Nitro::FS
     // FUNCTIONS: UTILS
     //
 
-    inline Core::Addr32          TranslateDirectoryIDToOffset    (const DirectoryID dir_id) { return (dir_id & 0xFFF) * 8; /*sourcing this from my old code that i sourced from gbatek docs on nitrofs*/ };
+    inline Core::Addr32         TranslateDirectoryIDToOffset    (const DirectoryID dir_id) { return (dir_id & 0xFFF) * 8; /*sourcing this from my old code that i sourced from gbatek docs on nitrofs*/ };
     // returns false if filename doesn't exist in table
     bool                        GetFileIDOfFilename             (const FileNameTable& table, const std::filesystem::path &query, FileID& out_id);
 };

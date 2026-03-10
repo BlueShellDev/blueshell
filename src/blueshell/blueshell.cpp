@@ -26,7 +26,6 @@ void BS::RunUI(MainContext *ctx)
     ImGui::GetStyle().CellPadding           = ImVec2(6, 6);
     ImGui::StyleColorsClassic();
 
-    
     // so this gives us a bare name table of what files are recognized in the rom
     // if we also have a file browser that shows the extracted rom on your local FS, we could highlight
     // which files are NOT recognized by the nitrorom, letting the user know they need to be inserted
