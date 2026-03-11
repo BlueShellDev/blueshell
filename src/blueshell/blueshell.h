@@ -12,16 +12,22 @@ namespace BS
     {
         GLFWwindow* glfwCtx;
         ImGuiContext* guiCtx;
+
+        // plugin stuffs
         Plugins::PluginManager pluginManager;
         Plugins::EditorStateProvider *editorStateProvider;
         Plugins::LevelEditSink *levelEditSink;
 
-        MainContext()
+        // render stuffs
+        // <coming soon>
+
+        inline MainContext()
         {
-            glfwCtx = nullptr;
-            guiCtx = nullptr;
+            glfwCtx             = nullptr;
+            guiCtx              = nullptr;
+
             editorStateProvider = nullptr;
-            levelEditSink = nullptr;
+            levelEditSink       = nullptr;
         };
     };
 

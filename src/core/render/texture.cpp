@@ -28,6 +28,7 @@ Core::Texture Core::MakeTextureFromBytes(const u8 *data, i32 width, i32 height, 
 
     glGenTextures(1, &newTexture.id);
     glBindTexture(GL_TEXTURE_2D, newTexture.id);
+    
     switch (format)
     {
     case Texture::Format::RGBA8888:
@@ -40,7 +41,10 @@ Core::Texture Core::MakeTextureFromBytes(const u8 *data, i32 width, i32 height, 
         Console::Global().Err("Unsupported texture format specified! Didn't bind any texture.");
         return Texture{};
     }
-    Console::Global().Log("Created OpenGL texture (ID: {}) with dimensions {}x{} and format {}", newTexture.id, width, height, format == Texture::Format::RGBA8888 ? "RGBA8888" : "BGR565");
+
+    Console::Global().Log("Created OpenGL texture (ID: {}) with dimensions {}x{} and format {}", 
+        newTexture.id, width, height, format == Texture::Format::RGBA8888 ? "RGBA8888" : "BGR565");
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     return newTexture;

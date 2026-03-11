@@ -89,6 +89,7 @@ Nitro::Screen Nitro::ReadScreenFromBytes(const Core::ByteArray &bytes, Core::Add
 Nitro::FS::FileNameTable Nitro::FS::ReadFileNameTableFromBytes(const Core::ByteArray &bytes, DirectoryID starting_dir)
 {
     // this is a super bare bones scraper of the fnt; just getting filenames mapped to ids
+    // reading this the next day now that i have my "brain-do-work" meds again. loard.
     FileNameTable filetable;
     Core::Addr32 metadata_offset = TranslateDirectoryIDToOffset(starting_dir);
 
@@ -105,11 +106,14 @@ Nitro::FS::FileNameTable Nitro::FS::ReadFileNameTableFromBytes(const Core::ByteA
     {
         TableCtrl ctrl = bytes.ReadEx<TableCtrl>(table_offset);
         // if the flag is ONLY 0x00 or 0x80 then its a special case, else treat as flag
-        if (ctrl == TableCtrlFlag::Reserved)
-            break;
-        
         if (ctrl == TableCtrlFlag::EndOfTable)
             break;
+
+        if (ctrl == TableCtrlFlag::Reserved)
+        {
+            Core::Console::Global().Warn("ReadFileNameTableFromBytes: Reserve byte hit at 0x{:08X}, Breaking early.", table_offset);
+            break;
+        }
 
         const bool is_dir = (ctrl & TableCtrlFlag::EndOfTable);
         // filenames can have 127 chars
@@ -129,5 +133,6 @@ Nitro::FS::FileNameTable Nitro::FS::ReadFileNameTableFromBytes(const Core::ByteA
         }
     }
 
+    Core::Console::Global().Log("ReadFileNameTableFromBytes: Read {} immediate files in directory 0x{:04X}", filetable.size(), starting_dir);
     return filetable;
 }

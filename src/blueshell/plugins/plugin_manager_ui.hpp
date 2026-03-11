@@ -5,6 +5,7 @@
 #include <string>
 
 #include "imgui.h"
+#include "imgui-3rd-party/imfilebrowser.h"
 #include "plugin_manager.h"
 
 namespace BS::Plugins::UI
@@ -14,8 +15,9 @@ namespace BS::Plugins::UI
         if (manager == nullptr)
             return;
 
+        static ImGui::FileBrowser import_dir_browser(ImGuiFileBrowserFlags_SelectDirectory);
         static std::string selected_plugin_id;
-        static char import_path[1024] = "";
+        static std::string selected_plugin_dir;
         static std::string last_action_message;
 
         ImGui::SetNextWindowSize(ImVec2(1000, 600), ImGuiCond_FirstUseEver);
@@ -35,19 +37,28 @@ namespace BS::Plugins::UI
         }
 
         ImGui::SameLine();
-        ImGui::TextUnformatted("Import folder:");
-        ImGui::SameLine();
-        ImGui::SetNextItemWidth(420.0f);
-        ImGui::InputText("##plugin_import_path", import_path, sizeof(import_path));
-
-        ImGui::SameLine();
-        if (ImGui::Button("Import"))
+        if (ImGui::Button("Import Bundle"))
+            import_dir_browser.Open();
+        
+        import_dir_browser.Display();
+        if (import_dir_browser.HasSelected())
         {
+            selected_plugin_dir = import_dir_browser.GetSelected();
+
             std::string error;
-            if (!manager->ImportPluginBundle(import_path, &error))
+            if (!manager->ImportPluginBundle(selected_plugin_dir, &error))
                 last_action_message = std::format("Import failed: {}", error);
             else
                 last_action_message = "Import succeeded";
+
+            import_dir_browser.ClearSelected();
+            import_dir_browser.Close();
+        }
+
+        if (!selected_plugin_dir.empty())
+        {
+            ImGui::SameLine();
+            ImGui::Text("Selected directory: '%s'", selected_plugin_dir.c_str());
         }
 
         if (!last_action_message.empty())
@@ -55,7 +66,7 @@ namespace BS::Plugins::UI
 
         ImGui::Separator();
 
-        ImGui::BeginChild("##plugin_list", ImVec2(430, 0), true);
+        ImGui::BeginChild("##plugin_list", ImVec2(800, 0), true);
         if (ImGui::BeginTable(
                 "##plugins_table",
                 5,

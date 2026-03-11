@@ -1,13 +1,16 @@
 #include <iostream>
 #include "blueshell/blueshell.h"
 
-int main(int, char **)
-{
-    BS::MainContext* blueshell = BS::CreateEmptyContext();
-    if(!BS::InitContext(blueshell, "BlueShell v0.2.1a", 1920, 1080))
-        return EXIT_FAILURE;
-
-    BS::RunUI(blueshell);
+// HEY! you! looking for the main loop?
+// it's lin- eh, better just show you. follow meeee! -----------------------+
+                                                                        //  |                                                                
+int main(int, char **)                                                  //  |
+{                                                                       //  |
+    BS::MainContext* blueshell = BS::CreateEmptyContext();              //  | almost there!
+    if(!BS::InitContext(blueshell, "BlueShell", 1920, 1080))            //  |
+        return EXIT_FAILURE;                                            //  |
+                                                                        //  |
+    BS::RunUI(blueshell);  // < ----- over here, in this function! ---------+
 
     BS::DestroyContext(blueshell);
     return EXIT_SUCCESS;

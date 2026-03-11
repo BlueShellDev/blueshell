@@ -90,7 +90,7 @@ namespace NSMB
 
     struct AreaHeader
     {
-        AreaBlockDefinition blockDefinitions[AreaHeaderBlockDefCount];
+        std::array<AreaBlockDefinition, AreaHeaderBlockDefCount> blockDefinitions;
     };
 };
 

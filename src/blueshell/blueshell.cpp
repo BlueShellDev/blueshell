@@ -116,5 +116,6 @@ void BS::DestroyContext(MainContext *ctx)
     BS::UI::EndImGui(ctx->guiCtx);
     glfwDestroyWindow(ctx->glfwCtx);
     glfwTerminate();
+    Core::DestroyTextures();
     delete ctx;
 }
