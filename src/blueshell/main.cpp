@@ -1,5 +1,5 @@
 #include <iostream>
-#include "blueshell/blueshell.h"
+#include "blueshell.h"
 
 // HEY! you! looking for the main loop?
 // it's lin- eh, better just show you. follow meeee! -----------------------+

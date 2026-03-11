@@ -13,7 +13,7 @@ YAML_CPP_DIR  		:= ./$(DEPS_DIR)/yaml-cpp
 EXE 				:= $(BIN_DIR)/BlueShell
 
 # blueshell
-SRC_CPP := $(SRC_DIR)/main.cpp
+SRC_CPP := $(SRC_DIR)/blueshell/main.cpp
 
 # imgui 
 SRC_CPP += $(wildcard $(IMGUI_DIR)/*.cpp)
@@ -92,7 +92,7 @@ $(BUILD_DIR)/%.o: $(IMGUI_DIR)/backends/%.cpp | dirs
 $(BUILD_DIR)/%.o: $(YAML_CPP_DIR)/src/%.cpp | dirs
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | dirs 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/core/command/%.cpp | dirs 
