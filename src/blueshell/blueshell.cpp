@@ -13,6 +13,8 @@
 #include "ui/windows/all_windows.h"
 #include "ui/widgets/main_menu_bar.hpp"
 
+#include "imgui-3rd-party/imgui_memory_editor.h"
+
 bool Core::ByteArray::LogReadsAndWrites = false;
 
 void BS::RunUI(MainContext *ctx)
@@ -27,9 +29,7 @@ void BS::RunUI(MainContext *ctx)
     ImGui::GetStyle().CellPadding           = ImVec2(6, 6);
     ImGui::StyleColorsClassic();
 
-    // so this gives us a bare name table of what files are recognized in the rom
-    // if we also have a file browser that shows the extracted rom on your local FS, we could highlight
-    // which files are NOT recognized by the nitrorom, letting the user know they need to be inserted
+    // now. where should this stuff live?
     Nitro::FS::FileNameTable rom_fns = Nitro::FS::ReadFileNameTableFromBytes(Core::ReadByteArrayFromFile("data/fnt.bin"), 0xF000);
     Nitro::ExPalette pal = Nitro::ReadExPaletteFromBytes(Core::ReadByteArrayFromFile("data/jyotyu_ncl.bin"));
     NSMB::AreaHeader area_header = NSMB::ReadAreaHeaderFromBytes(Core::ReadByteArrayFromFile("data/area.bin"));
@@ -48,7 +48,42 @@ void BS::RunUI(MainContext *ctx)
         BS::UI::InitializeImGuiDockspace("bs_dockspace");
 
         static BS::UI::VisibilityState window_visibility;
-        BS::UI::DrawMainMenuBar(ctx->glfwCtx, window_visibility);
+        BS::UI::DrawMainMenuBar(ctx->glfwCtx, window_visibility, ctx->editorMgr);
+
+        ImGui::Begin("Loaded files");
+        static MemoryEditor editors[3];
+
+        editors[0].DrawWindow("File A Raw", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileA).data.bytes.data(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileA).data.bytes.size());
+        ImGui::Text("File Slot A: Filename: %s | Size: %d\n", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileA).locationOnDisk.c_str(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileA).data.bytes.size());
+        ImGui::SameLine();
+        if (ImGui::Button("Close##FileA"))
+            ctx->editorMgr.CloseFile(EditorManager::FileSlot::FileA);
+
+        editors[1].DrawWindow("File B Raw", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileB).data.bytes.data(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileB).data.bytes.size());
+        ImGui::Text("File Slot B: Filename: %s | Size: %d\n", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileB).locationOnDisk.c_str(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileB).data.bytes.size());
+        ImGui::SameLine();
+        if (ImGui::Button("Close##FileB"))
+            ctx->editorMgr.CloseFile(EditorManager::FileSlot::FileB);
+
+        editors[2].DrawWindow("File C Raw", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileC).data.bytes.data(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileC).data.bytes.size());
+        ImGui::Text("File Slot C: Filename: %s | Size: %d\n", 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileC).locationOnDisk.c_str(), 
+            ctx->editorMgr.GetFile(EditorManager::FileSlot::FileC).data.bytes.size());
+        ImGui::SameLine();
+        if (ImGui::Button("Close##FileC"))
+            ctx->editorMgr.CloseFile(EditorManager::FileSlot::FileC);
+            
+        ImGui::End();
 
         if (window_visibility.ShowConsole)
             BS::UI::ShowConsoleWindow("Console",                        &window_visibility.ShowConsole);

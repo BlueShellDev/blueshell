@@ -28,6 +28,7 @@ SRC_CPP += $(wildcard $(SRC_DIR)/nitro/impl/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/nsmb/impl/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/commands/*.cpp)
+SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/editor/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/plugins/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/*.cpp)
 SRC_CPP += $(wildcard $(SRC_DIR)/blueshell/ui/util/*.cpp)
@@ -112,6 +113,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/nsmb/impl/%.cpp | dirs
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/commands/%.cpp | dirs 
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/editor/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 $(BUILD_DIR)/%.o: $(SRC_DIR)/blueshell/ui/%.cpp | dirs 
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

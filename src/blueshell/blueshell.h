@@ -1,10 +1,12 @@
 #pragma once
 
 #include "imgui_internal.h"
+#include "editor/editor_manager.h"
 #include "plugins/plugin_host_api.h"
 #include "plugins/plugin_manager.h"
 #include "ui/util/glfw_util.h"
 #include "ui/util/imgui_util.h"
+#include "game/game.h"
 
 namespace BS
 {
@@ -13,13 +15,12 @@ namespace BS
         GLFWwindow* glfwCtx;
         ImGuiContext* guiCtx;
 
+        EditorManager editorMgr;
+
         // plugin stuffs
         Plugins::PluginManager pluginManager;
         Plugins::EditorStateProvider *editorStateProvider;
         Plugins::LevelEditSink *levelEditSink;
-
-        // render stuffs
-        // <coming soon>
 
         inline MainContext()
         {
@@ -31,9 +32,8 @@ namespace BS
         };
     };
 
-    void RunUI(MainContext* ctx);
-
-    MainContext* CreateEmptyContext();
-    bool InitContext(MainContext* ctx, const std::string &win_tile, const int &win_w, const int &win_h);
-    void DestroyContext(MainContext* ctx);
+    MainContext*                CreateEmptyContext();
+    bool                        InitContext(MainContext* ctx, const std::string &win_tile, const int &win_w, const int &win_h);
+    void                        DestroyContext(MainContext* ctx);
+    void                        RunUI(MainContext* ctx);
 };

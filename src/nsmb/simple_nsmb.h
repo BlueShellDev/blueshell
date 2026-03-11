@@ -92,6 +92,11 @@ namespace NSMB
     {
         std::array<AreaBlockDefinition, AreaHeaderBlockDefCount> blockDefinitions;
     };
+
+    struct Area
+    {
+        AreaHeader header;
+    };
 };
 
 namespace NSMB::Tilesets
